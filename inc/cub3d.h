@@ -6,6 +6,8 @@
 # define ERR_ARGC			"Provide a path to your desired map only."
 # define ERR_ARGV			"Provide a .cub file."
 # define ERR_OPEN			"File cannot be opened."
+# define WIDTH 1200
+# define HEIGHT 800
 
 # include "../libftprintf/ft_printf.h"
 
