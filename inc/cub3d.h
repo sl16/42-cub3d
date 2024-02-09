@@ -6,6 +6,7 @@
 # define ERR_ARGC			"Provide a path to your desired map only."
 # define ERR_ARGV			"Provide a .cub file."
 # define ERR_OPEN			"File cannot be opened."
+# define ERR_MISSING_VALUE	"The map is missing a required value."
 
 # include "../libftprintf/ft_printf.h"
 # include "../minilibx_linux/mlx.h"
@@ -19,22 +20,36 @@
 # include <X11/X.h>
 # include <X11/Xlib.h>
 
-typedef struct s_map {
+typedef union u_clr
+{
+	unsigned int	rgba;
+	struct
+	{
+		unsigned char	r;
+		unsigned char	g;
+		unsigned char	b;
+		unsigned char	a;
+	};
+}				t_clr;
+
+typedef struct s_map
+{
 	int		fd;
 	char	**parsed_file;
 	char	**map;
 
-	char	*texture_NO;
-	char	*texture_SO;
-	char	*texture_WE;
-	char	*texture_EA;
-	int		texture_width;
-	int		texture_height;
-	int		color_floor;
-	int		color_ceiling;
+	char	*txt_NO;
+	char	*txt_SO;
+	char	*txt_WE;
+	char	*txt_EA;
+	int		txt_width;
+	int		txt_height;
+	t_clr	clr_floor;
+	t_clr	clr_ceiling;
 }				t_map;
 
-typedef struct s_game {
+typedef struct s_game
+{
 	void	*mlx_ptr;
 	void	*win_ptr;
 

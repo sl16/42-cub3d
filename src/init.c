@@ -10,13 +10,13 @@ int	init_empty_struct(t_game *game)
 	game->map->fd = 0;
 	game->map->parsed_file = NULL;
 	game->map->map = NULL;
-	game->map->texture_NO = NULL;
-	game->map->texture_SO = NULL;
-	game->map->texture_WE = NULL;
-	game->map->texture_EA = NULL;
-	game->map->texture_width = 0;
-	game->map->texture_height = 0;
-	game->map->color_floor = 0;
-	game->map->color_ceiling = 0;
+	game->map->txt_NO = NULL;
+	game->map->txt_SO = NULL;
+	game->map->txt_WE = NULL;
+	game->map->txt_EA = NULL;
+	game->map->txt_width = 0;
+	game->map->txt_height = 0;
+	game->map->clr_floor.rgba = 0;
+	game->map->clr_ceiling.rgba = 0;
 	return (0);
 }
