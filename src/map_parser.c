@@ -42,7 +42,6 @@ static char	*value_parser(char *value, char **parsed_file)
 	int		j;
 	int		str_start;
 	int		str_end;
-	char	*texture;
 
 	i = 0;
 	while (parsed_file[i] != NULL)
@@ -56,7 +55,6 @@ static char	*value_parser(char *value, char **parsed_file)
 			j += ft_strlen(value);
 			j = increment_if_space(parsed_file[i], j);
 			str_start = j;
-			texture	= ft_strdup(parsed_file[i] + j);
 			while (!(7 <= parsed_file[i][j] && parsed_file[i][j] <= 13)
 						&& parsed_file[i][j] != 32)
 				j++;
@@ -74,26 +72,26 @@ static void	clr_parser(char *value, char **parsed_file, t_game *game)
 	char	**split_rgb;
 
 	rgb = value_parser(value, parsed_file);
-	printf("%s \n\n", rgb);
 	split_rgb = ft_split(rgb, ',');
-	if (value == 'F')
+	if (value[0] == 'F')
 	{
-		game->map->clr_floor.r = split_rgb[0];
-		game->map->clr_floor.g = split_rgb[1];
-		game->map->clr_floor.b = split_rgb[2];
-		game->map->clr_floor.a = 1;
+		game->map->clr_floor.r = ft_atoi(split_rgb[0]);
+		game->map->clr_floor.g = ft_atoi(split_rgb[1]);
+		game->map->clr_floor.b = ft_atoi(split_rgb[2]);
+		game->map->clr_floor.a = 0xFF;
 	}
-	else if (value == 'C')
+	else if (value[0] == 'C')
 	{
-		game->map->clr_ceiling.r = split_rgb[0];
-		game->map->clr_ceiling.r = split_rgb[1];
-		game->map->clr_ceiling.r = split_rgb[2];
-		game->map->clr_ceiling.a = 1;
+		game->map->clr_ceiling.r = ft_atoi(split_rgb[0]);
+		game->map->clr_ceiling.g = ft_atoi(split_rgb[1]);
+		game->map->clr_ceiling.b = ft_atoi(split_rgb[2]);
+		game->map->clr_ceiling.a = 0xFF;
 	}
-		
 }
 
-
+// add 'open' checks to texture to check if files actually exist?
+// add checks for duplicate values?
+// add further parsing checks for values
 int	map_parser(t_game *game)
 {
 	t_map	*map;
@@ -104,10 +102,10 @@ int	map_parser(t_game *game)
 	map->txt_SO = value_parser("SO", map->parsed_file);
 	map->txt_WE = value_parser("WE", map->parsed_file);
 	map->txt_EA = value_parser("EA", map->parsed_file);
-	// char *lol = clr_parser("C", map->parsed_file);
-	// (void) lol;
-	map->clr_floor.rgba = clr_parser("F", map->parsed_file, game);
-	if (!map->txt_NO || !map->txt_SO || !map->txt_WE || !map->txt_EA)
+	clr_parser("F", map->parsed_file, game);
+	clr_parser("C", map->parsed_file, game);
+	if (!map->txt_NO || !map->txt_SO || !map->txt_WE || !map->txt_EA
+		|| map->clr_ceiling.rgba == 0 || map->clr_floor.rgba == 0)
 		error_print_exit(ERR_MISSING_VALUE, game);
 	return (0);
 }
