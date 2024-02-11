@@ -6,7 +6,9 @@
 # define ERR_ARGC			"Provide a path to your desired map only."
 # define ERR_ARGV			"Provide a .cub file."
 # define ERR_OPEN			"File cannot be opened."
-# define ERR_MISSING_VALUE	"The map is missing a required value."
+# define ERR_MISSING_VALUE	"The provided map is missing a required value."
+# define ERR_MAP_NOT_FOUND	"No valid map found in provided file."
+# define ERR_MAP_NOT_CLOSED	"The map's perimeter is not enclosed in walls."
 
 # include "../libftprintf/ft_printf.h"
 # include "../minilibx_linux/mlx.h"
@@ -37,6 +39,8 @@ typedef struct s_map
 	int		fd;
 	char	**parsed_file;
 	char	**map;
+	int		width;
+	int		height;
 
 	char	*txt_NO;
 	char	*txt_SO;
@@ -66,7 +70,7 @@ int		free_str_arr(char **arr);
 int		init_empty_struct(t_game *game);
 int		arg_checker(int argc, char **argv, t_game *game);
 
-int		map_parser(t_game *game);
+int		parser(t_game *game);
 int		print_map(char **map);
 int		print_values(t_game *game);
 

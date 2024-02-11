@@ -4,7 +4,7 @@ SRC = main.c\
 		src/arg_checker.c\
 		src/map_checker.c\
 		src/init.c\
-		src/map_parser.c\
+		src/parser.c\
 		src/free.c\
 		src/error.c\
 		src/debug.c

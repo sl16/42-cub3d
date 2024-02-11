@@ -10,6 +10,8 @@ int	init_empty_struct(t_game *game)
 	game->map->fd = 0;
 	game->map->parsed_file = NULL;
 	game->map->map = NULL;
+	game->map->width = 0;
+	game->map->height = 0;
 	game->map->txt_NO = NULL;
 	game->map->txt_SO = NULL;
 	game->map->txt_WE = NULL;
