@@ -8,6 +8,10 @@
 # define ERR_OPEN			"File cannot be opened."
 # define WIDTH 1200
 # define HEIGHT 800
+# define TILE_SIZE 30
+# define FOV 60
+# define PLAYER_SPEED 4
+# define ROTATION_SPEED 0.045
 
 # include "../libftprintf/ft_printf.h"
 
@@ -21,11 +25,11 @@
 # include <X11/Xlib.h>
 # include <../MLX42/include/MLX42/MLX42.h>
 
-typedef struct s_map {
+typedef struct s_map
+{
 	int		fd;
 	char	**parsed_file;
-	char	**map;
-
+	char	**grid;
 	char	*texture_NO;
 	char	*texture_SO;
 	char	*texture_WE;
@@ -34,13 +38,37 @@ typedef struct s_map {
 	int		texture_height;
 	int		color_floor;
 	int		color_ceiling;
+	int		map_width;
+	int		map_height;
+	int		p_x;
+	int		p_y;
 }				t_map;
 
-typedef struct s_game {
+typedef struct s_ray
+{
+	double	ray_ngl; // ray angle
+	double	distance; // disntance to the wall
+	int		flag; // flag for the wall
+}	t_ray;
+
+typedef struct	player
+{
+	int		p_x;
+	int		p_y;
+	double	p_angle;
+	float	fov;
+	int  rot; // rotation flag
+	int  l_r; // left right flag
+	int  u_d; // up down flag
+}	t_player;
+
+typedef struct s_game
+{
 	mlx_t       *mlx;
 	mlx_image_t	*image;
-
 	t_map	    *map;
+	t_ray		*ray;
+	t_player	*player;
 }				t_game;
 
 int		error_print(char *error_message);
