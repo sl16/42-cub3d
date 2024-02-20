@@ -6,12 +6,13 @@
 # define ERR_ARGC			"Provide a path to your desired map only."
 # define ERR_ARGV			"Provide a .cub file."
 # define ERR_OPEN			"File cannot be opened."
-# define WIDTH 1200
-# define HEIGHT 800
-# define TILE_SIZE 30
+# define WIDTH 1024
+# define HEIGHT 512
+# define TILE_SIZE 64
 # define FOV 60
 # define PLAYER_SPEED 4
 # define ROTATION_SPEED 0.045
+# define PLAYER_SIZE 8
 
 # include "../libftprintf/ft_printf.h"
 
@@ -40,8 +41,8 @@ typedef struct s_map
 	int		color_ceiling;
 	int		map_width;
 	int		map_height;
-	int		p_x;
-	int		p_y;
+	float		p_x;
+	float		p_y;
 }				t_map;
 
 typedef struct s_ray
@@ -53,9 +54,11 @@ typedef struct s_ray
 
 typedef struct	player
 {
-	int		p_x;
-	int		p_y;
-	double	p_angle;
+	float	p_x;
+	float	p_y;
+	float	p_dx; // delta x
+	float	p_dy; // delta y
+	float	p_a;
 	float	fov;
 	int  rot; // rotation flag
 	int  l_r; // left right flag
