@@ -1,10 +1,11 @@
 NAME = cub3d
 
 SRC = main.c\
-		src/arg_checker.c\
-		src/map_checker.c\
+		src/checker_map.c\
+		src/checker_arg.c\
 		src/init.c\
 		src/parser.c\
+		src/parser_utils.c\
 		src/free.c\
 		src/error.c\
 		src/debug.c

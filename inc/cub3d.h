@@ -9,6 +9,8 @@
 # define ERR_MISSING_VALUE	"The provided map is missing a required value."
 # define ERR_MAP_NOT_FOUND	"No valid map found in provided file."
 # define ERR_MAP_NOT_CLOSED	"The map's perimeter is not enclosed in walls."
+# define ERR_MAP_CH_INVALID	"The map contains invalid characters."
+# define ERR_MAP_DUPLICATE	"The map must contain only one starting point."
 
 # include "../libftprintf/ft_printf.h"
 # include "../minilibx_linux/mlx.h"
@@ -68,9 +70,15 @@ int		free_map(t_map *map);
 int		free_str_arr(char **arr);
 
 int		init_empty_struct(t_game *game);
-int		arg_checker(int argc, char **argv, t_game *game);
+int		checker_arg(int argc, char **argv, t_game *game);
 
 int		parser(t_game *game);
+int		is_space(char input);
+int		increment_if_space(char *input, int i);
+void	get_map_dimensions(t_map *map);
+
+void	checker_map(t_map *map, t_game *game);
+
 int		print_map(char **map);
 int		print_values(t_game *game);
 

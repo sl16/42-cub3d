@@ -1,6 +1,6 @@
 #include "../inc/cub3d.h"
 
-int	arg_checker(int argc, char **argv, t_game *game)
+int	checker_arg(int argc, char **argv, t_game *game)
 {
 	int	len;
 
