@@ -63,8 +63,7 @@ static char	*value_parser(char *value, char **parsed_file)
 			j += ft_strlen(value);
 			j = increment_if_space(parsed_file[i], j);
 			str_start = j;
-			while (!(7 <= parsed_file[i][j] && parsed_file[i][j] <= 13)
-						&& parsed_file[i][j] != 32)
+			while (parsed_file[i][j] != '\0' && !is_space(parsed_file[i][j]))
 				j++;
 			str_end = j;
 			break;
@@ -81,6 +80,7 @@ static void	clr_parser(char *value, char **parsed_file, t_game *game)
 
 	rgb = value_parser(value, parsed_file);
 	split_rgb = ft_split(rgb, ',');
+	free(rgb);
 	if (value[0] == 'F')
 	{
 		game->map->clr_floor.r = ft_atoi(split_rgb[0]);
@@ -95,6 +95,7 @@ static void	clr_parser(char *value, char **parsed_file, t_game *game)
 		game->map->clr_ceiling.b = ft_atoi(split_rgb[2]);
 		game->map->clr_ceiling.a = 0xFF;
 	}
+	free_str_arr(split_rgb);
 }
 
 static void	find_map_in_file(t_map *map, t_game *game)
@@ -146,41 +147,41 @@ static void	get_map_dimensions(t_map *map)
 	// printf("height: %d, width: %d\n\n\n", map->height, map->width);
 }
 
-// static void	check_perimeter(t_map *map, t_game *game)
-// {
-// 	int i;
-// 	int	j;
+static void	check_perimeter(t_map *map, t_game *game)
+{
+	int i;
+	int	j;
 
-// 	i = 0;
-// 	while (map->map[i] != NULL)
-// 	{
-// 		j = 0;
-// 		while (map->map[i][j] != '\0')
-// 		{
-// 			if (map->map[0] || map->map[map->height - 1])
-// 			{
-// 				if (map->map[i][j] != '1' && !is_space(map->map[i][j]))
-// 					error_print_exit(ERR_MAP_NOT_CLOSED, game);
-// 				j++;
-// 			}
-// 			else
-// 			{
-// 				if (map->map[i][0] != '1'
-// 					&& map->map[i][ft_strlen(map->map[i])] != '1')
-// 					error_print_exit(ERR_MAP_NOT_CLOSED, game);
-// 				j++;
-// 			}
-// 		}
-// 		i++;
-		
-// 	}
-// }
+	i = 0;
+	while (map->map[i] != NULL)
+	{
+		j = 0;
+		while (map->map[i][j] != '\0')
+		{
+			if (i == 0 || i == map->height - 1)
+			{
+				if (map->map[i][j] != '1' && !is_space(map->map[i][j]))
+					error_print_exit(ERR_MAP_NOT_CLOSED, game);
+			}
+			else
+			{
+				if ((map->map[i][0] != '1'
+					&& map->map[i][ft_strlen(map->map[i])] != '1')
+					&& !is_space(map->map[i][0])
+					&& !is_space(map->map[i][ft_strlen(map->map[i])]))
+					error_print_exit("Error2\n", game);
+			}
+			j++;
+		}
+		i++;
+	}
+}
 
 static void	map_parser(t_map *map, t_game *game)
 {
 	find_map_in_file(map, game);
 	get_map_dimensions(map);
-	// check_perimeter(map, game);
+	check_perimeter(map, game);
 }
 
 // add 'open' checks to texture to check if files actually exist?

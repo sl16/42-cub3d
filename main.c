@@ -17,6 +17,7 @@ int	main(int argc, char **argv)
 	print_values(game);
 	ft_printf("\n --- PARSED MAP ---\n\n");
 	print_map(game->map->map);
+	free_game(game);
 	// map_checker(argc, argv, game);
 
 	return (0);
