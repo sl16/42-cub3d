@@ -6,7 +6,7 @@
 /*   By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/20 13:48:33 by aulicna           #+#    #+#             */
-/*   Updated: 2024/02/20 19:16:10 by aulicna          ###   ########.fr       */
+/*   Updated: 2024/02/21 17:29:11 by aulicna          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,11 @@ int	init_game_struct(t_game *game)
 
 	// Init ray	
 	game->ray = calloc(1, sizeof(t_ray));
+	game->ray->r_x = 0;
+	game->ray->r_y = 0;
+	game->ray->r_a = 0;
+	game->ray->y_offset = 0;
+	game->ray->x_offset = 0;
 
 	return (0);
 }
@@ -102,7 +107,7 @@ void	handle_key_actions(void *param)
 	}
     if (mlx_is_key_down(game->mlx, MLX_KEY_LEFT))
     {
-        player->p_a -= 0.1;
+        player->p_a -= 0.01;
         if (player->p_a < 0)
             player->p_a += 2 * M_PI;
         player->p_dx = cos(player->p_a) * 5;
@@ -110,7 +115,7 @@ void	handle_key_actions(void *param)
     }
     if (mlx_is_key_down(game->mlx, MLX_KEY_RIGHT))
     {
-        player->p_a += 0.1;
+        player->p_a += 0.01;
         if (player->p_a > 2 * M_PI)
             player->p_a -= 2 * M_PI;
         player->p_dx = cos(player->p_a) * 5;
@@ -128,10 +133,12 @@ void	handle_key_actions(void *param)
 //    }
 }
 
-void	draw_square(mlx_image_t *image, float p_x, float p_y, int size, int color)
+void	draw_square(mlx_image_t *image, int p_x, int p_y, int size, uint32_t color)
 {
-	int		x;
-	int		y;
+	int	x;
+	int	y;
+	int pixel_x;
+	int pixel_y;
 
 	x = 0;
 	while (x < size)
@@ -139,15 +146,18 @@ void	draw_square(mlx_image_t *image, float p_x, float p_y, int size, int color)
 		y = 0;
 		while (y < size)
 		{
-   			mlx_put_pixel(image, (p_x - size / 2) + x,
-				(p_y - size / 2) + y, color); // yellow
+			pixel_x = (p_x - size / 2) + x;
+			pixel_y = (p_y - size / 2) + y;
+
+			if (pixel_x >= 0 && pixel_x < WIDTH && pixel_y >= 0 && pixel_y < HEIGHT)
+				mlx_put_pixel(image, pixel_x, pixel_y, color);
 			y++;
 		}
 		x++;
 	}
 }
 
-void	draw_line(int x1, int y1, int x2, int y2, int color, mlx_image_t *image)
+void	draw_line(int x1, int y1, int x2, int y2, uint32_t color, mlx_image_t *image)
 {
 	int dx = abs(x2 - x1);
 	int dy = abs(y2 - y1);
@@ -156,8 +166,9 @@ void	draw_line(int x1, int y1, int x2, int y2, int color, mlx_image_t *image)
 	int err = dx - dy;
 
 	while (1) {
-		mlx_put_pixel(image, x1, y1, color); // yellow
-		if (x1 == x2 && y1 == y2) {
+		if (x1 >= 0 && x1 < WIDTH && y1 >= 0 && y1 < HEIGHT)
+			mlx_put_pixel(image, x1, y1, color); // yellow
+		if ((x1 == x2 && y1 == y2) || x1 > WIDTH || y1 > HEIGHT) {
 			break;
 		}
 		int e2 = 2 * err;
@@ -169,6 +180,116 @@ void	draw_line(int x1, int y1, int x2, int y2, int color, mlx_image_t *image)
 			err += dx;
 			y1 += sy;
 		}
+	}
+}
+void draw_line_thickness(int x1, int y1, int x2, int y2, uint32_t color, int thickness, mlx_image_t *image) {
+	int dx = abs(x2 - x1);
+	int dy = abs(y2 - y1);
+	int sx = (x1 < x2) ? 1 : -1;
+	int sy = (y1 < y2) ? 1 : -1;
+	int err = dx - dy;
+
+	int offset = thickness / 2;
+	int i;
+
+	for (i = -offset; i < offset; i++) {
+		int nx1 = x1, ny1 = y1, nx2 = x2, ny2 = y2;
+
+		if (dx > dy) {
+			ny1 += i;
+			ny2 += i;
+		} else {
+			nx1 += i;
+			nx2 += i;
+		}
+
+		while (1) {
+			if (x1 >= 0 && x1 < WIDTH && y1 >= 0 && y1 < HEIGHT)
+				mlx_put_pixel(image, nx1, ny1, color);
+			if (nx1 == nx2 && ny1 == ny2) {
+				break;
+			}
+			int e2 = 2 * err;
+			if (e2 > -dy) {
+				err -= dy;
+				nx1 += sx;
+			}
+			if (e2 < dx) {
+				err += dx;
+				ny1 += sy;
+			}
+		}
+	}
+}
+
+void	draw_rays(t_game *game, t_map *map, t_player *player, t_ray *ray)
+{
+	int	r, dof, mx, my, mp;
+
+//	int map_h[]=           //the map array. Edit to change level but keep the outer walls
+//	{
+//	 1,1,1,1,1,1,1,1,
+//	 1,0,1,0,0,0,0,1,
+//	 1,0,1,0,0,0,0,1,
+//	 1,0,1,0,0,0,0,1,
+//	 1,0,0,0,0,0,0,1,
+//	 1,0,0,0,0,1,0,1,
+//	 1,0,0,0,0,0,0,1,
+//	 1,1,1,1,1,1,1,1,	
+//	};
+
+	ray->r_a = player->p_a;
+
+	for (r = 0; r < 1; r++)
+	{
+		// check horizontal lines - where the ray will first hit the closest horizontal line
+		dof = 0;
+		float aTan = -1 / tan(ray->r_a);
+		if (ray->r_a > M_PI) // ray looking up - determined from the ray angle
+		{
+			ray->r_y = (((int)player->p_y >> 6) << 6) - 0.0001;
+			ray->r_x = (player->p_y - ray->r_y) * aTan + player->p_x;
+			// once we have first ray hit position, we need next x and y offset
+			ray->y_offset = (-TILE_SIZE);
+			ray->x_offset = (-ray->y_offset) * aTan;
+		}
+		if (ray->r_a < M_PI) // ray looking down - determined from the ray angle
+		{
+			ray->r_y = (((int)player->p_y >> 6) << 6) + TILE_SIZE;
+			ray->r_x = (player->p_y - ray->r_y) * aTan + player->p_x;
+			// once we have first ray hit position, we need next x and y offset
+			ray->y_offset = TILE_SIZE;
+			ray->x_offset = (-ray->y_offset) * aTan;
+		}
+		if (ray->r_a == 0 || ray->r_a == M_PI) // if the ray is looking straight left or right, it will never hit a horizontal line
+		{
+			ray->r_x = player->p_x;
+			ray->r_y = player->p_y;
+			dof = 8;
+		}
+		while (dof < 8)
+		{
+			mx = (int)(ray->r_x) >> 6;
+			my = (int)(ray->r_y) >> 6;
+			mp = my * map->map_width + mx;
+			printf("mx: %d\n", mx);
+			printf("my: %d\n", my);
+			printf("mp: %d\n", mp);
+			if (mx >= 0 && mx < map->map_width && my >= 0 && my < map->map_height && map->grid[my][mx] == '1') // hit wall
+			{
+				printf("mx, my: %c\n", map->grid[my][mx]);
+				dof = 8;
+			}
+			else
+			{
+				ray->r_x += ray->x_offset;
+				ray->r_y += ray->y_offset;
+				dof += 1;
+			}
+		}
+		printf("r_y: %d %d\n", ray->r_y, ray->r_y >> 6);
+		printf("r_x: %d %d\n", ray->r_x, ray->r_x >> 6);
+		draw_line(player->p_x, player->p_y, ray->r_x, ray->r_y, 0x00FF00FF, game->image);
 	}
 }
 
@@ -218,8 +339,10 @@ void	draw(void *param)
 	// Draw player
 	draw_square(game->image, game->player->p_x, game->player->p_y, PLAYER_SIZE, 0xFFFF00FF); // yellow
     // Draw a line to where the player is looking
-	draw_line(player->p_x, player->p_y, player->p_x + player->p_dx * 5,
-		player->p_y + player->p_dy * 5, 0xFFFF00FF, game->image);
+	draw_line_thickness(player->p_x, player->p_y, player->p_x + player->p_dx * 5,
+		player->p_y + player->p_dy * 5, 0xFFFF00FF, 3, game->image);
+	// Draw rays
+	draw_rays(game, game->map, game->player, game->ray);
 }
 
 int main(void)

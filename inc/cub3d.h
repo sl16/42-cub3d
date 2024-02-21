@@ -8,7 +8,7 @@
 # define ERR_OPEN			"File cannot be opened."
 # define WIDTH 1024
 # define HEIGHT 512
-# define TILE_SIZE 64
+# define TILE_SIZE 64 // map cube size (mapS)
 # define FOV 60
 # define PLAYER_SPEED 4
 # define ROTATION_SPEED 0.045
@@ -39,8 +39,8 @@ typedef struct s_map
 	int		texture_height;
 	int		color_floor;
 	int		color_ceiling;
-	int		map_width;
-	int		map_height;
+	int		map_width; // mapX
+	int		map_height; //mapY
 	float		p_x;
 	float		p_y;
 }				t_map;
@@ -50,15 +50,21 @@ typedef struct s_ray
 	double	ray_ngl; // ray angle
 	double	distance; // disntance to the wall
 	int		flag; // flag for the wall
+	
+	int	r_x;
+	int	r_y;
+	float	r_a; // ray angle
+	float	y_offset;
+	float	x_offset;
 }	t_ray;
 
 typedef struct	player
 {
-	float	p_x;
-	float	p_y;
-	float	p_dx; // delta x
-	float	p_dy; // delta y
-	float	p_a;
+	int	p_x;
+	int	p_y;
+	int	p_dx; // delta x
+	int	p_dy; // delta y
+	float	p_a; // player angle
 	float	fov;
 	int  rot; // rotation flag
 	int  l_r; // left right flag
