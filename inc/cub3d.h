@@ -11,8 +11,9 @@
 # define TILE_SIZE 64 // map cube size (mapS)
 # define FOV 60
 # define PLAYER_SPEED 4
-# define ROTATION_SPEED 0.045
+# define ROTATION_SPEED 0.01
 # define PLAYER_SIZE 8
+# define PRECISION 0.000001
 
 # include "../libftprintf/ft_printf.h"
 
@@ -54,8 +55,8 @@ typedef struct s_ray
 	int	r_x;
 	int	r_y;
 	float	r_a; // ray angle
-	float	y_offset;
-	float	x_offset;
+	int	y_offset;
+	int	x_offset;
 }	t_ray;
 
 typedef struct	player

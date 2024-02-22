@@ -6,7 +6,7 @@
 /*   By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/20 13:48:33 by aulicna           #+#    #+#             */
-/*   Updated: 2024/02/21 17:29:11 by aulicna          ###   ########.fr       */
+/*   Updated: 2024/02/22 13:42:36 by aulicna          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,7 +107,7 @@ void	handle_key_actions(void *param)
 	}
     if (mlx_is_key_down(game->mlx, MLX_KEY_LEFT))
     {
-        player->p_a -= 0.01;
+        player->p_a -= ROTATION_SPEED;
         if (player->p_a < 0)
             player->p_a += 2 * M_PI;
         player->p_dx = cos(player->p_a) * 5;
@@ -115,7 +115,7 @@ void	handle_key_actions(void *param)
     }
     if (mlx_is_key_down(game->mlx, MLX_KEY_RIGHT))
     {
-        player->p_a += 0.01;
+        player->p_a += ROTATION_SPEED;
         if (player->p_a > 2 * M_PI)
             player->p_a -= 2 * M_PI;
         player->p_dx = cos(player->p_a) * 5;
@@ -222,6 +222,11 @@ void draw_line_thickness(int x1, int y1, int x2, int y2, uint32_t color, int thi
 	}
 }
 
+int almost_equal(double a, double b, double epsilon)
+{
+	return fabs(a - b) < epsilon;
+}
+
 void	draw_rays(t_game *game, t_map *map, t_player *player, t_ray *ray)
 {
 	int	r, dof, mx, my, mp;
@@ -242,9 +247,10 @@ void	draw_rays(t_game *game, t_map *map, t_player *player, t_ray *ray)
 
 	for (r = 0; r < 1; r++)
 	{
+		// HORIZONTAL
 		// check horizontal lines - where the ray will first hit the closest horizontal line
 		dof = 0;
-		float aTan = -1 / tan(ray->r_a);
+		double aTan = -1 / tan(ray->r_a);
 		if (ray->r_a > M_PI) // ray looking up - determined from the ray angle
 		{
 			ray->r_y = (((int)player->p_y >> 6) << 6) - 0.0001;
@@ -261,7 +267,62 @@ void	draw_rays(t_game *game, t_map *map, t_player *player, t_ray *ray)
 			ray->y_offset = TILE_SIZE;
 			ray->x_offset = (-ray->y_offset) * aTan;
 		}
-		if (ray->r_a == 0 || ray->r_a == M_PI) // if the ray is looking straight left or right, it will never hit a horizontal line
+		if (almost_equal(ray->r_a, 0, PRECISION) || almost_equal(ray->r_a, M_PI, PRECISION)) // if the ray is looking straight left or right, it will never hit a horizontal line
+		{
+			ray->r_x = player->p_x;
+			ray->r_y = player->p_y;
+			dof = 8;
+		}
+	//	if (ray->r_a == 0 || ray->r_a == M_PI) // if the ray is looking straight left or right, it will never hit a horizontal line
+	//	{
+	//		ray->r_x = player->p_x;
+	//		ray->r_y = player->p_y;
+	//		dof = 8;
+	//	}
+		while (dof < 8)
+		{
+			mx = (int)(ray->r_x) >> 6;
+			my = (int)(ray->r_y) >> 6;
+			mp = my * map->map_width + mx;
+			printf("mx: %d\n", mx);
+			printf("my: %d\n", my);
+			printf("mp: %d\n", mp);
+			if (mx >= 0 && mx < map->map_width && my >= 0 && my < map->map_height && map->grid[my][mx] == '1') // hit wall
+			{
+				dof = 8;
+			}
+			else
+			{
+				ray->r_x += ray->x_offset;
+				ray->r_y += ray->y_offset;
+				dof += 1;
+			}
+		}
+	//	printf("r_y: %d %d\n", ray->r_y, ray->r_y >> 6);
+	//	printf("r_x: %d %d\n", ray->r_x, ray->r_x >> 6);
+		draw_line(player->p_x, player->p_y, ray->r_x, ray->r_y, 0x00FF00FF, game->image);
+		
+		// VERTICAL
+		// check vertical lines - where the ray will first hit the closest vertical line
+		dof = 0;
+		double nTan = (-tan(ray->r_a));
+		if (ray->r_a > (M_PI / 2) && ray->r_a < (3 * M_PI / 2)) // ray looking left - determined from the ray angle
+		{
+			ray->r_x = (((int)player->p_x >> 6) << 6) - 0.0001;
+			ray->r_y = (player->p_x - ray->r_x) * nTan + player->p_y;
+			// once we have first ray hit position, we need next x and y offset
+			ray->x_offset = (-TILE_SIZE);
+			ray->y_offset = (-ray->x_offset) * nTan;
+		}
+		if (ray->r_a < (M_PI / 2) || ray->r_a > (3 * M_PI / 2)) // ray looking right - determined from the ray angle
+		{
+			ray->r_x = (((int)player->p_x >> 6) << 6) + TILE_SIZE;
+			ray->r_y = (player->p_x - ray->r_x) * nTan + player->p_y;
+			// once we have first ray hit position, we need next x and y offset
+			ray->x_offset = TILE_SIZE;
+			ray->y_offset = (-ray->x_offset) * nTan;
+		}
+		if (almost_equal(ray->r_a, 0, PRECISION) || almost_equal(ray->r_a, M_PI, PRECISION)) // if the ray is looking straight up or down, it will never hit a vertical line
 		{
 			ray->r_x = player->p_x;
 			ray->r_y = player->p_y;
@@ -277,7 +338,6 @@ void	draw_rays(t_game *game, t_map *map, t_player *player, t_ray *ray)
 			printf("mp: %d\n", mp);
 			if (mx >= 0 && mx < map->map_width && my >= 0 && my < map->map_height && map->grid[my][mx] == '1') // hit wall
 			{
-				printf("mx, my: %c\n", map->grid[my][mx]);
 				dof = 8;
 			}
 			else
@@ -287,9 +347,9 @@ void	draw_rays(t_game *game, t_map *map, t_player *player, t_ray *ray)
 				dof += 1;
 			}
 		}
-		printf("r_y: %d %d\n", ray->r_y, ray->r_y >> 6);
-		printf("r_x: %d %d\n", ray->r_x, ray->r_x >> 6);
-		draw_line(player->p_x, player->p_y, ray->r_x, ray->r_y, 0x00FF00FF, game->image);
+	//	printf("r_y: %d %d\n", ray->r_y, ray->r_y >> 6);
+	//	printf("r_x: %d %d\n", ray->r_x, ray->r_x >> 6);
+		draw_line(player->p_x, player->p_y, ray->r_x, ray->r_y, 0xFF0000FF, game->image);
 	}
 }
 
@@ -330,12 +390,29 @@ void	draw(void *param)
     			draw_square(game->image, x, y, TILE_SIZE, 0xFFFFFFFF); // white
     		else if (game->map->grid[i][j] == '0')
     			draw_square(game->image, x, y, TILE_SIZE, 0xB99470FF); // brown
-    		x += TILE_SIZE + 1;
+    		x += TILE_SIZE;
     		j++;
     	}
-    	y += TILE_SIZE + 1;
+    	y += TILE_SIZE;
         i++;
     }
+	// Draw lines in map grid
+	// vertical
+	y = 0;
+	x = TILE_SIZE;
+	for (int i = 1; i < game->map->map_height; i++)
+	{
+			draw_line(x, y, x, y + (TILE_SIZE * game->map->map_height), 0x000000FF, game->image); // black
+			x += TILE_SIZE;
+	}
+	// horizontal
+	y = TILE_SIZE;
+	x = 0;
+	for (int i = 1; i < game->map->map_width; i++)
+	{
+			draw_line(x, y, x + (TILE_SIZE * game->map->map_width), y, 0x000000FF, game->image); // black
+			y += TILE_SIZE;
+	}
 	// Draw player
 	draw_square(game->image, game->player->p_x, game->player->p_y, PLAYER_SIZE, 0xFFFF00FF); // yellow
     // Draw a line to where the player is looking
