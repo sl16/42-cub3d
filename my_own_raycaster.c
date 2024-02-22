@@ -6,7 +6,7 @@
 /*   By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/20 13:48:33 by aulicna           #+#    #+#             */
-/*   Updated: 2024/02/22 13:42:36 by aulicna          ###   ########.fr       */
+/*   Updated: 2024/02/22 17:28:44 by aulicna          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,11 +17,11 @@ int	init_game_struct(t_game *game)
 	game->map = calloc(1, sizeof(t_map));
 	game->map->grid = calloc(9, sizeof(char *)); // init the map
 	game->map->grid[0] = ft_strdup("11111111"); //fill the map
-	game->map->grid[1] = ft_strdup("10100001");
-	game->map->grid[2] = ft_strdup("10100001");
-	game->map->grid[3] = ft_strdup("10100001");
+	game->map->grid[1] = ft_strdup("10000001");
+	game->map->grid[2] = ft_strdup("10101111");
+	game->map->grid[3] = ft_strdup("11001001");
 	game->map->grid[4] = ft_strdup("10000001");
-	game->map->grid[5] = ft_strdup("10000101");
+	game->map->grid[5] = ft_strdup("10000001");
 	game->map->grid[6] = ft_strdup("10000001");
 	game->map->grid[7] = ft_strdup("11111111");
 	game->map->grid[8] = NULL;
@@ -89,21 +89,27 @@ void	handle_key_actions(void *param)
 		free_game_struct(game);
 		exit(0);
 	}
-	if (mlx_is_key_down(game->mlx, MLX_KEY_A)) // move left
-		player->p_x -= 5;
 	if (mlx_is_key_down(game->mlx, MLX_KEY_W)) // move up
 	{
 		//player->p_y -= 5;
         player->p_x += player->p_dx; 
         player->p_y += player->p_dy; 
 	}
-	if (mlx_is_key_down(game->mlx, MLX_KEY_D)) // move right
-		player->p_x += 5;
 	if (mlx_is_key_down(game->mlx, MLX_KEY_S)) // move down
 	{
 		//player->p_y += 5;
         player->p_x -= player->p_dx; 
         player->p_y -= player->p_dy; 
+	}
+	if (mlx_is_key_down(game->mlx, MLX_KEY_D)) // move right
+	{
+		player->p_x -= player->p_dy; 
+		player->p_y += player->p_dx; 
+	}
+	if (mlx_is_key_down(game->mlx, MLX_KEY_A)) // move left
+	{
+		player->p_x += player->p_dy; 
+		player->p_y -= player->p_dx; 
 	}
     if (mlx_is_key_down(game->mlx, MLX_KEY_LEFT))
     {
@@ -159,77 +165,133 @@ void	draw_square(mlx_image_t *image, int p_x, int p_y, int size, uint32_t color)
 
 void	draw_line(int x1, int y1, int x2, int y2, uint32_t color, mlx_image_t *image)
 {
-	int dx = abs(x2 - x1);
-	int dy = abs(y2 - y1);
-	int sx = (x1 < x2) ? 1 : -1;
-	int sy = (y1 < y2) ? 1 : -1;
-	int err = dx - dy;
+//	int dx = abs(x2 - x1);
+//	int dy = abs(y2 - y1);
+//	int sx = (x1 < x2) ? 1 : -1;
+//	int sy = (y1 < y2) ? 1 : -1;
+//	int err = dx - dy;
+//
+//	while (1) {
+//		if (x1 >= 0 && x1 < WIDTH && y1 >= 0 && y1 < HEIGHT)
+//			mlx_put_pixel(image, x1, y1, color); // yellow
+//		if ((x1 == x2 && y1 == y2) || x1 > WIDTH || y1 > HEIGHT) {
+//			break;
+//		}
+//		int e2 = 2 * err;
+//		if (e2 > -dy) {
+//			err -= dy;
+//			x1 += sx;
+//		}
+//		if (e2 < dx) {
+//			err += dx;
+//			y1 += sy;
+//		}
+//	}
+	double	delta_x;
+	double	delta_y;
+	int		pixels;
+	double	pixel_x;
+	double	pixel_y;
 
-	while (1) {
-		if (x1 >= 0 && x1 < WIDTH && y1 >= 0 && y1 < HEIGHT)
-			mlx_put_pixel(image, x1, y1, color); // yellow
-		if ((x1 == x2 && y1 == y2) || x1 > WIDTH || y1 > HEIGHT) {
-			break;
-		}
-		int e2 = 2 * err;
-		if (e2 > -dy) {
-			err -= dy;
-			x1 += sx;
-		}
-		if (e2 < dx) {
-			err += dx;
-			y1 += sy;
-		}
+	delta_x = x2 - x1;
+	delta_y = y2 - y1;
+	pixels = sqrt(pow(delta_x, 2) + pow(delta_y, 2));
+	delta_x /= pixels;
+	delta_y /= pixels;
+	pixel_x = x1;
+	pixel_y = y1;
+	while (pixels)
+	{
+		if (pixel_x >= 0 && pixel_x < WIDTH && pixel_y >= 0 && pixel_y < HEIGHT)
+			mlx_put_pixel(image, (int)pixel_x, (int)pixel_y, color);
+		pixel_x += delta_x;
+		pixel_y += delta_y;
+		pixels--;
 	}
 }
-void draw_line_thickness(int x1, int y1, int x2, int y2, uint32_t color, int thickness, mlx_image_t *image) {
-	int dx = abs(x2 - x1);
-	int dy = abs(y2 - y1);
-	int sx = (x1 < x2) ? 1 : -1;
-	int sy = (y1 < y2) ? 1 : -1;
-	int err = dx - dy;
 
-	int offset = thickness / 2;
-	int i;
+void draw_line_thickness(int x1, int y1, int x2, int y2, uint32_t color, int thickness, mlx_image_t *image)
+{
+	double	delta_x;
+	double	delta_y;
+	int		pixels;
+	double	pixel_x;
+	double	pixel_y;
 
-	for (i = -offset; i < offset; i++) {
-		int nx1 = x1, ny1 = y1, nx2 = x2, ny2 = y2;
+	delta_x = x2 - x1;
+	delta_y = y2 - y1;
+	pixels = sqrt(pow(delta_x, 2) + pow(delta_y, 2));
+	delta_x /= pixels;
+	delta_y /= pixels;
 
-		if (dx > dy) {
-			ny1 += i;
-			ny2 += i;
-		} else {
-			nx1 += i;
-			nx2 += i;
-		}
-
-		while (1) {
-			if (x1 >= 0 && x1 < WIDTH && y1 >= 0 && y1 < HEIGHT)
-				mlx_put_pixel(image, nx1, ny1, color);
-			if (nx1 == nx2 && ny1 == ny2) {
-				break;
-			}
-			int e2 = 2 * err;
-			if (e2 > -dy) {
-				err -= dy;
-				nx1 += sx;
-			}
-			if (e2 < dx) {
-				err += dx;
-				ny1 += sy;
-			}
+	for (int t = -thickness / 2; t < thickness / 2; ++t) {
+		pixel_x = x1 + t * -delta_y;
+		pixel_y = y1 + t * delta_x;
+		int p = pixels;
+		while (p)
+		{
+			if (pixel_x >= 0 && pixel_x < WIDTH && pixel_y >= 0 && pixel_y < HEIGHT)
+				mlx_put_pixel(image, (int)pixel_x, (int)pixel_y, color);
+			pixel_x += delta_x;
+			pixel_y += delta_y;
+			p--;
 		}
 	}
+//	int dx = abs(x2 - x1);
+//	int dy = abs(y2 - y1);
+//	int sx = (x1 < x2) ? 1 : -1;
+//	int sy = (y1 < y2) ? 1 : -1;
+//	int err = dx - dy;
+//
+//	int offset = thickness / 2;
+//	int i;
+//
+//	for (i = -offset; i < offset; i++) {
+//		int nx1 = x1, ny1 = y1, nx2 = x2, ny2 = y2;
+//
+//		if (dx > dy) {
+//			ny1 += i;
+//			ny2 += i;
+//		} else {
+//			nx1 += i;
+//			nx2 += i;
+//		}
+//
+//		while (1) {
+//			if (x1 >= 0 && x1 < WIDTH && y1 >= 0 && y1 < HEIGHT)
+//				mlx_put_pixel(image, nx1, ny1, color);
+//			if (nx1 == nx2 && ny1 == ny2) {
+//				break;
+//			}
+//			int e2 = 2 * err;
+//			if (e2 > -dy) {
+//				err -= dy;
+//				nx1 += sx;
+//			}
+//			if (e2 < dx) {
+//				err += dx;
+//				ny1 += sy;
+//			}
+//		}
+//	}
+}
+
+// Function that returs the distance between the player's position and the ray's end point
+double	distance_player_ray_end(int p_x, int p_y, int r_x, int r_y)
+{
+	return (sqrt((r_x - p_x) * (r_x - p_x) + (r_y - p_y) * (r_y - p_y)));
 }
 
 int almost_equal(double a, double b, double epsilon)
 {
-	return fabs(a - b) < epsilon;
+	return (fabs(a - b) < epsilon);
 }
 
 void	draw_rays(t_game *game, t_map *map, t_player *player, t_ray *ray)
 {
 	int	r, dof, mx, my, mp;
+	double distT;
+	int color;
 
 //	int map_h[]=           //the map array. Edit to change level but keep the outer walls
 //	{
@@ -242,14 +304,22 @@ void	draw_rays(t_game *game, t_map *map, t_player *player, t_ray *ray)
 //	 1,0,0,0,0,0,0,1,
 //	 1,1,1,1,1,1,1,1,	
 //	};
-
-	ray->r_a = player->p_a;
-
-	for (r = 0; r < 1; r++)
+	// initialize ray angle DEGREE degrees back from the player angle
+	ray->r_a = player->p_a - DEGREE * 30;
+	// then we need to add the limits to the next angle bcs unit circle
+	if (ray->r_a < 0)
+		ray->r_a += 2 * M_PI;
+	if (ray->r_a >= 2 * M_PI)
+		ray->r_a -= 2 * M_PI;
+	// how many rays will be drawn
+	for (r = 0; r < 60; r++)
 	{
 		// HORIZONTAL
 		// check horizontal lines - where the ray will first hit the closest horizontal line
 		dof = 0;
+		double distH = 1000000;
+		int	hx = player->p_x;
+		int	hy = player->p_y;
 		double aTan = -1 / tan(ray->r_a);
 		if (ray->r_a > M_PI) // ray looking up - determined from the ray angle
 		{
@@ -284,11 +354,14 @@ void	draw_rays(t_game *game, t_map *map, t_player *player, t_ray *ray)
 			mx = (int)(ray->r_x) >> 6;
 			my = (int)(ray->r_y) >> 6;
 			mp = my * map->map_width + mx;
-			printf("mx: %d\n", mx);
-			printf("my: %d\n", my);
-			printf("mp: %d\n", mp);
+		//	printf("mx: %d\n", mx);
+		//	printf("my: %d\n", my);
+		//	printf("mp: %d\n", mp);
 			if (mx >= 0 && mx < map->map_width && my >= 0 && my < map->map_height && map->grid[my][mx] == '1') // hit wall
 			{
+				hx = ray->r_x;
+				hy = ray->r_y;
+				distH = distance_player_ray_end(player->p_x, player->p_y, hx, hy);
 				dof = 8;
 			}
 			else
@@ -300,11 +373,14 @@ void	draw_rays(t_game *game, t_map *map, t_player *player, t_ray *ray)
 		}
 	//	printf("r_y: %d %d\n", ray->r_y, ray->r_y >> 6);
 	//	printf("r_x: %d %d\n", ray->r_x, ray->r_x >> 6);
-		draw_line(player->p_x, player->p_y, ray->r_x, ray->r_y, 0x00FF00FF, game->image);
+	//	draw_line(player->p_x, player->p_y, ray->r_x, ray->r_y, 0x00FF00FF, game->image);
 		
 		// VERTICAL
 		// check vertical lines - where the ray will first hit the closest vertical line
 		dof = 0;
+		double distV = 1000000;
+		int	vx = player->p_x;
+		int	vy = player->p_y;
 		double nTan = (-tan(ray->r_a));
 		if (ray->r_a > (M_PI / 2) && ray->r_a < (3 * M_PI / 2)) // ray looking left - determined from the ray angle
 		{
@@ -333,11 +409,14 @@ void	draw_rays(t_game *game, t_map *map, t_player *player, t_ray *ray)
 			mx = (int)(ray->r_x) >> 6;
 			my = (int)(ray->r_y) >> 6;
 			mp = my * map->map_width + mx;
-			printf("mx: %d\n", mx);
-			printf("my: %d\n", my);
-			printf("mp: %d\n", mp);
+		//	printf("mx: %d\n", mx);
+		//	printf("my: %d\n", my);
+		//	printf("mp: %d\n", mp);
 			if (mx >= 0 && mx < map->map_width && my >= 0 && my < map->map_height && map->grid[my][mx] == '1') // hit wall
 			{
+				vx = ray->r_x;
+				vy = ray->r_y;
+				distV = distance_player_ray_end(player->p_x, player->p_y, vx, vy);
 				dof = 8;
 			}
 			else
@@ -349,7 +428,44 @@ void	draw_rays(t_game *game, t_map *map, t_player *player, t_ray *ray)
 		}
 	//	printf("r_y: %d %d\n", ray->r_y, ray->r_y >> 6);
 	//	printf("r_x: %d %d\n", ray->r_x, ray->r_x >> 6);
+	// pick the shortest distance
+		if (distV < distH)
+		{
+			ray->r_x = vx;
+			ray->r_y = vy;
+			distT = distV;
+			color = 0xFF0000FF;
+		}
+		if (distH < distV)
+		{
+			ray->r_x = hx;
+			ray->r_y = hy;
+			distT = distH;
+			color = 0x913831FF;
+		}
 		draw_line(player->p_x, player->p_y, ray->r_x, ray->r_y, 0xFF0000FF, game->image);
+		// 3D WALLS
+		// distance between the player angle and the ray angle
+		double ca = player->p_a - ray->r_a;
+		if (ca < 0)
+			ca += 2 * M_PI;
+		if (ca >= 2 * M_PI)
+			ca -= 2 * M_PI;
+		// multiply the ray distance by the cosine of that ray angle
+		distT = distT * cos(ca); // fix fish eye
+		double lineH = (TILE_SIZE * 320) / distT; // line height
+		if (lineH > 320)
+			lineH = 320;
+		double lineO = 160 - lineH / 2; // line offset
+		draw_line_thickness(r * map->map_width + 530, lineO, r * map->map_height + 530, lineH + lineO, color, 5, game->image);
+		// NEXT RAY setup
+		// if drawing more lines, the angle need to more after each line
+		ray->r_a += DEGREE;
+		// and the limits need to be set again bcs unit circle
+		if (ray->r_a < 0)
+			ray->r_a += 2 * M_PI;
+		if (ray->r_a >= 2 * M_PI)
+			ray->r_a -= 2 * M_PI;
 	}
 }
 
@@ -413,13 +529,13 @@ void	draw(void *param)
 			draw_line(x, y, x + (TILE_SIZE * game->map->map_width), y, 0x000000FF, game->image); // black
 			y += TILE_SIZE;
 	}
+	// Draw rays
+	draw_rays(game, game->map, game->player, game->ray);
 	// Draw player
 	draw_square(game->image, game->player->p_x, game->player->p_y, PLAYER_SIZE, 0xFFFF00FF); // yellow
     // Draw a line to where the player is looking
 	draw_line_thickness(player->p_x, player->p_y, player->p_x + player->p_dx * 5,
 		player->p_y + player->p_dy * 5, 0xFFFF00FF, 3, game->image);
-	// Draw rays
-	draw_rays(game, game->map, game->player, game->ray);
 }
 
 int main(void)

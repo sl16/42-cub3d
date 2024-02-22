@@ -14,6 +14,7 @@
 # define ROTATION_SPEED 0.01
 # define PLAYER_SIZE 8
 # define PRECISION 0.000001
+# define DEGREE	1.0 * (M_PI / 180.0) // one degree in radians
 
 # include "../libftprintf/ft_printf.h"
 
@@ -42,8 +43,8 @@ typedef struct s_map
 	int		color_ceiling;
 	int		map_width; // mapX
 	int		map_height; //mapY
-	float		p_x;
-	float		p_y;
+	int		p_x;
+	int		p_y;
 }				t_map;
 
 typedef struct s_ray
@@ -54,7 +55,7 @@ typedef struct s_ray
 	
 	int	r_x;
 	int	r_y;
-	float	r_a; // ray angle
+	double	r_a; // ray angle
 	int	y_offset;
 	int	x_offset;
 }	t_ray;
@@ -65,7 +66,7 @@ typedef struct	player
 	int	p_y;
 	int	p_dx; // delta x
 	int	p_dy; // delta y
-	float	p_a; // player angle
+	double	p_a; // player angle
 	float	fov;
 	int  rot; // rotation flag
 	int  l_r; // left right flag
