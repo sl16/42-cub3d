@@ -15,6 +15,7 @@
 # define PLAYER_SIZE 8
 # define PRECISION 0.000001
 # define DEGREE	1.0 * (M_PI / 180.0) // one degree in radians
+# define DOF 100
 
 # include "../libftprintf/ft_printf.h"
 
@@ -53,19 +54,19 @@ typedef struct s_ray
 	double	distance; // disntance to the wall
 	int		flag; // flag for the wall
 	
-	int	r_x;
-	int	r_y;
+	double	r_x;
+	double	r_y;
 	double	r_a; // ray angle
-	int	y_offset;
-	int	x_offset;
+	double	y_offset;
+	double	x_offset;
 }	t_ray;
 
 typedef struct	player
 {
-	int	p_x;
-	int	p_y;
-	int	p_dx; // delta x
-	int	p_dy; // delta y
+	double	p_x;
+	double	p_y;
+	double	p_dx; // delta x
+	double	p_dy; // delta y
 	double	p_a; // player angle
 	float	fov;
 	int  rot; // rotation flag

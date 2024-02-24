@@ -6,7 +6,7 @@
 /*   By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/20 13:48:33 by aulicna           #+#    #+#             */
-/*   Updated: 2024/02/22 18:26:58 by aulicna          ###   ########.fr       */
+/*   Updated: 2024/02/24 15:53:46 by aulicna          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -217,6 +217,8 @@ void	draw_line(int x1, int y1, int x2, int y2, uint32_t color, mlx_image_t *imag
 	{
 		if (pixel_x >= 0 && pixel_x < WIDTH && pixel_y >= 0 && pixel_y < HEIGHT)
 			mlx_put_pixel(image, (int)pixel_x, (int)pixel_y, color);
+		else
+			break ;
 		pixel_x += delta_x;
 		pixel_y += delta_y;
 		pixels--;
@@ -290,7 +292,7 @@ void draw_line_thickness(int x1, int y1, int x2, int y2, uint32_t color, int thi
 }
 
 // Function that returs the distance between the player's position and the ray's end point
-double	distance_player_ray_end(int p_x, int p_y, int r_x, int r_y)
+double	distance_player_ray_end(double p_x, double p_y, double r_x, double r_y)
 {
 	return (sqrt((r_x - p_x) * (r_x - p_x) + (r_y - p_y) * (r_y - p_y)));
 }
@@ -300,6 +302,7 @@ void	draw_rays(t_game *game, t_map *map, t_player *player, t_ray *ray)
 	int	r, dof, mx, my, mp;
 	double distT;
 	int color;
+	int old_color = -1;
 
 //	int map_h[]=           //the map array. Edit to change level but keep the outer walls
 //	{
@@ -325,7 +328,7 @@ void	draw_rays(t_game *game, t_map *map, t_player *player, t_ray *ray)
 		// HORIZONTAL
 		// check horizontal lines - where the ray will first hit the closest horizontal line
 		dof = 0;
-		double distH = 1000000;
+		double distH = 1000000000;
 		int	hx = player->p_x;
 		int	hy = player->p_y;
 		double aTan = -1 / tan(ray->r_a);
@@ -349,7 +352,7 @@ void	draw_rays(t_game *game, t_map *map, t_player *player, t_ray *ray)
 		{
 			ray->r_x = player->p_x;
 			ray->r_y = player->p_y;
-			dof = 8;
+			dof = DOF;
 		}
 	//	if (ray->r_a == 0 || ray->r_a == M_PI) // if the ray is looking straight left or right, it will never hit a horizontal line
 	//	{
@@ -357,7 +360,7 @@ void	draw_rays(t_game *game, t_map *map, t_player *player, t_ray *ray)
 	//		ray->r_y = ppixelslayer->p_y;
 	//		dof = 8;
 	//	}
-		while (dof < 8)
+		while (dof < DOF)
 		{
 			mx = (int)(ray->r_x) >> 6;
 			my = (int)(ray->r_y) >> 6;
@@ -370,7 +373,7 @@ void	draw_rays(t_game *game, t_map *map, t_player *player, t_ray *ray)
 				hx = ray->r_x;
 				hy = ray->r_y;
 				distH = distance_player_ray_end(player->p_x, player->p_y, hx, hy);
-				dof = 8;
+				dof = DOF;
 			}
 			else
 			{
@@ -379,6 +382,7 @@ void	draw_rays(t_game *game, t_map *map, t_player *player, t_ray *ray)
 				dof += 1;
 			}
 		}
+		//draw_line(player->p_x, player->p_y, ray->r_x, ray->r_y, 0x0000FFFF, game->image);
 	//	printf("r_y: %d %d\n", ray->r_y, ray->r_y >> 6);
 	//	printf("r_x: %d %d\n", ray->r_x, ray->r_x >> 6);
 	//	draw_line(player->p_x, player->p_y, ray->r_x, ray->r_y, 0x00FF00FF, game->image);
@@ -386,7 +390,7 @@ void	draw_rays(t_game *game, t_map *map, t_player *player, t_ray *ray)
 		// VERTICAL
 		// check vertical lines - where the ray will first hit the closest vertical line
 		dof = 0;
-		double distV = 1000000;
+		double distV = 1000000000;
 		int	vx = player->p_x;
 		int	vy = player->p_y;
 		double nTan = (-tan(ray->r_a));
@@ -410,9 +414,9 @@ void	draw_rays(t_game *game, t_map *map, t_player *player, t_ray *ray)
 		{
 			ray->r_x = player->p_x;
 			ray->r_y = player->p_y;
-			dof = 8;
+			dof = DOF;
 		}
-		while (dof < 8)
+		while (dof < DOF)
 		{
 			mx = (int)(ray->r_x) >> 6;
 			my = (int)(ray->r_y) >> 6;
@@ -425,7 +429,7 @@ void	draw_rays(t_game *game, t_map *map, t_player *player, t_ray *ray)
 				vx = ray->r_x;
 				vy = ray->r_y;
 				distV = distance_player_ray_end(player->p_x, player->p_y, vx, vy);
-				dof = 8;
+				dof = DOF;
 			}
 			else
 			{
@@ -434,17 +438,29 @@ void	draw_rays(t_game *game, t_map *map, t_player *player, t_ray *ray)
 				dof += 1;
 			}
 		}
+	//	draw_line(player->p_x, player->p_y, ray->r_x, ray->r_y, 0x00FF00FF, game->image);
 	//	printf("r_y: %d %d\n", ray->r_y, ray->r_y >> 6);
 	//	printf("r_x: %d %d\n", ray->r_x, ray->r_x >> 6);
 	// pick the shortest distance
-		if (almost_less_than(distV, distH, PRECISION))
+	//	if (almost_equal(distH, distV, PRECISION))
+	//	{
+	//		ray->r_x = hx;
+	//		ray->r_y = hy;
+	//		distT = distH;
+	//		color = 0x0000FFFF;
+	//	}
+		if (fabs(distH - distV) < PRECISION)
+		{
+		    // If distH and distV are within the tolerance, default to one color
+		}
+		else if (almost_less_than(distV, distH, PRECISION))
 		{
 			ray->r_x = vx;
 			ray->r_y = vy;
 			distT = distV;
 			color = 0xFF0000FF;
 		}
-		if (almost_less_than(distH, distV, PRECISION))
+		else if (almost_less_than(distH, distV, PRECISION))
 		{
 			ray->r_x = hx;
 			ray->r_y = hy;
@@ -465,7 +481,15 @@ void	draw_rays(t_game *game, t_map *map, t_player *player, t_ray *ray)
 		if (almost_greater_than(lineH, 320, PRECISION))
 			lineH = 320;
 		double lineO = 160 - lineH / 2; // line offset
-		draw_line_thickness(r * map->map_width + 530, lineO, r * map->map_height + 530, lineH + lineO, color, 5, game->image);
+	//	if (old_color != -1)
+	//	{
+	//		if (old_color != color && almost_equal(distH, distT, PRECISION))
+	//		{
+	//			color = old_color;
+	//		}
+	//	}
+		draw_line_thickness(r * map->map_width + 530, (int)lineO, r * map->map_height + 530, (int)(lineH + lineO), color, 5, game->image);
+		old_color = color;
 		// NEXT RAY setup
 		// if drawing more lines, the angle need to more after each line
 		ray->r_a += DEGREE;
@@ -540,10 +564,10 @@ void	draw(void *param)
 	// Draw rays
 	draw_rays(game, game->map, game->player, game->ray);
 	// Draw player
-	draw_square(game->image, game->player->p_x, game->player->p_y, PLAYER_SIZE, 0xFFFF00FF); // yellow
+	draw_square(game->image, (int)game->player->p_x, (int)game->player->p_y, PLAYER_SIZE, 0xFFFF00FF); // yellow
     // Draw a line to where the player is looking
-	draw_line_thickness(player->p_x, player->p_y, player->p_x + player->p_dx * 5,
-		player->p_y + player->p_dy * 5, 0xFFFF00FF, 3, game->image);
+	draw_line_thickness((int)player->p_x, (int)player->p_y, (int)(player->p_x + player->p_dx * 5),
+		(int)(player->p_y + player->p_dy * 5), 0xFFFF00FF, 3, game->image);
 }
 
 int main(void)
