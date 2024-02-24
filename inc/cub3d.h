@@ -97,5 +97,12 @@ int		map_parser(t_game *game);
 int		print_map(char **map);
 int		print_values(t_game *game);
 
+// draw.c
+void	draw_line(int x1, int y1, int x2, int y2, uint32_t color, mlx_image_t *image);
+void	draw_line_thickness(int x1, int y1, int x2, int y2, uint32_t color, int thickness, mlx_image_t *image);
+void	draw_square(mlx_image_t *image, int p_x, int p_y, int size, uint32_t color);
+void    draw_map_grid(t_game *game);
+void    draw_lines_in_map_grid(t_game *game);
+
 
 #endif
