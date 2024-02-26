@@ -16,8 +16,10 @@ int	free_str_arr(char **arr)
 
 int	free_map(t_map *map)
 {
-	if (map->map)
+	if (map->parsed_file)
 		free_str_arr(map->parsed_file);
+	if (map->start_dir)
+		free(map->start_dir);
 	if (map->txt_NO)
 		free(map->txt_NO);
 	if (map->txt_SO)

@@ -19,6 +19,31 @@ int	increment_if_space(char *input, int i)
 	return (i);
 }
 
+int	find_last_char(char *input, int i)
+{
+	int	original_i;
+	int	len_until_end;
+	int	len_spaces;
+	int	j;
+
+	original_i = i;
+	while (input[i] != '\0')
+	{
+		len_until_end = ft_strlen(input + i);
+		len_spaces = 0;
+		j = i;
+		while (is_space(input[j]))
+		{
+			len_spaces++;
+			j++;
+		}
+		if (len_until_end == len_spaces)
+			return (i);
+		i++;
+	}
+	return (original_i);
+}
+
 void	get_map_dimensions(t_map *map)
 {
 	int	max_width;
