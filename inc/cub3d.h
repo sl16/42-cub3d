@@ -17,6 +17,7 @@
 # define DEGREE	1.0 * (M_PI / 180.0) // one degree in radians
 # define DOF 100
 
+
 # include "../libftprintf/ft_printf.h"
 
 # include <stdio.h>
@@ -42,18 +43,14 @@ typedef struct s_map
 	int		texture_height;
 	int		color_floor;
 	int		color_ceiling;
-	int		map_width; // mapX
-	int		map_height; //mapY
+	int		map_width;
+	int		map_height;
 	int		p_x;
 	int		p_y;
 }				t_map;
 
 typedef struct s_ray
 {
-	double	ray_ngl; // ray angle
-	double	distance; // disntance to the wall
-	int		flag; // flag for the wall
-	
 	double	r_x;
 	double	r_y;
 	double	r_a; // ray angle
@@ -68,10 +65,6 @@ typedef struct	player
 	double	p_dx; // delta x
 	double	p_dy; // delta y
 	double	p_a; // player angle
-	float	fov;
-	int  rot; // rotation flag
-	int  l_r; // left right flag
-	int  u_d; // up down flag
 }	t_player;
 
 typedef struct s_game
@@ -82,6 +75,23 @@ typedef struct s_game
 	t_ray		*ray;
 	t_player	*player;
 }				t_game;
+
+typedef struct s_draw_info
+{
+	int			y1;
+	int			x1;
+	int			y2;
+	int			x2;
+	uint32_t	color;
+	int			size;
+}	t_draw_info;
+
+typedef	struct	s_draw_delta
+{
+	int		length;
+	double	delta_x;
+	double	delta_y;
+}	t_draw_delta;
 
 int		error_print(char *error_message);
 void	error_print_exit(char *error_message, t_game *game);
@@ -97,12 +107,29 @@ int		map_parser(t_game *game);
 int		print_map(char **map);
 int		print_values(t_game *game);
 
+// init.c
+int	init_game_struct(t_game *game);
+
+// precision.c
+bool	almost_equal(double a, double b, double epsilon);
+bool	almost_less_than(double a, double b, double epsilon);
+bool	almost_greater_than(double a, double b, double epsilon);
+
+// rays.c
+void	draw_rays(t_game *game, t_map *map, t_player *player, t_ray *ray);
+
 // draw.c
-void	draw_line(int x1, int y1, int x2, int y2, uint32_t color, mlx_image_t *image);
-void	draw_line_thickness(int x1, int y1, int x2, int y2, uint32_t color, int thickness, mlx_image_t *image);
-void	draw_square(mlx_image_t *image, int p_x, int p_y, int size, uint32_t color);
+void	draw_line(mlx_image_t *image, t_draw_info draw_info);
+void	draw_line_thickness(mlx_image_t *image, t_draw_info draw_info);
+void	draw_square(mlx_image_t *image, t_draw_info draw_info);
 void    draw_map_grid(t_game *game);
 void    draw_lines_in_map_grid(t_game *game);
+void	print_grid(char **grid, int map_height);
 
+// keys.c
+void	handle_key_actions(void *param);
+
+// free.c
+void	free_game_struct(t_game *game);
 
 #endif

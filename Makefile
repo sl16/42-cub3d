@@ -1,7 +1,12 @@
 NAME = cub3d
 
 SRC = my_own_raycaster.c \
-		draw.c
+		init.c \
+		precision.c \
+		rays.c \
+		draw.c \
+		keys.c \
+		free.c
 
 OBJ = $(SRC)
 OBJ := $(OBJ:%.c=%.o)
