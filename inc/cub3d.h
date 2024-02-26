@@ -11,7 +11,7 @@
 # define TILE_SIZE 64 // map cube size (mapS)
 # define FOV 60
 # define PLAYER_SPEED 4
-# define ROTATION_SPEED 0.01
+# define ROTATION_SPEED 0.04
 # define PLAYER_SIZE 8
 # define PRECISION 0.000001
 # define DEGREE	1.0 * (M_PI / 180.0) // one degree in radians

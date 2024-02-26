@@ -6,7 +6,7 @@
 /*   By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/20 13:48:33 by aulicna           #+#    #+#             */
-/*   Updated: 2024/02/24 16:56:32 by aulicna          ###   ########.fr       */
+/*   Updated: 2024/02/26 13:47:07 aulicna          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,9 +92,17 @@ void	handle_key_actions(void *param)
 {
 	t_game	    *game;
     t_player    *player;
+	t_map		*map;
+	// Wall colisions
+	double		grid_x;
+	double		grid_y;
 
 	game = (t_game *) param;
     player = game->player;
+	map = game->map;
+
+	// Wall collisions
+	
 	if (mlx_is_key_down(game->mlx, MLX_KEY_ESCAPE))
 	{
 		free_game_struct(game);
@@ -102,23 +110,43 @@ void	handle_key_actions(void *param)
 	}
 	if (mlx_is_key_down(game->mlx, MLX_KEY_W)) // move up
 	{
-        player->p_x += player->p_dx; 
-        player->p_y += player->p_dy; 
+		grid_x = player->p_x + player->p_dx; 
+		grid_y = player->p_y + player->p_dy; 
+		if (map->grid[(int)grid_y >> 6][(int)grid_x >> 6] == '0')
+		{
+    		player->p_x += player->p_dx; 
+			player->p_y += player->p_dy; 
+		}
 	}
 	if (mlx_is_key_down(game->mlx, MLX_KEY_S)) // move down
 	{
-        player->p_x -= player->p_dx; 
-        player->p_y -= player->p_dy; 
+		grid_x = player->p_x - player->p_dx; 
+		grid_y = player->p_y - player->p_dy; 
+		if (map->grid[(int)grid_y >> 6][(int)grid_x >> 6] == '0')
+		{
+  	      player->p_x -= player->p_dx; 
+  	      player->p_y -= player->p_dy; 
+		}
 	}
 	if (mlx_is_key_down(game->mlx, MLX_KEY_D)) // move right
 	{
-		player->p_x -= player->p_dy; 
-		player->p_y += player->p_dx; 
+		grid_x = player->p_x - player->p_dy; 
+		grid_y = player->p_y + player->p_dx; 
+		if (map->grid[(int)grid_y >> 6][(int)grid_x >> 6] == '0')
+		{
+			player->p_x -= player->p_dy; 
+			player->p_y += player->p_dx; 
+		}
 	}
 	if (mlx_is_key_down(game->mlx, MLX_KEY_A)) // move left
 	{
-		player->p_x += player->p_dy; 
-		player->p_y -= player->p_dx; 
+		grid_x = player->p_x + player->p_dy; 
+		grid_y = player->p_y - player->p_dx; 
+		if (map->grid[(int)grid_y >> 6][(int)grid_x >> 6] == '0')
+		{
+			player->p_x += player->p_dy; 
+			player->p_y -= player->p_dx; 
+		}
 	}
     if (mlx_is_key_down(game->mlx, MLX_KEY_LEFT))
     {
@@ -146,10 +174,23 @@ double	distance_player_ray_end(double p_x, double p_y, double r_x, double r_y)
 
 void	draw_rays(t_game *game, t_map *map, t_player *player, t_ray *ray)
 {
-	int	ray_counter, dof, mx, my, mp;
-	double distT;
-	int color;
-	int old_color = -1;
+	int		ray_counter;
+	int		dof;
+	int		mx;
+	int		my;
+	double	distT;
+	int		color;
+	double	distH;
+	double	hx; 
+	double	hy;
+	double	aTan;
+	double	distV;
+	double	vx; 
+	double	vy;
+	double	nTan;
+	double	ca;
+	double	lineH;
+	double	lineO;
 
 	// initialize ray angle DEGREE degrees back from the player angle
 	ray->r_a = player->p_a - DEGREE * 30;
@@ -165,10 +206,10 @@ void	draw_rays(t_game *game, t_map *map, t_player *player, t_ray *ray)
 		// HORIZONTAL
 		// check horizontal lines - where the ray will first hit the closest horizontal line
 		dof = 0;
-		double distH = 1000000000;
-		double	hx = player->p_x;
-		double	hy = player->p_y;
-		double aTan = -1 / tan(ray->r_a);
+		distH = 1000000000;
+		hx = player->p_x;
+		hy = player->p_y;
+		aTan = -1 / tan(ray->r_a);
 		if (almost_greater_than(ray->r_a, M_PI, PRECISION)) // ray looking up - determined from the ray angle
 		{
 			ray->r_y = (((int)player->p_y >> 6) << 6) - 0.0001;
@@ -195,7 +236,6 @@ void	draw_rays(t_game *game, t_map *map, t_player *player, t_ray *ray)
 		{
 			mx = (int)(ray->r_x) >> 6;
 			my = (int)(ray->r_y) >> 6;
-			mp = my * map->map_width + mx;
 			if (mx >= 0 && mx < map->map_width && my >= 0 && my < map->map_height && map->grid[my][mx] == '1') // hit wall
 			{
 				hx = ray->r_x;
@@ -215,10 +255,10 @@ void	draw_rays(t_game *game, t_map *map, t_player *player, t_ray *ray)
 		// VERTICAL
 		// check vertical lines - where the ray will first hit the closest vertical line
 		dof = 0;
-		double distV = 1000000000;
-		double	vx = player->p_x;
-		double	vy = player->p_y;
-		double nTan = (-tan(ray->r_a));
+		distV = 1000000000;
+		vx = player->p_x;
+		vy = player->p_y;
+		nTan = (-tan(ray->r_a));
 		if (almost_greater_than(ray->r_a, (M_PI / 2), PRECISION) && almost_less_than(ray->r_a, (3 * M_PI / 2), PRECISION)) // ray looking left - determined from the ray angle
 		{
 			ray->r_x = (((int)player->p_x >> 6) << 6) - 0.0001;
@@ -245,7 +285,6 @@ void	draw_rays(t_game *game, t_map *map, t_player *player, t_ray *ray)
 		{
 			mx = (int)(ray->r_x) >> 6;
 			my = (int)(ray->r_y) >> 6;
-			mp = my * map->map_width + mx;
 			if (mx >= 0 && mx < map->map_width && my >= 0 && my < map->map_height && map->grid[my][mx] == '1') // hit wall
 			{
 				vx = ray->r_x;
@@ -279,19 +318,18 @@ void	draw_rays(t_game *game, t_map *map, t_player *player, t_ray *ray)
 		draw_line(player->p_x, player->p_y, ray->r_x, ray->r_y, 0xFF0000FF, game->image);
 		// 3D WALLS
 		// distance between the player angle and the ray angle
-		double ca = player->p_a - ray->r_a;
+		ca = player->p_a - ray->r_a;
 		if (almost_less_than(ca, 0, PRECISION))
 			ca += 2 * M_PI;
 		if (almost_greater_than(ca, (2 * M_PI), PRECISION))
 			ca -= 2 * M_PI;
 		// multiply the ray distance by the cosine of that ray angle
 		distT = distT * cos(ca); // fix fish eye
-		double lineH = (TILE_SIZE * 320) / distT; // line height
+		lineH = (TILE_SIZE * 320) / distT; // line height
 		if (almost_greater_than(lineH, 320, PRECISION))
 			lineH = 320;
-		double lineO = 160 - lineH / 2; // line offset
+		lineO = 160 - lineH / 2; // line offset
 		draw_line_thickness(ray_counter * map->map_width + 530, (int)lineO, ray_counter * map->map_height + 530, (int)(lineH + lineO), color, 5, game->image);
-		old_color = color;
 		// NEXT RAY setup
 		// if drawing more lines, the angle need to move after each line
 		ray->r_a += DEGREE;
