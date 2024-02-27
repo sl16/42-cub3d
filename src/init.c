@@ -20,5 +20,9 @@ int	init_empty_struct(t_game *game)
 	game->map->txt_height = 0;
 	game->map->clr_floor.rgba = 0;
 	game->map->clr_ceiling.rgba = 0;
+	game->map->start_dir = NULL;
+	game->map->start_count = 0;
+	game->map->start_x = -1;
+	game->map->start_y = -1;
 	return (0);
 }

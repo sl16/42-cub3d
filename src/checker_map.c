@@ -1,36 +1,20 @@
 #include "../inc/cub3d.h"
 
-static void	check_chars(t_map *map, t_game *game)
+static void	check_chars(int x, int y, t_map *map, t_game *game)
 {
-	int		start_found;
-	int		i;
-	int		j;
-	char	ch;
+	char			ch;
 
-	start_found = 0;
-	i = 0;
-	while (map->map[i] != NULL)
+	ch = map->map[y][x];
+	if (ch != '0' && ch != '1' && ch != 'N' && ch != 'W' && ch != 'S'
+		&& ch != 'E' && !is_space(ch))
+		error_print_exit(ERR_MAP_CH_INVALID, game);
+	if (ch == 'N' || ch == 'W' || ch == 'S' || ch == 'E')
 	{
-		j = 0;
-		while (map->map[i][j] != '\0')
-		{
-			ch = map->map[i][j];
-			if (ch != '0' && ch != '1' && ch != 'N' && ch != 'W' && ch != 'S'
-				&& ch != 'E' && !is_space(ch))
-				error_print_exit(ERR_MAP_CH_INVALID, game);
-			if (ch == 'N' || ch == 'W' || ch == 'S' || ch == 'E')
-			{
-				start_found++;
-				map->start_x = j;
-				map->start_y = i;
-				map->start_dir = ft_strdup(&ch);
-			}
-			j++;
-		}
-		i++;
+		map->start_count++;
+		map->start_x = x;
+		map->start_y = y;
+		map->start_dir = ft_strdup(&ch);
 	}
-	if (start_found != 1)
-		error_print_exit(ERR_MAP_DUPLICATE, game);
 }
 
 static void	check_top_and_bottom_walls(t_map *map, t_game *game)
@@ -56,26 +40,26 @@ static void	check_top_and_bottom_walls(t_map *map, t_game *game)
 	}
 }
 
-// static void	check_side_walls(t_map *map, t_game *game)
-// {
-// 	int i;
-// 	int	j;
+static void	check_side_walls(t_map *map, t_game *game)
+{
+	int i;
+	int	j;
 
-// 	i = 1;
-// 	while (i < map->height - 1)
-// 	{
-// 		j = 0;
-// 		j = increment_if_space(map->map[i], j);
-// 		if (map->map[i][j] != '1')
-// 			error_print_exit(ERR_MAP_NOT_CLOSED, game);
-// 		while (!is_space(map->map[i][j]) && map->map[i][j] != '\0')
-// 			j++;
-// 		printf("x: %d, y: %d \n", j, i);
-// 		if (map->map[i][j - 1] != '1')
-// 			error_print_exit(ERR_MAP_NOT_CLOSED, game);
-// 		i++;
-// 	}
-// }
+	i = 1;
+	while (i < map->height - 1)
+	{
+		j = 0;
+		j = increment_if_space(map->map[i], j);
+		if (map->map[i][j] != '1')
+			error_print_exit(ERR_MAP_NOT_CLOSED, game);
+		j = find_last_char(map->map[i]);
+		if (j == -1)
+			error_print_exit(ERR_MAP_NOT_CLOSED, game);
+		if (map->map[i][j] != '1')
+			error_print_exit(ERR_MAP_NOT_CLOSED, game);
+		i++;
+	}
+}
 
 // static void	check_corners(t_map *map, t_game *game)
 // {
@@ -137,20 +121,47 @@ static void	check_top_and_bottom_walls(t_map *map, t_game *game)
 // 	}
 // }
 
-static int	check_floodfill(int x, int y, t_map *map)
+// static int	check_floodfill(int x, int y, t_map *map)
+// {
+// 	if (map->map[y][x] == 0)
+// 	return (1);
+// }
+
+static void	check_spaces(int x, int y, t_map *map, t_game *game)
 {
-	if (map->map[y][x] == 0)
-	return (1);
+	if (x == 0)
+		x++;
+	if (x == ft_strlen(map->map[y]) - 1)
+		x--;
+	if (!is_space(map->map[y][x]))
+		return ;
+	
 }
 
 
 void	checker_map(t_map *map, t_game *game)
 {
-	check_chars(map, game);
+	int	i;
+	int	j;
+	
 	check_top_and_bottom_walls(map, game);
-	if (check_floodfill(map->start_x, map->start_y, map) == 1)
-		error_print_exit(ERR_MAP_ADJACENT, game);
-	// check_side_walls(map, game);
+	check_side_walls(map, game);
+	i = 0;
+	while (i < map->height)
+	{
+		j = 0;
+		j = increment_if_space(map->map[i], j);
+		while (map->map[i][j] != '\0')
+		{
+			check_chars(j, i, map, game);
+			if (i != 0 || i != map->height)
+				check_spaces(j, i, map, game);
+			j++;
+		}
+		i++;
+	}
+	if (map->start_count != 1)
+		error_print_exit(ERR_MAP_START, game);
 	// // check_corners(map, game);
 	// check_inner_walls(map, game);
 }
