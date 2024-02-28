@@ -1,7 +1,0 @@
-/nfs/homes/aulicna/42cursus/42cursus_work/github/42_cub3d/MLX42/build/CMakeFiles/mlx42.dir
-/nfs/homes/aulicna/42cursus/42cursus_work/github/42_cub3d/MLX42/build/CMakeFiles/edit_cache.dir
-/nfs/homes/aulicna/42cursus/42cursus_work/github/42_cub3d/MLX42/build/CMakeFiles/rebuild_cache.dir
-/nfs/homes/aulicna/42cursus/42cursus_work/github/42_cub3d/MLX42/build/CMakeFiles/list_install_components.dir
-/nfs/homes/aulicna/42cursus/42cursus_work/github/42_cub3d/MLX42/build/CMakeFiles/install.dir
-/nfs/homes/aulicna/42cursus/42cursus_work/github/42_cub3d/MLX42/build/CMakeFiles/install/local.dir
-/nfs/homes/aulicna/42cursus/42cursus_work/github/42_cub3d/MLX42/build/CMakeFiles/install/strip.dir

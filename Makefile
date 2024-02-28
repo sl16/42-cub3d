@@ -14,14 +14,14 @@ OBJ := $(OBJ:%.c=%.o)
 HEADER = -I ./inc/
 
 CFLAGS = -Wall -Werror -Wextra -g
-MLXFLAGS = -Iinclude -ldl -lglfw -pthread -lm
 
 CC = cc
 
 LIBFT_PATH	= libftprintf
 LIBFT_NAME	= libftprintf.a
-MLX_PATH	= MLX42/build
-MLX_NAME	= libmlx42.a
+MLX_DIR = ./MLX42
+MLX_LIB = $(MLX_DIR)/build/libmlx42.a -ldl -lglfw -pthread -lm -Ofast
+COMPILER_SPEC = -DCMAKE_C_COMPILER=/usr/bin/gcc -DCMAKE_CXX_COMPILER=/usr/bin/g++
 
 all: libs $(NAME)
 	@echo "✅ cub3d executable ready"
@@ -32,15 +32,18 @@ all: libs $(NAME)
 libs:
 	@make -s -C $(LIBFT_PATH)
 	@mv $(LIBFT_PATH)/$(LIBFT_NAME) .
+	cmake $(MLX_DIR) $(COMPILER_SPEC) -B $(MLX_DIR)/build
+	make -C $(MLX_DIR)/build -j4
 	@echo "✅ libprintf and MLX42 libraries ready"
 
 $(NAME): $(OBJ)
-	@$(CC) $(CFLAGS) $(OBJ) $(LIBFT_NAME) $(MLX_PATH)/$(MLX_NAME) -o $(NAME) $(MLXFLAGS) 
+	@$(CC) $(CFLAGS) $(OBJ) $(LIBFT_NAME) $(MLX_LIB) -o $(NAME)
 
 clean:
 	@rm -f $(OBJ)
 	@make clean -s -C $(LIBFT_PATH)
 	@echo "✅ object files deleted"
+	rm -rf $(MLX_DIR)/build
 
 fclean: clean
 	@rm -f $(NAME)
