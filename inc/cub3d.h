@@ -58,7 +58,7 @@ typedef struct s_ray
 	double	x_offset;
 }	t_ray;
 
-typedef struct	player
+typedef struct	s_player
 {
 	double	p_x;
 	double	p_y;
@@ -93,6 +93,24 @@ typedef	struct	s_draw_delta
 	double	delta_y;
 }	t_draw_delta;
 
+typedef struct s_ray_calculation
+{
+	int		mx;
+	int		my;
+	double	hx;
+	double	hy;
+	double	tan_pos;
+	double	vx;
+	double	vy;
+	double	tan_neg;
+	double	dist_horizontal;
+	double	dist_vertical;
+	double	dist_total;
+	double	angle_diff;
+	double	line_height;
+	double	line_offset;
+}	t_ray_calculation;
+
 int		error_print(char *error_message);
 void	error_print_exit(char *error_message, t_game *game);
 
@@ -109,6 +127,7 @@ int		print_values(t_game *game);
 
 // init.c
 int	init_game_struct(t_game *game);
+int	init_mlx42(t_game *game);
 
 // precision.c
 bool	almost_equal(double a, double b, double epsilon);

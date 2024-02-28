@@ -6,7 +6,7 @@
 /*   By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/26 16:19:30 by aulicna           #+#    #+#             */
-/*   Updated: 2024/02/26 16:29:34 by aulicna          ###   ########.fr       */
+/*   Updated: 2024/02/28 12:04:11 by aulicna          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,11 +25,6 @@ static void	init_player(t_game *game)
 static void	init_ray(t_game *game)
 {
 	game->ray = calloc(1, sizeof(t_ray));
-	game->ray->r_x = 0;
-	game->ray->r_y = 0;
-	game->ray->r_a = 0;
-	game->ray->y_offset = 0;
-	game->ray->x_offset = 0;
 }
 
 int	init_game_struct(t_game *game)
@@ -52,4 +47,29 @@ int	init_game_struct(t_game *game)
 	init_player(game);
 	init_ray(game);
 	return (0);
+}
+
+int	init_mlx42(t_game *game)
+{
+	game->mlx = mlx_init(WIDTH, HEIGHT, "cub3d", 1);
+	if (!game->mlx)
+	{
+		puts(mlx_strerror(mlx_errno));
+		return(EXIT_FAILURE);
+	}
+	if (!(game->image = mlx_new_image(game->mlx, WIDTH, HEIGHT)))
+	{
+		mlx_close_window(game->mlx);
+		puts(mlx_strerror(mlx_errno));
+		free_game_struct(game);
+		return (EXIT_FAILURE);
+	}
+	if (mlx_image_to_window(game->mlx, game->image, 0, 0) == -1)
+	{
+		mlx_close_window(game->mlx);
+		puts(mlx_strerror(mlx_errno));
+		free_game_struct(game);
+		return (EXIT_FAILURE);
+	}
+	return (EXIT_SUCCESS);
 }
