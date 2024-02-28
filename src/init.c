@@ -1,5 +1,11 @@
 #include "../inc/cub3d.h"
 
+/**
+ * Initializes an empty game structure.
+ * 
+ * @param game The game structure to initialize.
+ * @return 0 if successful, otherwise an error code.
+ */
 int	init_empty_struct(t_game *game)
 {
 	game->mlx_ptr = NULL;

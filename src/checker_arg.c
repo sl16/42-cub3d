@@ -1,5 +1,14 @@
 #include "../inc/cub3d.h"
 
+/**
+ * Checks the command line arguments and and checks if the specified map file
+ * exists and can be opened.
+ * 
+ * @param argc The number of command line arguments.
+ * @param argv An array of strings containing the command line arguments.
+ * @param game A pointer to the game structure.
+ * @return 0 if successful.
+ */
 int	checker_arg(int argc, char **argv, t_game *game)
 {
 	int	len;

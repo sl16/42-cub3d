@@ -1,5 +1,11 @@
 #include "../inc/cub3d.h"
 
+/**
+ * Prints the values of various game parameters for debugging purposes.
+ * 
+ * @param game The game structure containing the map and other parameters.
+ * @return 0 indicating successful execution.
+ */
 int	print_values(t_game *game)
 {
 	ft_printf("texture_NO: %s\n", game->map->txt_NO);
@@ -11,6 +17,12 @@ int	print_values(t_game *game)
 	return (0);
 }
 
+/**
+ * Prints the contents of a 2D array representing a map.
+ *
+ * @param map The 2D array representing the map.
+ * @return 0 if successful.
+ */
 int	print_map(char **map)
 {
 	int i;

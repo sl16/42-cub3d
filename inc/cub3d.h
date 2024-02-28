@@ -14,6 +14,7 @@
 # define ERR_MAP_CH_INVALID	"The map contains invalid characters."
 # define ERR_MAP_START		"The map must contain precisely one starting point."
 # define ERR_MAP_ADJACENT	"The map's inner spaces must be enclosed."
+# define ERR_MAP_CORNER		"The map's corners must be enclosed."
 
 # include "../libftprintf/ft_printf.h"
 # include "../minilibx_linux/mlx.h"
@@ -81,6 +82,7 @@ int		checker_arg(int argc, char **argv, t_game *game);
 
 int		parser(t_game *game);
 int		is_space(char input);
+int		is_wall(char input);
 int		increment_if_space(char *input, int i);
 int		find_last_char(char *input);
 void	get_map_dimensions(t_map *map);
