@@ -6,7 +6,7 @@
 /*   By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/28 11:37:55 by aulicna           #+#    #+#             */
-/*   Updated: 2024/02/28 11:45:11 by aulicna          ###   ########.fr       */
+/*   Updated: 2024/02/29 12:42:17 by aulicna          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ void	draw(void *param)
 	draw_info.y1 = 256;
 	draw_info.x1 = 256;
 	draw_info.size = HEIGHT;
-	draw_info.color = 0x000000FF; // black
+	draw_info.color = 0x000000FF;
 	draw_square(game->image, draw_info);
 	draw_info.x1 = 768;
 	draw_square(game->image, draw_info);

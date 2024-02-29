@@ -32,8 +32,8 @@ all: libs $(NAME)
 libs:
 	@make -s -C $(LIBFT_PATH)
 	@mv $(LIBFT_PATH)/$(LIBFT_NAME) .
-	cmake $(MLX_DIR) $(COMPILER_SPEC) -B $(MLX_DIR)/build
-	make -C $(MLX_DIR)/build -j4
+	@cmake $(MLX_DIR) $(COMPILER_SPEC) -B $(MLX_DIR)/build
+	@make -C $(MLX_DIR)/build -j4
 	@echo "✅ libprintf and MLX42 libraries ready"
 
 $(NAME): $(OBJ)
@@ -43,12 +43,12 @@ clean:
 	@rm -f $(OBJ)
 	@make clean -s -C $(LIBFT_PATH)
 	@echo "✅ object files deleted"
-	rm -rf $(MLX_DIR)/build
 
 fclean: clean
 	@rm -f $(NAME)
 	@rm -f libftprintf.a
 	@make fclean -s -C $(LIBFT_PATH)
+	@rm -rf $(MLX_DIR)/build
 	@echo "✅ executable files deleted"
 
 re: fclean all

@@ -14,11 +14,7 @@
 # define ROTATION_SPEED 0.04
 # define PLAYER_SIZE 8
 # define PRECISION 0.000001
-# define DEGREE	1.0 * (M_PI / 180.0) // one degree in radians
 # define DOF 100
-
-
-# include "../libftprintf/ft_printf.h"
 
 # include <stdio.h>
 # include <fcntl.h>
@@ -28,6 +24,7 @@
 # include <math.h>
 # include <X11/X.h>
 # include <X11/Xlib.h>
+# include "../libftprintf/ft_printf.h"
 # include <../MLX42/include/MLX42/MLX42.h>
 
 typedef struct s_map
@@ -56,9 +53,10 @@ typedef struct s_ray
 	double	r_a; // ray angle
 	double	y_offset;
 	double	x_offset;
+	int		color;
 }	t_ray;
 
-typedef struct	s_player
+typedef struct s_player
 {
 	double	p_x;
 	double	p_y;
@@ -69,11 +67,12 @@ typedef struct	s_player
 
 typedef struct s_game
 {
-	mlx_t       *mlx;
+	mlx_t		*mlx;
 	mlx_image_t	*image;
-	t_map	    *map;
+	t_map		*map;
 	t_ray		*ray;
 	t_player	*player;
+	double		degree;
 }				t_game;
 
 typedef struct s_draw_info
@@ -86,7 +85,7 @@ typedef struct s_draw_info
 	int			size;
 }	t_draw_info;
 
-typedef	struct	s_draw_delta
+typedef struct s_draw_delta
 {
 	int		length;
 	double	delta_x;
@@ -97,14 +96,15 @@ typedef struct s_ray_calculation
 {
 	int		mx;
 	int		my;
+	int		dof;
 	double	hx;
 	double	hy;
 	double	tan_pos;
 	double	vx;
 	double	vy;
 	double	tan_neg;
-	double	dist_horizontal;
-	double	dist_vertical;
+	double	dist_hor;
+	double	dist_ver;
 	double	dist_total;
 	double	angle_diff;
 	double	line_height;
@@ -126,8 +126,8 @@ int		print_map(char **map);
 int		print_values(t_game *game);
 
 // init.c
-int	init_game_struct(t_game *game);
-int	init_mlx42(t_game *game);
+int		init_game_struct(t_game *game);
+int		init_mlx42(t_game *game);
 
 // precision.c
 bool	almost_equal(double a, double b, double epsilon);
@@ -141,8 +141,8 @@ void	draw_rays(t_game *game, t_map *map, t_player *player, t_ray *ray);
 void	draw_line(mlx_image_t *image, t_draw_info draw_info);
 void	draw_line_thickness(mlx_image_t *image, t_draw_info draw_info);
 void	draw_square(mlx_image_t *image, t_draw_info draw_info);
-void    draw_map_grid(t_game *game);
-void    draw_lines_in_map_grid(t_game *game);
+void	draw_map_grid(t_game *game);
+void	draw_lines_in_map_grid(t_game *game);
 void	print_grid(char **grid, int map_height);
 
 // keys.c

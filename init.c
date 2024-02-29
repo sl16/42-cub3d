@@ -6,7 +6,7 @@
 /*   By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/26 16:19:30 by aulicna           #+#    #+#             */
-/*   Updated: 2024/02/28 12:04:11 by aulicna          ###   ########.fr       */
+/*   Updated: 2024/02/29 12:52:17 by aulicna          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,7 @@ static void	init_ray(t_game *game)
 
 int	init_game_struct(t_game *game)
 {
+	game->degree = 1.0 * (M_PI / 180.0);
 	game->map = calloc(1, sizeof(t_map));
 	game->map->grid = calloc(9, sizeof(char *));
 	game->map->grid[0] = ft_strdup("11111111");
@@ -51,13 +52,14 @@ int	init_game_struct(t_game *game)
 
 int	init_mlx42(t_game *game)
 {
-	game->mlx = mlx_init(WIDTH, HEIGHT, "cub3d", 1);
+	game->mlx = mlx_init(WIDTH, HEIGHT, "cub3d", 0);
 	if (!game->mlx)
 	{
 		puts(mlx_strerror(mlx_errno));
-		return(EXIT_FAILURE);
+		return (EXIT_FAILURE);
 	}
-	if (!(game->image = mlx_new_image(game->mlx, WIDTH, HEIGHT)))
+	game->image = mlx_new_image(game->mlx, WIDTH, HEIGHT);
+	if (!(game->image))
 	{
 		mlx_close_window(game->mlx);
 		puts(mlx_strerror(mlx_errno));
