@@ -6,7 +6,7 @@
 /*   By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/26 16:22:05 by aulicna           #+#    #+#             */
-/*   Updated: 2024/02/29 12:55:23 by aulicna          ###   ########.fr       */
+/*   Updated: 2024/02/29 16:40:13 by aulicna          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -250,20 +250,20 @@ void	pick_shortest_ray(t_ray_calculation *ray_cal, t_player *player,
 	ray_cal->angle_diff = player->p_a - ray->r_a;
 	ray_cal->angle_diff = limits_unit_circle(ray_cal->angle_diff);
 	ray_cal->dist_total = ray_cal->dist_total * cos(ray_cal->angle_diff);
-	ray_cal->line_height = (TILE_SIZE * 320) / ray_cal->dist_total;
-	if (almost_greater_than(ray_cal->line_height, 320, PRECISION))
-		ray_cal->line_height = 320;
-	ray_cal->line_offset = 160 - ray_cal->line_height / 2;
+	ray_cal->line_height = (TILE_SIZE * HEIGHT) / ray_cal->dist_total;
+	if (almost_greater_than(ray_cal->line_height, HEIGHT, PRECISION))
+		ray_cal->line_height = HEIGHT;
+	ray_cal->line_offset = HEIGHT / 2 - ray_cal->line_height / 2;
 }
 
 void	draw_ray_2d(mlx_image_t *image, t_player *player, t_ray *ray)
 {
 	t_draw_info			draw_info;
 
-	draw_info.y1 = player->p_y;
-	draw_info.x1 = player->p_x;
-	draw_info.y2 = ray->r_y;
-	draw_info.x2 = ray->r_x;
+	draw_info.y1 = player->p_y / MINI_MAP;
+	draw_info.x1 = player->p_x  / MINI_MAP;
+	draw_info.y2 = ray->r_y / MINI_MAP;
+	draw_info.x2 = ray->r_x / MINI_MAP;
 	draw_info.color = ray->color;
 	draw_line(image, draw_info);
 }
@@ -274,9 +274,9 @@ void	draw_ray_3d(t_game *game, t_ray_calculation *ray_cal, t_ray *ray,
 	t_draw_info			draw_info;
 
 	draw_info.y1 = ray_cal->line_offset;
-	draw_info.x1 = ray_counter * game->map->map_width + 530;
+	draw_info.x1 = ray_counter * game->map->map_width + 330;
 	draw_info.y2 = ray_cal->line_height + ray_cal->line_offset;
-	draw_info.x2 = ray_counter * game->map->map_height + 530;
+	draw_info.x2 = ray_counter * game->map->map_height + 330;
 	draw_info.size = 8;
 	draw_info.color = ray->color;
 	draw_line_thickness(game->image, draw_info);
@@ -298,7 +298,7 @@ void	draw_rays(t_game *game, t_map *map, t_player *player, t_ray *ray)
 	int					ray_counter;
 	t_ray_calculation	ray_cal;
 
-	ray->r_a = player->p_a - game->degree * 30;
+	ray->r_a = player->p_a - (M_PI / 180.0) * (FOV / 2.0);
 	ray->r_a = limits_unit_circle(ray->r_a);
 	ray_counter = 0;
 	while (ray_counter < FOV)

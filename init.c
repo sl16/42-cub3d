@@ -6,7 +6,7 @@
 /*   By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/26 16:19:30 by aulicna           #+#    #+#             */
-/*   Updated: 2024/02/29 12:52:17 by aulicna          ###   ########.fr       */
+/*   Updated: 2024/02/29 16:23:34 by aulicna          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ static void	init_ray(t_game *game)
 
 int	init_game_struct(t_game *game)
 {
-	game->degree = 1.0 * (M_PI / 180.0);
+	game->degree = 360.0 * M_PI / (360.0 - FOV) / (WIDTH / 4.0);
 	game->map = calloc(1, sizeof(t_map));
 	game->map->grid = calloc(9, sizeof(char *));
 	game->map->grid[0] = ft_strdup("11111111");

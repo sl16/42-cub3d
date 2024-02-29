@@ -6,7 +6,7 @@
 /*   By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/24 16:39:23 by aulicna           #+#    #+#             */
-/*   Updated: 2024/02/26 18:01:43 by aulicna          ###   ########.fr       */
+/*   Updated: 2024/02/29 16:24:58 by aulicna          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ void	draw_square(mlx_image_t *image, t_draw_info draw_info)
 		{
 			pxl_x = (draw_info.x1 - draw_info.size / 2) + x;
 			pxl_y = (draw_info.y1 - draw_info.size / 2) + y;
-			if (pxl_x >= 0 && pxl_x < WIDTH && pxl_y >= 0 && pxl_y < HEIGHT)
+			if (pxl_x >= 0 && pxl_x <= WIDTH && pxl_y >= 0 && pxl_y <= HEIGHT)
 				mlx_put_pixel(image, pxl_x, pxl_y, draw_info.color);
 			y++;
 		}
@@ -58,7 +58,7 @@ void	draw_line(mlx_image_t *image, t_draw_info draw_info)
 	pxl_y = draw_info.y1;
 	while (delta.length)
 	{
-		if (pxl_x >= 0 && pxl_x < WIDTH && pxl_y >= 0 && pxl_y < HEIGHT)
+		if (pxl_x >= 0 && pxl_x <= WIDTH && pxl_y >= 0 && pxl_y <= HEIGHT)
 			mlx_put_pixel(image, pxl_x, pxl_y, draw_info.color);
 		else
 			break ;
@@ -85,7 +85,7 @@ void	draw_line_thickness(mlx_image_t *image, t_draw_info draw_info)
 		pxls_draw = delta.length;
 		while (pxls_draw)
 		{
-			if (pxl_x >= 0 && pxl_x < WIDTH && pxl_y >= 0 && pxl_y < HEIGHT)
+			if (pxl_x >= 0 && pxl_x <= WIDTH && pxl_y >= 0 && pxl_y <= HEIGHT)
 				mlx_put_pixel(image, pxl_x, pxl_y, draw_info.color);
 			pxl_x += delta.delta_x;
 			pxl_y += delta.delta_y;
@@ -104,25 +104,25 @@ void	draw_map_grid(t_game *game)
 	t_draw_info	draw_info;
 
 	i = 0;
-	y = TILE_SIZE / 2;
+	y = TILE_SIZE_2D / 2;
 	while (game->map->grid[i])
 	{
-		x = TILE_SIZE / 2;
+		x = TILE_SIZE_2D / 2;
 		j = 0;
 		while (game->map->grid[i][j])
 		{
 			draw_info.y1 = y;
 			draw_info.x1 = x;
-			draw_info.size = TILE_SIZE;
+			draw_info.size = TILE_SIZE_2D;
 			if (game->map->grid[i][j] == '1')
 				draw_info.color = 0xFFFFFFFF;
 			else if (game->map->grid[i][j] == '0')
 				draw_info.color = 0xB99470FF;
 			draw_square(game->image, draw_info);
-			x += TILE_SIZE;
+			x += TILE_SIZE_2D;
 			j++;
 		}
-		y += TILE_SIZE;
+		y += TILE_SIZE_2D;
 		i++;
 	}
 }
@@ -134,26 +134,26 @@ void	draw_lines_in_map_grid(t_game *game)
 
 	i = 0;
 	draw_info.y1 = 0;
-	draw_info.x1 = TILE_SIZE;
+	draw_info.x1 = TILE_SIZE_2D;
 	while (i < game->map->map_height)
 	{
-		draw_info.y2 = TILE_SIZE * game->map->map_height + draw_info.y1;
+		draw_info.y2 = TILE_SIZE_2D * game->map->map_height + draw_info.y1;
 		draw_info.x2 = draw_info.x1;
 		draw_info.color = 0x000000FF;
 		draw_line(game->image, draw_info);
-		draw_info.x1 += TILE_SIZE;
+		draw_info.x1 += TILE_SIZE_2D;
 		i++;
 	}
-	draw_info.y1 = TILE_SIZE;
+	draw_info.y1 = TILE_SIZE_2D;
 	draw_info.x1 = 0;
 	i = 0;
 	while (i < game->map->map_width)
 	{
 		draw_info.y2 = draw_info.y1;
-		draw_info.x2 = TILE_SIZE * game->map->map_width + draw_info.x1;
+		draw_info.x2 = TILE_SIZE_2D * game->map->map_width + draw_info.x1;
 		draw_info.color = 0x000000FF;
 		draw_line(game->image, draw_info);
-		draw_info.y1 += TILE_SIZE;
+		draw_info.y1 += TILE_SIZE_2D;
 		i++;
 	}
 }

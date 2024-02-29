@@ -6,7 +6,7 @@
 /*   By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/28 11:37:55 by aulicna           #+#    #+#             */
-/*   Updated: 2024/02/29 12:42:17 by aulicna          ###   ########.fr       */
+/*   Updated: 2024/02/29 14:46:03 by aulicna          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,17 +32,17 @@ void	draw(void *param)
 	draw_lines_in_map_grid(game);
 	draw_rays(game, game->map, game->player, game->ray);
 	// Draw player
-	draw_info.y1 = player->p_y;
-	draw_info.x1 = player->p_x;
-	draw_info.size = PLAYER_SIZE;
+	draw_info.y1 = player->p_y / MINI_MAP;
+	draw_info.x1 = player->p_x / MINI_MAP;
+	draw_info.size = PLAYER_SIZE / MINI_MAP;
 	draw_info.color = 0xFFFF00FF;
 	draw_square(game->image, draw_info);
 	// Draw a line to where the player is looking
-	draw_info.y1 = player->p_y;
-	draw_info.x1 = player->p_x;
-	draw_info.y2 = player->p_dy * 5 + player->p_y;
-	draw_info.x2 = player->p_dx * 5 + player->p_x;
-	draw_info.size = 3;
+	draw_info.y1 = player->p_y / MINI_MAP;
+	draw_info.x1 = player->p_x / MINI_MAP;
+	draw_info.y2 = (player->p_dy * 5 + player->p_y) / MINI_MAP;
+	draw_info.x2 = (player->p_dx * 5 + player->p_x) / MINI_MAP;
+	draw_info.size = 2;
 	draw_info.color = 0xFFFF00FF;
 	draw_line_thickness(game->image, draw_info);
 }

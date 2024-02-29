@@ -8,7 +8,9 @@
 # define ERR_OPEN			"File cannot be opened."
 # define WIDTH 1024
 # define HEIGHT 512
-# define TILE_SIZE 64 // map cube size (mapS)
+# define TILE_SIZE 64
+# define TILE_SIZE_2D 32
+# define MINI_MAP 2
 # define FOV 60
 # define PLAYER_SPEED 4
 # define ROTATION_SPEED 0.04
