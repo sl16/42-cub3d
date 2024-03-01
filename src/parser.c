@@ -18,7 +18,7 @@ static int	file_parser(t_game *game)
 	char	*concat;
 	char	*temp;
 	int		i;
-	
+
 	line = get_next_line(game->map->fd);
 	temp = ft_strdup("");
 	i = 0;
@@ -67,7 +67,7 @@ static char	*value_parser(char *value, char **parsed_file)
 			while (parsed_file[i][j] != '\0' && !is_space(parsed_file[i][j]))
 				j++;
 			str_end = j;
-			break;
+			break ;
 		}
 		i++;
 	}
@@ -130,7 +130,7 @@ static void	find_map_in_file(t_map *map, t_game *game)
 		{
 			if (map->parsed_file[i][j] != '1'
 				&& !is_space(map->parsed_file[i][j]))
-				break;
+				break ;
 			j++;
 			if (map->parsed_file[i][j] == '\0')
 				map_start = i;
@@ -157,24 +157,20 @@ static void	find_map_in_file(t_map *map, t_game *game)
 int	parser(t_game *game)
 {
 	t_map	*map;
-	
+
 	file_parser(game);
 	map = game->map;
-	map->txt_NO = value_parser("NO", map->parsed_file);
-	map->txt_SO = value_parser("SO", map->parsed_file);
-	map->txt_WE = value_parser("WE", map->parsed_file);
-	map->txt_EA = value_parser("EA", map->parsed_file);
+	map->txt_no = value_parser("NO", map->parsed_file);
+	map->txt_so = value_parser("SO", map->parsed_file);
+	map->txt_we = value_parser("WE", map->parsed_file);
+	map->txt_ea = value_parser("EA", map->parsed_file);
 	clr_parser("F", map->parsed_file, game);
 	clr_parser("C", map->parsed_file, game);
-	if (!map->txt_NO || !map->txt_SO || !map->txt_WE || !map->txt_EA
+	if (!map->txt_no || !map->txt_so || !map->txt_we || !map->txt_ea
 		|| map->clr_ceiling.rgba == 0 || map->clr_floor.rgba == 0)
 		error_print_exit(ERR_MISSING_VALUE, game);
 	find_map_in_file(map, game);
 	get_map_dimensions(map);
+	copy_map(map, game);
 	return (0);
 }
-
-// add 'open' checks to texture to check if files actually exist?
-// ERR_MISSING_VALUE checker for colours needs better condition (what if specified colors == 0?)
-// current find_map_in_file doesn't work if first row of map not valid
-// add further parsing checks for values

@@ -29,18 +29,20 @@ int	free_str_arr(char **arr)
  */
 int	free_map(t_map *map)
 {
+	if (map->map)
+		free_str_arr(map->map);
 	if (map->parsed_file)
 		free_str_arr(map->parsed_file);
 	if (map->start_dir)
 		free(map->start_dir);
-	if (map->txt_NO)
-		free(map->txt_NO);
-	if (map->txt_SO)
-		free(map->txt_SO);
-	if (map->txt_WE)
-		free(map->txt_WE);
-	if (map->txt_EA)
-		free(map->txt_EA);
+	if (map->txt_no)
+		free(map->txt_no);
+	if (map->txt_so)
+		free(map->txt_so);
+	if (map->txt_we)
+		free(map->txt_we);
+	if (map->txt_ea)
+		free(map->txt_ea);
 	free(map);
 	return (0);
 }

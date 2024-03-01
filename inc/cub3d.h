@@ -52,10 +52,10 @@ typedef struct s_map
 	int		start_y;
 	char	*start_dir;
 
-	char	*txt_NO;
-	char	*txt_SO;
-	char	*txt_WE;
-	char	*txt_EA;
+	char	*txt_no;
+	char	*txt_so;
+	char	*txt_we;
+	char	*txt_ea;
 	int		txt_width;
 	int		txt_height;
 	t_clr	clr_floor;
@@ -86,11 +86,11 @@ int		is_wall(char input);
 int		increment_if_space(char *input, int i);
 int		find_last_char(char *input);
 void	get_map_dimensions(t_map *map);
+void	copy_map(t_map *map, t_game *game);
 
 void	checker_map(t_map *map, t_game *game);
 
 int		print_map(char **map);
 int		print_values(t_game *game);
-
 
 #endif

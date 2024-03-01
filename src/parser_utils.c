@@ -41,12 +41,12 @@ int	is_wall(char input)
  * @param i The current index in the input string.
  * @return The updated index after skipping all consecutive space characters.
  */
-int	increment_if_space(char *input, int i)	
+int	increment_if_space(char *input, int i)
 {
 	while (input[i] != '\0')
 	{
 		if (!is_space(input[i]))
-			break;
+			break ;
 		i++;
 	}
 	return (i);
@@ -85,7 +85,7 @@ int	find_last_char(char *input)
 void	get_map_dimensions(t_map *map)
 {
 	int	max_width;
-	int i;
+	int	i;
 	int	j;
 
 	max_width = 0;

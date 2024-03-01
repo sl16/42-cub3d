@@ -18,10 +18,10 @@ int	init_empty_struct(t_game *game)
 	game->map->map = NULL;
 	game->map->width = 0;
 	game->map->height = 0;
-	game->map->txt_NO = NULL;
-	game->map->txt_SO = NULL;
-	game->map->txt_WE = NULL;
-	game->map->txt_EA = NULL;
+	game->map->txt_no = NULL;
+	game->map->txt_so = NULL;
+	game->map->txt_we = NULL;
+	game->map->txt_ea = NULL;
 	game->map->txt_width = 0;
 	game->map->txt_height = 0;
 	game->map->clr_floor.rgba = 0;

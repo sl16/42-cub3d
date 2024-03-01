@@ -8,12 +8,16 @@
  */
 int	print_values(t_game *game)
 {
-	ft_printf("texture_NO: %s\n", game->map->txt_NO);
-	ft_printf("texture_SO: %s\n", game->map->txt_SO);
-	ft_printf("texture_WE: %s\n", game->map->txt_WE);
-	ft_printf("texture_EA: %s\n", game->map->txt_EA);
-	ft_printf("floor color: %u, %u, %u, %u\n", game->map->clr_floor.r, game->map->clr_floor.g, game->map->clr_floor.b, game->map->clr_floor.a);
-	ft_printf("ceiling color: %u, %u, %u, %u\n", game->map->clr_ceiling.r, game->map->clr_ceiling.g, game->map->clr_ceiling.b, game->map->clr_ceiling.a);
+	ft_printf("texture_NO: %s\n", game->map->txt_no);
+	ft_printf("texture_SO: %s\n", game->map->txt_so);
+	ft_printf("texture_WE: %s\n", game->map->txt_we);
+	ft_printf("texture_EA: %s\n", game->map->txt_ea);
+	ft_printf("floor color: %u, %u, %u, %u\n", game->map->clr_floor.r,
+		game->map->clr_floor.g, game->map->clr_floor.b,
+		game->map->clr_floor.a);
+	ft_printf("ceiling color: %u, %u, %u, %u\n", game->map->clr_ceiling.r,
+		game->map->clr_ceiling.g, game->map->clr_ceiling.b,
+		game->map->clr_ceiling.a);
 	return (0);
 }
 
@@ -25,7 +29,7 @@ int	print_values(t_game *game)
  */
 int	print_map(char **map)
 {
-	int i;
+	int	i;
 
 	i = 0;
 	while (map[i] != NULL)

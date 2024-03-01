@@ -42,7 +42,7 @@ static void	check_top_and_bottom_walls(t_map *map, t_game *game)
 	while (map->map[0][i] != '\0')
 	{
 		if (map->map[0][i] != '1' && !is_space(map->map[0][i]))
-					error_print_exit(ERR_MAP_NOT_CLOSED, game);
+			error_print_exit(ERR_MAP_NOT_CLOSED, game);
 		i++;
 	}
 	i = 0;
@@ -51,7 +51,7 @@ static void	check_top_and_bottom_walls(t_map *map, t_game *game)
 	{
 		if (map->map[map->height - 1][i] != '1'
 			&& !is_space(map->map[map->height - 1][i]))
-					error_print_exit(ERR_MAP_NOT_CLOSED, game);
+			error_print_exit(ERR_MAP_NOT_CLOSED, game);
 		i++;
 	}
 }
@@ -65,7 +65,7 @@ static void	check_top_and_bottom_walls(t_map *map, t_game *game)
  */
 static void	check_side_walls(t_map *map, t_game *game)
 {
-	int i;
+	int	i;
 	int	j;
 
 	i = 1;
@@ -85,10 +85,10 @@ static void	check_side_walls(t_map *map, t_game *game)
 }
 
 /**
- * @brief Checks if the characters adjacent to a space are either a space or a wall.
- * The first and last lines and the first and last characters in a line are
- * ignored (as they are checked by other functions or the adjacency and
- * accessing their neighbours would cause a segfault).
+ * @brief Checks if the characters adjacent to a space are either a space or
+ * a wall. The first and last lines and the first and last characters in
+ * a line are ignored (as they are checked by other functions or the adjacency
+ * and accessing their neighbours would cause a segfault).
  * 
  * @param x The x-coordinate of the position to check.
  * @param y The y-coordinate of the position to check.
@@ -107,34 +107,13 @@ static void	check_spaces(int x, int y, t_map *map, t_game *game)
 		error_print_exit(ERR_MAP_ADJACENT, game);
 	if (map->map[y][x + 1] != '1' && !is_space(map->map[y][x + 1]))
 		error_print_exit(ERR_MAP_ADJACENT, game);
-	if (x < (int) ft_strlen(map->map[y - 1]) &&
-		(map->map[y - 1][x] != '1' && !is_space(map->map[y - 1][x])))
+	if (x < (int) ft_strlen(map->map[y - 1])
+		&& (map->map[y - 1][x] != '1' && !is_space(map->map[y - 1][x])))
 		error_print_exit(ERR_MAP_ADJACENT, game);
-	if (x < (int) ft_strlen(map->map[y + 1]) &&
-		(map->map[y + 1][x] != '1' && !is_space(map->map[y + 1][x])))
+	if (x < (int) ft_strlen(map->map[y + 1])
+		&& (map->map[y + 1][x] != '1' && !is_space(map->map[y + 1][x])))
 		error_print_exit(ERR_MAP_ADJACENT, game);
 }
-
-// static void	check_corners(int x, int y, t_map *map, t_game *game)
-// {
-// 	if (y == 0 || y == map->height - 1)
-// 		return ;
-// 	printf("X: %d, Y: %d,\n",x, y);
-// 	if (ft_strlen(map->map[y]) > ft_strlen(map->map[y - 1])
-// 		&& x >= (int) ft_strlen(map->map[y - 1])
-// 		&& !is_wall(map->map[y][x]))
-// 		error_print_exit(ERR_MAP_CORNER, game);
-// 	if (ft_strlen(map->map[y]) > ft_strlen(map->map[y + 1])
-// 		&& x >= (int) ft_strlen(map->map[y + 1])
-// 		&& !is_wall(map->map[y][x]))
-// 		error_print_exit(ERR_MAP_CORNER, game);
-// 	if (x < (int) ft_strlen(map->map[y - 1]) && map->map[y - 1][x] == ' '
-// 		&& !is_wall(map->map[y][x]))
-// 		error_print_exit(ERR_MAP_CORNER, game);
-// 	if (x < (int) ft_strlen(map->map[y + 1]) && map->map[y + 1][x] == ' '
-// 		&& !is_wall(map->map[y][x]))
-// 		error_print_exit(ERR_MAP_CORNER, game);
-// }
 
 /**
  * @brief Checks the validity of the map.
@@ -150,7 +129,7 @@ void	checker_map(t_map *map, t_game *game)
 {
 	int	i;
 	int	j;
-	
+
 	check_top_and_bottom_walls(map, game);
 	check_side_walls(map, game);
 	i = 0;
