@@ -6,7 +6,7 @@
 /*   By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/28 11:37:55 by aulicna           #+#    #+#             */
-/*   Updated: 2024/02/29 14:46:03 by aulicna          ###   ########.fr       */
+/*   Updated: 2024/03/01 22:27:10 by aulicna          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,8 +28,6 @@ void	draw(void *param)
 	draw_square(game->image, draw_info);
 	draw_info.x1 = 768;
 	draw_square(game->image, draw_info);
-	draw_map_grid(game);
-	draw_lines_in_map_grid(game);
 	draw_rays(game, game->map, game->player, game->ray);
 	// Draw player
 	draw_info.y1 = player->p_y / MINI_MAP;

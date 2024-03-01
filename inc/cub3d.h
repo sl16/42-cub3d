@@ -6,8 +6,8 @@
 # define ERR_ARGC			"Provide a path to your desired map only."
 # define ERR_ARGV			"Provide a .cub file."
 # define ERR_OPEN			"File cannot be opened."
-# define WIDTH 1024
-# define HEIGHT 512
+# define WIDTH 1900
+# define HEIGHT 1000
 # define TILE_SIZE 64
 # define TILE_SIZE_2D 32
 # define MINI_MAP 2
@@ -27,7 +27,7 @@
 # include <X11/X.h>
 # include <X11/Xlib.h>
 # include "../libftprintf/ft_printf.h"
-# include <../MLX42/include/MLX42/MLX42.h>
+# include "../MLX42/include/MLX42/MLX42.h"
 
 typedef struct s_map
 {
@@ -65,6 +65,7 @@ typedef struct s_player
 	double	p_dx; // delta x
 	double	p_dy; // delta y
 	double	p_a; // player angle
+	double	fov_rd;
 }	t_player;
 
 typedef struct s_game
