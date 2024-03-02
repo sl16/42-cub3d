@@ -22,7 +22,7 @@ static void	check_chars(int x, int y, t_map *map, t_game *game)
 		map->start_count++;
 		map->start_x = x;
 		map->start_y = y;
-		map->start_dir = ft_strdup(&ch);
+		map->start_dir = &ch;
 	}
 }
 
@@ -147,4 +147,5 @@ void	checker_map(t_map *map, t_game *game)
 	}
 	if (map->start_count != 1)
 		error_print_exit(ERR_MAP_START, game);
+	convert_spaces_to_walls(map);
 }

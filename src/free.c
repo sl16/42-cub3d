@@ -33,8 +33,6 @@ int	free_map(t_map *map)
 		free_str_arr(map->map);
 	if (map->parsed_file)
 		free_str_arr(map->parsed_file);
-	if (map->start_dir)
-		free(map->start_dir);
 	if (map->txt_no)
 		free(map->txt_no);
 	if (map->txt_so)

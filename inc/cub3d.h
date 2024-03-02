@@ -87,6 +87,7 @@ int		increment_if_space(char *input, int i);
 int		find_last_char(char *input);
 void	get_map_dimensions(t_map *map);
 void	copy_map(t_map *map, t_game *game);
+void	convert_spaces_to_walls(t_map *map);
 
 void	checker_map(t_map *map, t_game *game);
 

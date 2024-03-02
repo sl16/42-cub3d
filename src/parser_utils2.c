@@ -37,3 +37,32 @@ void	copy_map(t_map *map, t_game *game)
 	}
 	map->map[i] = NULL;
 }
+
+/**
+ * Converts spaces in the map to walls.
+ * 
+ * This function takes a pointer to a map structure and converts all whitespaces
+ * (' ') in the map to walls ('1'). It iterates through each row and column of
+ * the map and checks if the character is a space. If it is, it replaces it with
+ * a wall character.
+ * 
+ * @param map A pointer to the map structure.
+ */
+void	convert_spaces_to_walls(t_map *map)
+{
+	int	i;
+	int	j;
+
+	i = 0;
+	while (map->map[i] != NULL)
+	{
+		j = 0;
+		while (map->map[i][j] != '\0')
+		{
+			if (is_space(map->map[i][j]))
+				map->map[i][j] = '1';
+			j++;
+		}
+		i++;
+	}
+}
