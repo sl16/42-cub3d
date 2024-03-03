@@ -6,9 +6,9 @@
 # define ERR_ARGC			"Provide a path to your desired map only."
 # define ERR_ARGV			"Provide a .cub file."
 # define ERR_OPEN			"File cannot be opened."
-# define WIDTH 1900
-# define HEIGHT 1000
-# define TILE_SIZE 64
+# define WIDTH 1280
+# define HEIGHT 780
+# define TILE_SIZE 32
 # define TILE_SIZE_2D 32
 # define MINI_MAP 2
 # define FOV 60
@@ -112,6 +112,7 @@ typedef struct s_ray_calculation
 	double	angle_diff;
 	double	line_height;
 	double	line_offset;
+	double	angle_nor;
 }	t_ray_calculation;
 
 int		error_print(char *error_message);
