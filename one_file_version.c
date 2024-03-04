@@ -29,6 +29,8 @@ typedef struct s_player
 typedef struct s_ray
 {
  double	r_a; // ray angle
+ double	r_x;
+ double	r_y;
  double	angle_nor; // normalized ray angle
  double	vy;
  double	vx;
@@ -70,10 +72,10 @@ typedef struct s_game
 
 typedef struct s_draw_info
 {
-	int			y1;
-	int			x1;
-	int			y2;
-	int			x2;
+	double			y1;
+	double			x1;
+	double			y2;
+	double			x2;
 	uint32_t	color;
 	int			size;
 }	t_draw_info;
@@ -147,8 +149,8 @@ static t_draw_delta	calculate_deltas(t_draw_info draw_info)
 void	draw_line(mlx_image_t *image, t_draw_info draw_info)
 {
 	t_draw_delta	delta;
-	int			pxl_x;
-	int			pxl_y;
+	double			pxl_x;
+	double			pxl_y;
 
 	delta = calculate_deltas(draw_info);
 	pxl_x = draw_info.x1;
@@ -182,14 +184,14 @@ bool	almost_greater_than(double a, double b, double epsilon)
 
 double	normalize_angle(double angle)
 {
-	if (almost_less_than(angle, 0, PRECISION))
+	if (angle < 0)
 		angle += 2 * M_PI;
-	if (almost_greater_than(angle, 2 * M_PI, PRECISION))
+	if (angle > 2 * M_PI)
 		angle -= 2 * M_PI;
 	return (angle);
 }
 
-void	draw_around_wall(mlx_image_t *image, int x, int start, int stop, int color)
+void	draw_around_wall(mlx_image_t *image, int x, double start, double stop, int color)
 {
 	int	i;
 
@@ -201,7 +203,7 @@ void	draw_around_wall(mlx_image_t *image, int x, int start, int stop, int color)
 	}
 }
 
-void draw_wall(t_game *game, int ray_counter, int wall_start, int wall_end)
+void draw_wall(t_game *game, int ray_counter, double wall_start, double wall_end)
 {
 	while (wall_start < wall_end)
 	{
@@ -231,17 +233,17 @@ void draw_3d_game(t_game *game, int ray_counter)
 
 int wall_hit(t_map *map, double x, double y)
 {
- int  x_m;
- int  y_m;
+ int  m_x;
+ int  m_y;
 
- if (almost_less_than(x, 0, PRECISION) || almost_less_than(y, 0, PRECISION))
+ if (x < 0 || y < 0)
   return (0);
- x_m = floor (x / TILE_SIZE); // get the x position in the map
- y_m = floor (y / TILE_SIZE); // get the y position in the map
- if (y_m >= map->map_height || y_m <= 0 || x_m >= map->map_width || x_m <= 0)
+ m_x = floor (x / TILE_SIZE); // get the x position in the map
+ m_y = floor (y / TILE_SIZE); // get the y position in the map
+ if (m_y >= map->map_height || m_y <= 0 || m_x >= map->map_width || m_x <= 0)
   return (0);
- if (map->grid[y_m] && x_m <= (int)strlen(map->grid[y_m]))
-  if (map->grid[y_m][x_m] == '1')
+ if (map->grid[m_y] && m_x <= (int)strlen(map->grid[m_y]))
+  if (map->grid[m_y][m_x] == '1')
    return (0);
  return (1);
 }
@@ -260,7 +262,7 @@ void calculate_vertical_hit(t_map *map, t_player *player, t_ray *ray, double ang
 	y_step = TILE_SIZE;
 	x_step = TILE_SIZE / tan(angle);
 	ray->hy = floor(player->p_y / TILE_SIZE) * TILE_SIZE;
-	if ( angle > 0 && angle < M_PI)
+	if (angle > 0 && angle < M_PI)
 	{
 		ray->hy += TILE_SIZE;
 		pixel = -1;
@@ -349,6 +351,8 @@ void	draw_2d_rays(mlx_image_t *image, t_player *player, t_ray *ray)
 	draw_info.x1 = player->p_x / MINI_MAP;
 	draw_info.y2 = (player->p_y + ray->dist_total * sin(ray->r_a)) / MINI_MAP;
 	draw_info.x2 = (player->p_x + ray->dist_total * cos(ray->r_a)) / MINI_MAP;
+//	draw_info.y2 = (ray->r_y) / MINI_MAP;
+//	draw_info.x2 = (ray->r_x) / MINI_MAP;
 	draw_info.color = ray->color;
 	draw_line(image, draw_info);
 }
@@ -378,20 +382,22 @@ void	draw_2d_player_pov(mlx_image_t *image, t_player *player)
 
 void	pick_shortest_ray(t_ray *ray)
 {
-	if (almost_less_than(ray->dist_hor, ray->dist_ver, PRECISION))
+	if (ray->dist_hor < ray->dist_ver)
 	{
-		ray->dist_total = ray->dist_hor; // get the distance
-		//ray->color = 0xFF0000FF;
- 		if (almost_greater_than(ray->angle_nor, M_PI / 2, PRECISION) && almost_less_than(ray->angle_nor, 3 * (M_PI / 2), PRECISION))
+		ray->dist_total = ray->dist_hor;
+		ray->r_x = ray->hx;
+		ray->r_y = ray->hy;
+ 		if (ray->angle_nor > M_PI / 2 && ray->angle_nor < 3 * (M_PI / 2))
  			ray->color = 0x0000FFFF; // south wall
  		else
  			ray->color = 0x913831FF; // north wall
 	}
 	else
 	{
-		ray->dist_total = ray->dist_ver; // get the distance
-		//ray->color = 0x913831FF;
-		if (almost_greater_than(ray->angle_nor, 0, PRECISION) && almost_less_than(ray->angle_nor, M_PI, PRECISION))
+		ray->dist_total = ray->dist_ver;
+		ray->r_x = ray->vx;
+		ray->r_y = ray->vy;
+		if (ray->angle_nor > 0 && ray->angle_nor < M_PI)
 			ray->color = 0x00FF00FF; // east wall
 		else
 			ray->color = 0xB5B5B5FF; // west wall
@@ -424,7 +430,8 @@ void cast_rays(t_game *game, t_player *player, t_ray *ray)
 		calculate_vertical_hit(game->map, player, ray, ray->angle_nor);
 		calculate_horizontal_hit(game->map, player, ray, ray->angle_nor);
 		pick_shortest_ray(ray);
-		draw_2d_rays(game->image, player, ray);
+		//if (ray_counter % 20 == 0)
+			draw_2d_rays(game->image, player, ray);
 		ray->r_a += (player->fov_rd / WIDTH);
 		ray_counter++;
 	}
@@ -590,11 +597,12 @@ void	perform_move(t_map *map, t_player *player, double move_x, double move_y)
 	new_p_y = roundf(player->p_y + move_y); // get the new y position
 	grid_x = new_p_x / TILE_SIZE;
 	grid_y = new_p_y / TILE_SIZE;
-	if (grid_y >= 0 && grid_y < HEIGHT && grid_x >= 0 && grid_x < WIDTH) {
-		if (map->grid[grid_y][grid_x] == '0') 
+	if (grid_y >= 0 && grid_y < HEIGHT && grid_x >= 0 && grid_x < WIDTH)
+	{
+		if (map->grid[grid_y][grid_x] == '0' || map->grid[grid_y][grid_x] == 'P')
 		{
-			player->p_x = new_p_x;
-			player->p_y = new_p_y;
+				player->p_x = new_p_x;
+				player->p_y = new_p_y;
 		}
 	}
 }
@@ -604,12 +612,12 @@ void	handle_keys_move(t_game *game, t_map *map, t_player *player)
 	double	move_x;
 	double	move_y;
 
-	if (mlx_is_key_down(game->mlx, MLX_KEY_W))
+	if (mlx_is_key_down(game->mlx, MLX_KEY_W) || mlx_is_key_down(game->mlx, MLX_KEY_UP))
 	{
 		move_x = cos(player->p_a) * PLAYER_SPEED;
 		move_y = sin(player->p_a) * PLAYER_SPEED;
 	}
-	if (mlx_is_key_down(game->mlx, MLX_KEY_S))
+	if (mlx_is_key_down(game->mlx, MLX_KEY_S) || mlx_is_key_down(game->mlx, MLX_KEY_DOWN))
 	{
 		move_x = -cos(player->p_a) * PLAYER_SPEED;
 		move_y = -sin(player->p_a) * PLAYER_SPEED;
@@ -632,13 +640,13 @@ void	handle_keys_rotation(t_game *game, t_player *player)
 	if (mlx_is_key_down(game->mlx, MLX_KEY_LEFT))
 	{
 		player->p_a -= ROTATION_SPEED;
-		if (almost_less_than(player->p_a, 0, PRECISION))
+		if (player->p_a < 0)
 			player->p_a += 2 * M_PI;
 	}
 	if (mlx_is_key_down(game->mlx, MLX_KEY_RIGHT))
 	{
 		player->p_a += ROTATION_SPEED;
-		if (almost_greater_than(player->p_a, (2 * M_PI), PRECISION))
+		if (player->p_a > (2 * M_PI))
 			player->p_a -= 2 * M_PI;
 	}
 }
