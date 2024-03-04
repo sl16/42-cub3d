@@ -147,8 +147,8 @@ static t_draw_delta	calculate_deltas(t_draw_info draw_info)
 void	draw_line(mlx_image_t *image, t_draw_info draw_info)
 {
 	t_draw_delta	delta;
-	double			pxl_x;
-	double			pxl_y;
+	int			pxl_x;
+	int			pxl_y;
 
 	delta = calculate_deltas(draw_info);
 	pxl_x = draw_info.x1;
@@ -189,103 +189,60 @@ double	normalize_angle(double angle)
 	return (angle);
 }
 
-void draw_floor_ceiling(t_game *game, int ray, int start_pxl, int end_pxl)
+void	draw_around_wall(mlx_image_t *image, int x, int start, int stop, int color)
 {
- int  i;
+	int	i;
 
- i = end_pxl;
- while (i < HEIGHT)
- {
-  mlx_put_pixel(game->image, ray, i, 0xB99470FF); // floor
-  i++;
- }
- i = 0;
- while (i < start_pxl)
- {
-  mlx_put_pixel(game->image, ray, i, 0x89CFF3FF); // ceiling
-  i++;
- }
+	i = start;
+	while (i < stop)
+	{
+		mlx_put_pixel(image, x, i, color);
+		i++;
+	}
 }
 
-void draw_wall(t_game *game, int ray, int start_pxl, int end_pxl)
+void draw_wall(t_game *game, int ray_counter, int wall_start, int wall_end)
 {
- while (start_pxl < end_pxl)
- {
-  mlx_put_pixel(game->image, ray, start_pxl, game->ray->color);
-  start_pxl++;
- }
+	while (wall_start < wall_end)
+	{
+		mlx_put_pixel(game->image, ray_counter, wall_start, game->ray->color);
+		wall_start++;
+	}
 }
 
-void render_wall(t_game *game, int ray)
+void draw_3d_game(t_game *game, int ray_counter)
 {
- double wall_height;
- double start_pxl;
- double end_pxl;
+	double wall_height;
+	double wall_end;
+	double wall_start;
 
- game->ray->dist_total *= cos(normalize_angle(game->ray->r_a - game->player->p_a)); // fix the fisheye
- wall_height = (TILE_SIZE / game->ray->dist_total) * ((WIDTH / 2) / tan(game->player->fov_rd / 2)); // get the wall height
- start_pxl = (HEIGHT / 2) + (wall_height / 2); // get the bottom pixel
- end_pxl = (HEIGHT / 2) - (wall_height / 2); // get the top pixel
- if (start_pxl > HEIGHT) // check the bottom pixel
-  start_pxl = HEIGHT;
- if (end_pxl < 0) // check the top pixel
-  end_pxl = 0;
- draw_wall(game, ray, end_pxl, start_pxl); // draw the wall
- draw_floor_ceiling(game, ray, end_pxl, start_pxl); // draw the floor and the ceiling
+	game->ray->dist_total *= cos(normalize_angle(game->ray->r_a - game->player->p_a)); // fix the fisheye
+	wall_height = (TILE_SIZE / game->ray->dist_total) * ((WIDTH / 2) / tan(game->player->fov_rd / 2)); // get the wall height
+	wall_end = (HEIGHT / 2) + (wall_height / 2); // get the bottom pixel
+	wall_start = (HEIGHT / 2) - (wall_height / 2); // get the top pixel
+	if (wall_end > HEIGHT) // check the bottom pixel
+	 wall_end = HEIGHT;
+	if (wall_start < 0) // check the top pixel
+	 wall_start = 0;
+	draw_wall(game, ray_counter, wall_start, wall_end); // draw the wall
+	draw_around_wall(game->image, ray_counter, 0, wall_start, 0x89CFF3FF); // ceiling
+	draw_around_wall(game->image, ray_counter, wall_end, HEIGHT, 0xB99470FF); //floor
 }
 
-int unit_circle(double angle, char c)
-{
- if (c == 'x')
- {
-  if (angle > 0 && angle < M_PI)
-   return (1);
- }
- else if (c == 'y')
- {
-  if (angle > (M_PI / 2) && angle < (3 * M_PI) / 2)
-   return (1);
- }
- return (0);
-}
-
-int wall_hit(double x, double y, t_map *map)
+int wall_hit(t_map *map, double x, double y)
 {
  int  x_m;
  int  y_m;
 
- if (x < 0 || y < 0)
+ if (almost_less_than(x, 0, PRECISION) || almost_less_than(y, 0, PRECISION))
   return (0);
  x_m = floor (x / TILE_SIZE); // get the x position in the map
  y_m = floor (y / TILE_SIZE); // get the y position in the map
- if (y_m >= map->map_height || y_m < 0 || x_m >= map->map_width || x_m < 0)
+ if (y_m >= map->map_height || y_m <= 0 || x_m >= map->map_width || x_m <= 0)
   return (0);
  if (map->grid[y_m] && x_m <= (int)strlen(map->grid[y_m]))
   if (map->grid[y_m][x_m] == '1')
    return (0);
- return (1);
-}
-
-int inter_check(double angle, double *inter, double *step, int is_horizon)
-{
- if (is_horizon)
- {
-  if (angle > 0 && angle < M_PI)
-  {
-   *inter += TILE_SIZE;
-   return (-1);
-  }
-  *step *= -1;
- }
- else
- {
-  if (!(angle > M_PI / 2 && angle < 3 * M_PI / 2)) 
-  {
-   *inter += TILE_SIZE;
-   return (-1);
-  }
-  *step *= -1;
- }
  return (1);
 }
 
@@ -296,23 +253,33 @@ double	distance_player_ray_end(double p_x, double p_y, double r_x, double r_y)
 
 void calculate_vertical_hit(t_map *map, t_player *player, t_ray *ray, double angle)
 {
- double	x_step;
- double	y_step;
- int	pixel;
+	double	x_step;
+	double	y_step;
+	int	pixel;
 
- y_step = TILE_SIZE;
- x_step = TILE_SIZE / tan(angle);
- ray->hy = floor(player->p_y / TILE_SIZE) * TILE_SIZE;
- pixel = inter_check(angle, &ray->hy, &y_step, 1);
- ray->hx = player->p_x + (ray->hy - player->p_y) / tan(angle);
- if ((unit_circle(angle, 'y') && x_step > 0) || (!unit_circle(angle, 'y') && x_step < 0))
-  x_step *= -1;
- while (wall_hit(ray->hx, ray->hy - pixel, map))
- {
-  ray->hx += x_step;
-  ray->hy += y_step;
- }
- ray->dist_ver = distance_player_ray_end(player->p_x, player->p_y, ray->hx, ray->hy);
+	y_step = TILE_SIZE;
+	x_step = TILE_SIZE / tan(angle);
+	ray->hy = floor(player->p_y / TILE_SIZE) * TILE_SIZE;
+	if ( angle > 0 && angle < M_PI)
+	{
+		ray->hy += TILE_SIZE;
+		pixel = -1;
+	}
+	else
+	{
+		y_step *= (-1);
+		pixel = 1;
+	}
+	ray->hx = player->p_x + (ray->hy - player->p_y) / tan(angle);
+	if (((angle > (M_PI / 2) && angle < (3 * M_PI) / 2) && x_step > 0)
+		|| (!(angle > (M_PI / 2) && angle < (3 * M_PI) / 2) && x_step < 0))
+	 x_step *= -1;
+	while (wall_hit(map, ray->hx, ray->hy - pixel))
+	{
+	 ray->hx += x_step;
+	 ray->hy += y_step;
+	}
+	ray->dist_ver = distance_player_ray_end(player->p_x, player->p_y, ray->hx, ray->hy);
 }
 
 void calculate_horizontal_hit(t_map *map, t_player *player, t_ray *ray, double angle)
@@ -324,11 +291,21 @@ void calculate_horizontal_hit(t_map *map, t_player *player, t_ray *ray, double a
  x_step = TILE_SIZE; 
  y_step = TILE_SIZE * tan(angle);
  ray->vx = floor(player->p_x / TILE_SIZE) * TILE_SIZE;
- pixel = inter_check(angle, &ray->vx, &x_step, 0);
+ if (!(angle > M_PI / 2 && angle < 3 * M_PI / 2)) 
+ {
+	ray->vx += TILE_SIZE;
+	pixel = -1;
+ }
+ else
+ {
+	x_step *= (-1);
+	pixel = 1;
+ }
  ray->vy = player->p_y + (ray->vx - player->p_x) * tan(angle);
- if ((unit_circle(angle, 'x') && y_step < 0) || (!unit_circle(angle, 'x') && y_step > 0))
+  if (((angle > 0 && angle < M_PI) && y_step < 0)
+  	|| (!(angle > 0 && angle < M_PI) && y_step > 0))
   y_step *= -1;
- while (wall_hit(ray->vx - pixel, ray->vy, map))
+ while (wall_hit(map, ray->vx - pixel, ray->vy))
  {
   ray->vx += x_step;
   ray->vy += y_step;
@@ -433,7 +410,7 @@ void cast_rays(t_game *game, t_player *player, t_ray *ray)
 		calculate_vertical_hit(game->map, player, ray, ray->angle_nor);
 		calculate_horizontal_hit(game->map, player, ray, ray->angle_nor);
 		pick_shortest_ray(ray);
-		render_wall(game, ray_counter);
+		draw_3d_game(game, ray_counter);
 		ray->r_a += (player->fov_rd / WIDTH);
 		ray_counter++;
 	}
