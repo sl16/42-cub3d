@@ -220,8 +220,8 @@ void draw_3d_game(t_game *game, int ray_counter)
 
 	game->ray->dist_total *= cos(normalize_angle(game->ray->r_a - game->player->p_a)); // fix the fisheye
 	wall_height = (TILE_SIZE / game->ray->dist_total) * ((WIDTH / 2) / tan(game->player->fov_rd / 2)); // get the wall height
-	wall_end = (HEIGHT / 2) + (wall_height / 2); // get the bottom pixel
 	wall_start = (HEIGHT / 2) - (wall_height / 2); // get the top pixel
+	wall_end = (HEIGHT / 2) + (wall_height / 2); // get the bottom pixel
 	if (wall_end > HEIGHT) // check the bottom pixel
 	 wall_end = HEIGHT;
 	if (wall_start < 0) // check the top pixel
@@ -261,10 +261,10 @@ void calculate_vertical_hit(t_map *map, t_player *player, t_ray *ray, double ang
 
 	y_step = TILE_SIZE;
 	x_step = TILE_SIZE / tan(angle);
-	ray->hy = floor(player->p_y / TILE_SIZE) * TILE_SIZE;
+	ray->vy = floor(player->p_y / TILE_SIZE) * TILE_SIZE;
 	if (angle > 0 && angle < M_PI)
 	{
-		ray->hy += TILE_SIZE;
+		ray->vy += TILE_SIZE;
 		pixel = -1;
 	}
 	else
@@ -272,16 +272,18 @@ void calculate_vertical_hit(t_map *map, t_player *player, t_ray *ray, double ang
 		y_step *= (-1);
 		pixel = 1;
 	}
-	ray->hx = player->p_x + (ray->hy - player->p_y) / tan(angle);
+	ray->vx = player->p_x + (ray->vy - player->p_y) / tan(angle);
 	if (((angle > (M_PI / 2) && angle < (3 * M_PI) / 2) && x_step > 0)
 		|| (!(angle > (M_PI / 2) && angle < (3 * M_PI) / 2) && x_step < 0))
 	 x_step *= -1;
-	while (wall_hit(map, ray->hx, ray->hy - pixel))
+	while (wall_hit(map, ray->vx, ray->vy - pixel))
 	{
-	 ray->hx += x_step;
-	 ray->hy += y_step;
+	 ray->vx += x_step;
+	 ray->vy += y_step;
 	}
-	ray->dist_ver = distance_player_ray_end(player->p_x, player->p_y, ray->hx, ray->hy);
+	ray->vx += copysign(0.0001, x_step);
+	ray->vy += copysign(0.0001, y_step);
+	ray->dist_ver = distance_player_ray_end(player->p_x, player->p_y, ray->vx, ray->vy);
 }
 
 void calculate_horizontal_hit(t_map *map, t_player *player, t_ray *ray, double angle)
@@ -292,10 +294,10 @@ void calculate_horizontal_hit(t_map *map, t_player *player, t_ray *ray, double a
 
  x_step = TILE_SIZE; 
  y_step = TILE_SIZE * tan(angle);
- ray->vx = floor(player->p_x / TILE_SIZE) * TILE_SIZE;
+ ray->hx = floor(player->p_x / TILE_SIZE) * TILE_SIZE;
  if (!(angle > M_PI / 2 && angle < 3 * M_PI / 2)) 
  {
-	ray->vx += TILE_SIZE;
+	ray->hx += TILE_SIZE;
 	pixel = -1;
  }
  else
@@ -303,16 +305,18 @@ void calculate_horizontal_hit(t_map *map, t_player *player, t_ray *ray, double a
 	x_step *= (-1);
 	pixel = 1;
  }
- ray->vy = player->p_y + (ray->vx - player->p_x) * tan(angle);
+ ray->hy = player->p_y + (ray->hx - player->p_x) * tan(angle);
   if (((angle > 0 && angle < M_PI) && y_step < 0)
   	|| (!(angle > 0 && angle < M_PI) && y_step > 0))
   y_step *= -1;
- while (wall_hit(map, ray->vx - pixel, ray->vy))
+ while (wall_hit(map, ray->hx - pixel, ray->hy))
  {
-  ray->vx += x_step;
-  ray->vy += y_step;
+  ray->hx += x_step;
+  ray->hy += y_step;
  }
- ray->dist_hor = distance_player_ray_end(player->p_x, player->p_y, ray->vx, ray->vy);
+ ray->hx += copysign(0.0001, x_step);
+ ray->hy += copysign(0.0001, y_step);
+ ray->dist_hor = distance_player_ray_end(player->p_x, player->p_y, ray->hx, ray->hy);
 }
 
 void	draw_2d_map_grid(t_game *game)
@@ -349,10 +353,10 @@ void	draw_2d_rays(mlx_image_t *image, t_player *player, t_ray *ray)
 
 	draw_info.y1 = player->p_y / MINI_MAP;
 	draw_info.x1 = player->p_x / MINI_MAP;
-	draw_info.y2 = (player->p_y + ray->dist_total * sin(ray->r_a)) / MINI_MAP;
-	draw_info.x2 = (player->p_x + ray->dist_total * cos(ray->r_a)) / MINI_MAP;
-//	draw_info.y2 = (ray->r_y) / MINI_MAP;
-//	draw_info.x2 = (ray->r_x) / MINI_MAP;
+//	draw_info.y2 = (player->p_y + ray->dist_total * sin(ray->r_a)) / MINI_MAP;
+//	draw_info.x2 = (player->p_x + ray->dist_total * cos(ray->r_a)) / MINI_MAP;
+	draw_info.y2 = ray->r_y / MINI_MAP;
+	draw_info.x2 = ray->r_x / MINI_MAP;
 	draw_info.color = ray->color;
 	draw_line(image, draw_info);
 }
@@ -431,7 +435,7 @@ void cast_rays(t_game *game, t_player *player, t_ray *ray)
 		calculate_horizontal_hit(game->map, player, ray, ray->angle_nor);
 		pick_shortest_ray(ray);
 		//if (ray_counter % 20 == 0)
-			draw_2d_rays(game->image, player, ray);
+		draw_2d_rays(game->image, player, ray);
 		ray->r_a += (player->fov_rd / WIDTH);
 		ray_counter++;
 	}
