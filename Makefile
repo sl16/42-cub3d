@@ -1,15 +1,14 @@
 NAME = cub3d
 
-#SRC = my_own_raycaster.c \
-#		init.c \
-#		precision.c \
-#		rays.c \
-#		draw.c \
-#		keys.c \
-#		free.c
-#
+SRC = main.c \
+		init.c \
+		rays.c \
+		draw_2d.c \
+		draw_3d.c \
+		draw_utils.c \
+		keys.c \
+		free.c
 
-SRC = one_file_version.c
 OBJ = $(SRC)
 OBJ := $(OBJ:%.c=%.o)
 
