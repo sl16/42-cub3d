@@ -1,14 +1,20 @@
 #ifndef CUB3D_H
 # define CUB3D_H
 
-# include <string.h>
-# include <stdlib.h>
-# include <stdio.h>
-# include <math.h>
-# include <X11/X.h>
-# include <X11/Xlib.h>
-# include "../libftprintf/ft_printf.h"
-# include "../MLX42/include/MLX42/MLX42.h"
+# define ERR_MALLOC_GAME	"Couldn't allocate memory for struct 'game'."
+# define ERR_MALLOC_MAP		"Couldn't allocate memory for struct 'map'."
+# define ERR_ARGC			"Provide a path to your desired map only."
+# define ERR_ARGV			"Provide a .cub file."
+# define ERR_OPEN			"File cannot be opened."
+# define ERR_MISSING_VALUE	"The provided map is missing a required value."
+# define ERR_MAP_NOT_FOUND	"No valid map found in provided file."
+# define ERR_MAP_NOT_CLOSED	"The map's perimeter is not enclosed in walls."
+# define ERR_MAP_EMPTY_LINE	"The map must not contain empty lines."
+# define ERR_MAP_CORNERS	"The map's corners are not fully enclosed in walls."
+# define ERR_MAP_CH_INVALID	"The map contains invalid characters."
+# define ERR_MAP_START		"The map must contain precisely one starting point."
+# define ERR_MAP_ADJACENT	"The map's inner spaces must be enclosed."
+# define ERR_MAP_CORNER		"The map's corners must be enclosed."
 
 # define WIDTH 1280
 # define HEIGHT 768
@@ -20,6 +26,49 @@
 # define PLAYER_SPEED 5
 # define PLAYER_SIZE 8
 # define PRECISION 0.000001
+
+# include "../libftprintf/ft_printf.h"
+# include "../MLX42/include/MLX42/MLX42.h"
+# include <string.h>
+# include <stdlib.h>
+# include <stdio.h>
+# include <math.h>
+# include <X11/X.h>
+# include <X11/Xlib.h>
+
+typedef union u_clr
+{
+	unsigned int	rgba;
+	struct
+	{
+		unsigned char	r;
+		unsigned char	g;
+		unsigned char	b;
+		unsigned char	a;
+	};
+}				t_clr;
+
+typedef struct s_map
+{
+	int		fd;
+	char	**parsed_file;
+	char	**grid;
+	int		width;
+	int		height;
+	int		start_count;
+	int		start_x;
+	int		start_y;
+	char	start_dir;
+
+	char	*txt_no;
+	char	*txt_so;
+	char	*txt_we;
+	char	*txt_ea;
+	int		txt_width;
+	int		txt_height;
+	t_clr	clr_floor;
+	t_clr	clr_ceiling;
+}				t_map;
 
 typedef struct s_player
 {
@@ -48,19 +97,6 @@ typedef struct s_ray
 	int		pixel;
 	int		color;
 }	t_ray;
-
-typedef struct s_map
-{
-	int		fd;
-	char	**parsed_file;
-	char	**grid;
-	int		texture_width;
-	int		texture_height;
-	int		map_width;
-	int		map_height;
-	int		start_x;
-	int		start_y;
-}	t_map;
 
 typedef struct s_game
 {
@@ -122,5 +158,29 @@ void	handle_key_actions(void *param);
 
 // free.c
 void	free_game_struct(t_game *game);
+
+int		error_print(char *error_message);
+void	error_print_exit(char *error_message, t_game *game);
+
+int		free_game(t_game *game);
+int		free_map(t_map *map);
+int		free_str_arr(char **arr);
+
+int		init_empty_struct(t_game *game);
+int		checker_arg(int argc, char **argv, t_game *game);
+
+int		parser(t_game *game);
+int		is_space(char input);
+int		is_wall(char input);
+int		increment_if_space(char *input, int i);
+int		find_last_char(char *input);
+void	get_map_dimensions(t_map *map);
+void	copy_map(t_map *map, t_game *game);
+void	convert_spaces_to_walls(t_map *map);
+
+void	checker_map(t_map *map, t_game *game);
+
+int		print_map(char **map);
+int		print_values(t_game *game);
 
 #endif

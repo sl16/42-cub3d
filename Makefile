@@ -1,13 +1,21 @@
 NAME = cub3d
 
-SRC = main.c \
-		init.c \
-		rays.c \
-		draw_2d.c \
-		draw_3d.c \
-		draw_utils.c \
-		keys.c \
-		free.c
+SRC = main.c\
+		init.c\
+		rays.c\
+		draw_2d.c\
+		draw_3d.c\
+		draw_utils.c\
+		keys.c\
+		src/checker_map.c\
+		src/checker_arg.c\
+		src/init.c\
+		src/parser.c\
+		src/parser_utils.c\
+		src/parser_utils2.c\
+		src/free.c\
+		src/error.c\
+		src/debug.c
 
 OBJ = $(SRC)
 OBJ := $(OBJ:%.c=%.o)

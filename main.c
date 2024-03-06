@@ -6,7 +6,7 @@
 /*   By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/28 11:37:55 by aulicna           #+#    #+#             */
-/*   Updated: 2024/03/05 13:58:49 by aulicna          ###   ########.fr       */
+/*   Updated: 2024/03/06 09:37:47 by aulicna          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,16 +39,22 @@ void	game_loop(void *param)
 
 int	main(void)
 {
-	t_game	game;
+	t_game	*game;
 
-	init_game_struct(&game);
+	game = malloc(sizeof(t_game));
+	if (!game)
+		error_print_exit(ERR_MALLOC_GAME, NULL);
+	init_empty_struct(game);
+	//init_game_struct(&game);
+	checker_arg(argc, argv, game);
+	parser(game);
+	checker_map(game->map, game);
 	print_grid(game.map->grid, game.map->map_height);
 	if (!init_mlx42(&game))
 		return (EXIT_FAILURE);
 	mlx_loop_hook(game.mlx, &game_loop, &game);
 	mlx_loop_hook(game.mlx, &handle_key_actions, &game);
 	mlx_loop(game.mlx);
-	free_game_struct(&game);
-	mlx_terminate(game.mlx);
-	return (EXIT_SUCCESS);
+	free_game(game);
+	return (0);
 }
