@@ -29,8 +29,8 @@ int	free_str_arr(char **arr)
  */
 int	free_map(t_map *map)
 {
-	if (map->map)
-		free_str_arr(map->map);
+	if (map->grid)
+		free_str_arr(map->grid);
 	if (map->parsed_file)
 		free_str_arr(map->parsed_file);
 	if (map->txt_no)

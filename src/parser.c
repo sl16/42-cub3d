@@ -139,7 +139,7 @@ static void	find_map_in_file(t_map *map, t_game *game)
 	}
 	if (map_start == -1)
 		error_print_exit(ERR_MAP_NOT_FOUND, game);
-	map->map = &map->parsed_file[map_start];
+	map->grid = &map->parsed_file[map_start];
 }
 
 /**

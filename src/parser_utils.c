@@ -90,10 +90,10 @@ void	get_map_dimensions(t_map *map)
 
 	max_width = 0;
 	i = 0;
-	while (map->map[i] != NULL)
+	while (map->grid[i] != NULL)
 	{
 		j = 0;
-		while (map->map[i][j] != '\0')
+		while (map->grid[i][j] != '\0')
 			j++;
 		if (j > max_width)
 			max_width = j;

@@ -3,6 +3,8 @@
 /**
  * Checks if the map contains only permitted characters in the
  * required amount and saves the player's starting position to the map struct.
+ * Removes the player symbol from the map, as the starting coordinates
+ * are now saved.
  * 
  * @param x The x-coordinate of the character in the map.
  * @param y The y-coordinate of the character in the map.
@@ -13,7 +15,7 @@ static void	check_chars(int x, int y, t_map *map, t_game *game)
 {
 	char			ch;
 
-	ch = map->map[y][x];
+	ch = map->grid[y][x];
 	if (ch != '0' && ch != '1' && ch != 'N' && ch != 'W' && ch != 'S'
 		&& ch != 'E' && !is_space(ch))
 		error_print_exit(ERR_MAP_CH_INVALID, game);
@@ -22,7 +24,8 @@ static void	check_chars(int x, int y, t_map *map, t_game *game)
 		map->start_count++;
 		map->start_x = x;
 		map->start_y = y;
-		map->start_dir = &ch;
+		map->start_dir = ch;
+		map->grid[y][x] = '0';
 	}
 }
 
@@ -38,19 +41,19 @@ static void	check_top_and_bottom_walls(t_map *map, t_game *game)
 	int	i;
 
 	i = 0;
-	i = increment_if_space(map->map[0], i);
-	while (map->map[0][i] != '\0')
+	i = increment_if_space(map->grid[0], i);
+	while (map->grid[0][i] != '\0')
 	{
-		if (map->map[0][i] != '1' && !is_space(map->map[0][i]))
+		if (map->grid[0][i] != '1' && !is_space(map->grid[0][i]))
 			error_print_exit(ERR_MAP_NOT_CLOSED, game);
 		i++;
 	}
 	i = 0;
-	i = increment_if_space(map->map[map->height - 1], i);
-	while (map->map[map->height - 1][i] != '\0')
+	i = increment_if_space(map->grid[map->height - 1], i);
+	while (map->grid[map->height - 1][i] != '\0')
 	{
-		if (map->map[map->height - 1][i] != '1'
-			&& !is_space(map->map[map->height - 1][i]))
+		if (map->grid[map->height - 1][i] != '1'
+			&& !is_space(map->grid[map->height - 1][i]))
 			error_print_exit(ERR_MAP_NOT_CLOSED, game);
 		i++;
 	}
@@ -72,13 +75,13 @@ static void	check_side_walls(t_map *map, t_game *game)
 	while (i < map->height - 1)
 	{
 		j = 0;
-		j = increment_if_space(map->map[i], j);
-		if (map->map[i][j] != '1')
+		j = increment_if_space(map->grid[i], j);
+		if (map->grid[i][j] != '1')
 			error_print_exit(ERR_MAP_NOT_CLOSED, game);
-		j = find_last_char(map->map[i]);
+		j = find_last_char(map->grid[i]);
 		if (j == -1)
 			error_print_exit(ERR_MAP_NOT_CLOSED, game);
-		if (map->map[i][j] != '1')
+		if (map->grid[i][j] != '1')
 			error_print_exit(ERR_MAP_NOT_CLOSED, game);
 		i++;
 	}
@@ -97,21 +100,21 @@ static void	check_side_walls(t_map *map, t_game *game)
  */
 static void	check_spaces(int x, int y, t_map *map, t_game *game)
 {
-	if (y == 0 || y == map->height - 1 || !is_space(map->map[y][x]))
+	if (y == 0 || y == map->height - 1 || !is_space(map->grid[y][x]))
 		return ;
 	if (x == 0)
 		x++;
-	if (x == (int) ft_strlen(map->map[y]) - 1)
+	if (x == (int) ft_strlen(map->grid[y]) - 1)
 		x--;
-	if (map->map[y][x - 1] != '1' && !is_space(map->map[y][x - 1]))
+	if (map->grid[y][x - 1] != '1' && !is_space(map->grid[y][x - 1]))
 		error_print_exit(ERR_MAP_ADJACENT, game);
-	if (map->map[y][x + 1] != '1' && !is_space(map->map[y][x + 1]))
+	if (map->grid[y][x + 1] != '1' && !is_space(map->grid[y][x + 1]))
 		error_print_exit(ERR_MAP_ADJACENT, game);
-	if (x < (int) ft_strlen(map->map[y - 1])
-		&& (map->map[y - 1][x] != '1' && !is_space(map->map[y - 1][x])))
+	if (x < (int) ft_strlen(map->grid[y - 1])
+		&& (map->grid[y - 1][x] != '1' && !is_space(map->grid[y - 1][x])))
 		error_print_exit(ERR_MAP_ADJACENT, game);
-	if (x < (int) ft_strlen(map->map[y + 1])
-		&& (map->map[y + 1][x] != '1' && !is_space(map->map[y + 1][x])))
+	if (x < (int) ft_strlen(map->grid[y + 1])
+		&& (map->grid[y + 1][x] != '1' && !is_space(map->grid[y + 1][x])))
 		error_print_exit(ERR_MAP_ADJACENT, game);
 }
 
@@ -136,8 +139,8 @@ void	checker_map(t_map *map, t_game *game)
 	while (i < map->height)
 	{
 		j = 0;
-		j = increment_if_space(map->map[i], j);
-		while (map->map[i][j] != '\0')
+		j = increment_if_space(map->grid[i], j);
+		while (map->grid[i][j] != '\0')
 		{
 			check_chars(j, i, map, game);
 			check_spaces(j, i, map, game);

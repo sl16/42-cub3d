@@ -44,13 +44,13 @@ typedef struct s_map
 {
 	int		fd;
 	char	**parsed_file;
-	char	**map;
+	char	**grid;
 	int		width;
 	int		height;
 	int		start_count;
 	int		start_x;
 	int		start_y;
-	char	*start_dir;
+	char	start_dir;
 
 	char	*txt_no;
 	char	*txt_so;
@@ -64,9 +64,6 @@ typedef struct s_map
 
 typedef struct s_game
 {
-	void	*mlx_ptr;
-	void	*win_ptr;
-
 	t_map	*map;
 }				t_game;
 
