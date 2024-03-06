@@ -62,3 +62,29 @@ int	free_game(t_game *game)
 		free(game);
 	return (0);
 }
+
+
+// Andrea's free function
+void	free_game_struct(t_game *game)
+{
+	int	i;
+
+	i = 0;
+	while (i < game->map->map_height)
+	{
+		if (game->map->grid[i])
+			free(game->map->grid[i]);
+		i++;
+	}
+	if (game->map->grid)
+		free(game->map->grid);
+	if (game->map)
+		free(game->map);
+	if (game->player)
+		free(game->player);
+	if (game->ray)
+		free(game->ray);
+	mlx_delete_image(game->mlx, game->image);
+	mlx_close_window(game->mlx);
+	mlx_terminate(game->mlx);
+}

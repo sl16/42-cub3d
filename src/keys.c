@@ -6,11 +6,11 @@
 /*   By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/26 16:21:04 by aulicna           #+#    #+#             */
-/*   Updated: 2024/03/05 16:23:42 by aulicna          ###   ########.fr       */
+/*   Updated: 2024/03/06 09:49:16 by aulicna          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "./inc/cub3d.h"
+#include "../inc/cub3d.h"
 
 /**
  * @brief	Performs the movement of the player.

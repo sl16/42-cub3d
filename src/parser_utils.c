@@ -99,6 +99,6 @@ void	get_map_dimensions(t_map *map)
 			max_width = j;
 		i++;
 	}
-	map->width = max_width;
-	map->height = i;
+	map->map_width = max_width;
+	map->map_height = i;
 }

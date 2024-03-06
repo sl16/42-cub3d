@@ -6,7 +6,7 @@
 /*   By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/28 11:37:55 by aulicna           #+#    #+#             */
-/*   Updated: 2024/03/06 09:37:47 by aulicna          ###   ########.fr       */
+/*   Updated: 2024/03/06 09:57:42 by aulicna          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ void	game_loop(void *param)
 	t_game	*game;
 
 	game = (t_game *) param;
-	mlx_delete_image(game->mlx, game->image);
+	//mlx_delete_image(game->mlx, game->image);
 	game->image = mlx_new_image(game->mlx, WIDTH, HEIGHT);
 	if (!(game->image))
 	{
@@ -37,7 +37,7 @@ void	game_loop(void *param)
 	}
 }
 
-int	main(void)
+int	main(int argc, char **argv)
 {
 	t_game	*game;
 
@@ -45,16 +45,16 @@ int	main(void)
 	if (!game)
 		error_print_exit(ERR_MALLOC_GAME, NULL);
 	init_empty_struct(game);
-	//init_game_struct(&game);
 	checker_arg(argc, argv, game);
 	parser(game);
 	checker_map(game->map, game);
-	print_grid(game.map->grid, game.map->map_height);
-	if (!init_mlx42(&game))
-		return (EXIT_FAILURE);
-	mlx_loop_hook(game.mlx, &game_loop, &game);
-	mlx_loop_hook(game.mlx, &handle_key_actions, &game);
-	mlx_loop(game.mlx);
+	init_game_struct(game);
+	print_grid(game->map->grid, game->map->map_height);
+	if (!init_mlx42(game))
+		return (EXIT_FAILURE); // add free
+	mlx_loop_hook(game->mlx, &game_loop, &game);
+	mlx_loop_hook(game->mlx, &handle_key_actions, &game);
+	mlx_loop(game->mlx);
 	free_game(game);
 	return (0);
 }

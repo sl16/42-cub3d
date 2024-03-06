@@ -6,11 +6,11 @@
 /*   By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/05 12:16:47 by aulicna           #+#    #+#             */
-/*   Updated: 2024/03/05 16:18:34 by aulicna          ###   ########.fr       */
+/*   Updated: 2024/03/06 09:49:05 by aulicna          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "./inc/cub3d.h"
+#include "../inc/cub3d.h"
 
 /**
  * @brief	Draws a square of a specified size and color on the given image.

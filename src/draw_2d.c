@@ -6,11 +6,11 @@
 /*   By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/05 12:12:59 by aulicna           #+#    #+#             */
-/*   Updated: 2024/03/05 16:12:28 by aulicna          ###   ########.fr       */
+/*   Updated: 2024/03/06 09:48:53 by aulicna          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "./inc/cub3d.h"
+#include "../inc/cub3d.h"
 
 /**
  * @brief	Draws a 2D grid map of the game world.

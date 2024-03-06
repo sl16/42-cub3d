@@ -1,12 +1,11 @@
 NAME = cub3d
 
 SRC = main.c\
-		init.c\
-		rays.c\
-		draw_2d.c\
-		draw_3d.c\
-		draw_utils.c\
-		keys.c\
+		src/rays.c\
+		src/draw_2d.c\
+		src/draw_3d.c\
+		src/draw_utils.c\
+		src/keys.c\
 		src/checker_map.c\
 		src/checker_arg.c\
 		src/init.c\

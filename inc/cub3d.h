@@ -29,6 +29,7 @@
 
 # include "../libftprintf/ft_printf.h"
 # include "../MLX42/include/MLX42/MLX42.h"
+# include <fcntl.h>
 # include <string.h>
 # include <stdlib.h>
 # include <stdio.h>
@@ -53,8 +54,8 @@ typedef struct s_map
 	int		fd;
 	char	**parsed_file;
 	char	**grid;
-	int		width;
-	int		height;
+	int		map_width;
+	int		map_height;
 	int		start_count;
 	int		start_x;
 	int		start_y;
