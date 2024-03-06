@@ -25,7 +25,6 @@
 # define ROTATION_SPEED 0.045
 # define PLAYER_SPEED 5
 # define PLAYER_SIZE 8
-# define PRECISION 0.000001
 
 # include "../libftprintf/ft_printf.h"
 # include "../MLX42/include/MLX42/MLX42.h"
@@ -60,13 +59,10 @@ typedef struct s_map
 	int		start_x;
 	int		start_y;
 	char	start_dir;
-
 	char	*txt_no;
 	char	*txt_so;
 	char	*txt_we;
 	char	*txt_ea;
-	int		txt_width;
-	int		txt_height;
 	t_clr	clr_floor;
 	t_clr	clr_ceiling;
 }				t_map;
@@ -77,6 +73,8 @@ typedef struct s_player
 	int		p_y;
 	double	p_a; // player angle
 	double	fov_rd; // field of view in radians
+	double	move_y;
+	double	move_x;
 }	t_player;
 
 typedef struct s_ray
@@ -103,9 +101,9 @@ typedef struct s_game
 {
 	mlx_t		*mlx;
 	mlx_image_t	*image;
-	t_ray		*ray;
 	t_map		*map;
 	t_player	*player;
+	t_ray		*ray;
 }	t_game;
 
 typedef struct s_draw_info
@@ -131,15 +129,14 @@ typedef enum s_orientation
 	VERTICAL
 }	t_orientation;
 
-// one_file
-
-void	cast_rays_3d(t_game *game, t_player *player, t_ray *ray);
-void	cast_rays_2d(t_game *game, t_player *player, t_ray *ray);
-double	normalize_angle(double angle);
-
 // init.c
 bool	init_mlx42(t_game *game);
 void	init_game_struct(t_game *game);
+
+// rays.c
+void	cast_rays_3d(t_game *game, t_player *player, t_ray *ray);
+void	cast_rays_2d(t_game *game, t_player *player, t_ray *ray);
+double	normalize_angle(double angle);
 
 // draw_2d.c
 void	draw_2d_map_grid(t_game *game);
@@ -150,20 +147,20 @@ void	draw_2d_player(mlx_image_t *image, t_player *player);
 void	draw_3d_game(t_game *game, int ray_counter);
 
 // draw_utils.c
-void	draw_square(mlx_image_t *image, t_draw_info draw_info);
-void	draw_line(mlx_image_t *image, t_draw_info draw_info);
+void	draw_square(mlx_image_t *image, t_draw_info *draw_info);
+void	draw_line(mlx_image_t *image, t_draw_info *draw_info);
 void	print_grid(char **grid, int map_height);
 
 // keys.c
 void	handle_key_actions(void *param);
 
 // free.c
-void	free_game_struct(t_game *game);
+void	free_game_full(t_game *game);
 
 int		error_print(char *error_message);
 void	error_print_exit(char *error_message, t_game *game);
 
-int		free_game(t_game *game);
+int		free_game_parser(t_game *game);
 int		free_map(t_map *map);
 int		free_str_arr(char **arr);
 

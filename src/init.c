@@ -6,30 +6,32 @@
 /*   By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/26 16:19:30 by aulicna           #+#    #+#             */
-/*   Updated: 2024/03/06 09:52:54 by aulicna          ###   ########.fr       */
+/*   Updated: 2024/03/06 14:41:18 by aulicna          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/cub3d.h"
 
-static void	init_player(t_game *game)
+double	get_player_angle(char start_dir)
 {
-	game->player = calloc(1, sizeof(t_player));
-	game->player->p_x = (game->map->start_x * TILE_SIZE) + (TILE_SIZE / 2);
-	game->player->p_y = (game->map->start_y * TILE_SIZE) + (TILE_SIZE / 2);
-	game->player->p_a = M_PI;
-	game->player->fov_rd = (FOV * M_PI) / 180;
-}
-
-static void	init_ray(t_game *game)
-{
-	game->ray = calloc(1, sizeof(t_ray));
+	if (start_dir == 'E')
+		return (0);
+	if (start_dir == 'N')
+		return ((3 * M_PI) / 2);
+	if (start_dir == 'S')
+		return (M_PI / 2);
+	else
+		return (M_PI);
 }
 
 void	init_game_struct(t_game *game)
 {
-	init_player(game);
-	init_ray(game);
+	game->player = calloc(1, sizeof(t_player));
+	game->ray = calloc(1, sizeof(t_ray));
+	game->player->p_x = (game->map->start_x * TILE_SIZE) + (TILE_SIZE / 2);
+	game->player->p_y = (game->map->start_y * TILE_SIZE) + (TILE_SIZE / 2);
+	game->player->p_a = get_player_angle(game->map->start_dir);
+	game->player->fov_rd = (FOV * M_PI) / 180;
 }
 
 bool	init_mlx42(t_game *game)
@@ -45,15 +47,15 @@ bool	init_mlx42(t_game *game)
 	{
 		mlx_close_window(game->mlx);
 		puts(mlx_strerror(mlx_errno));
-		free_game_struct(game);
-		return (EXIT_FAILURE);
+		free_game_full(game);
+		return (false);
 	}
 	if (mlx_image_to_window(game->mlx, game->image, 0, 0) == -1)
 	{
 		mlx_close_window(game->mlx);
 		puts(mlx_strerror(mlx_errno));
-		free_game_struct(game);
-		return (EXIT_FAILURE);
+		free_game_full(game);
+		return (false);
 	}
 	return (true);
 }
@@ -66,6 +68,8 @@ bool	init_mlx42(t_game *game)
  */
 int	init_empty_struct(t_game *game)
 {
+	game->mlx = NULL;
+	game->image = NULL;
 	game->map = malloc(sizeof(t_map));
 	if (!game->map)
 		error_print_exit(ERR_MALLOC_MAP, game);
@@ -78,12 +82,13 @@ int	init_empty_struct(t_game *game)
 	game->map->txt_so = NULL;
 	game->map->txt_we = NULL;
 	game->map->txt_ea = NULL;
-	game->map->txt_width = 0;
-	game->map->txt_height = 0;
 	game->map->clr_floor.rgba = 0;
 	game->map->clr_ceiling.rgba = 0;
 	game->map->start_count = 0;
 	game->map->start_x = -1;
 	game->map->start_y = -1;
+	game->map->start_dir = '\0';
+	game->player = NULL;
+	game->ray = NULL;
 	return (0);
 }

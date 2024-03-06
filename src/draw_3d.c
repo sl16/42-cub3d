@@ -6,11 +6,30 @@
 /*   By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/05 12:14:29 by aulicna           #+#    #+#             */
-/*   Updated: 2024/03/06 09:51:50 by aulicna          ###   ########.fr       */
+/*   Updated: 2024/03/06 15:26:16 by aulicna          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/cub3d.h"
+
+/**
+ * @brief	Converts a color represented in RGBA components into a single
+ * 32-bit integer.
+ *
+ * Example:
+ * t_clr color = {255, 127, 0, 255};
+ * uint32_t int_color = get_color(&color);
+ * -> int_color is now 0xFF7F00FF
+ * 
+ * @param	color	pointer to a t_clr structure which contains the red, green,
+ * 					blue, and alpha components of a color.
+ * @return	uint32	color as an uint32
+ */
+static uint32_t	get_color(t_clr *color)
+{
+	return ((color->r << 24) | (color->g << 16) | (color->b << 8) | color->a);
+}
+
 /**
  * @brief	Draws a single vertical column of pixels for a 3D wall.
  *
@@ -72,8 +91,8 @@ void	draw_3d_game(t_game *game, int ray_counter)
 	if (wall_start < 0)
 		wall_start = 0;
 	draw_3d_column(game, ray_counter, wall_start, wall_end);
-	game->ray->color = 0x89CFF3FF;
+	game->ray->color = get_color(&game->map->clr_ceiling);
 	draw_3d_column(game, ray_counter, 0, wall_start);
-	game->ray->color = 0xB99470FF;
+	game->ray->color = get_color(&game->map->clr_floor);
 	draw_3d_column(game, ray_counter, wall_end, HEIGHT);
 }

@@ -6,7 +6,7 @@
 /*   By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/05 11:58:13 by aulicna           #+#    #+#             */
-/*   Updated: 2024/03/06 09:48:47 by aulicna          ###   ########.fr       */
+/*   Updated: 2024/03/06 15:26:52 by aulicna          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -232,7 +232,8 @@ void	calculate_horizontal_hit(t_map *map, t_player *player, t_ray *ray)
  * to the horizontal distance, and the intersection point (r_x, r_y) is set
  * to the horizontal intersection point (hx, hy).
  * 
- * The color of the ray is also set based on the direction of the ray to indicate a north or south wall hit.
+ * The color of the ray is also set based on the direction of the ray
+ * to indicate a north or south wall hit.
  * If the vertical distance is shorter, the total distance of the ray is set
  * to the vertical distance, and the intersection point (r_x, r_y) is set
  * to the vertical intersection point (vx, vy).

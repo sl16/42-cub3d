@@ -6,7 +6,7 @@
 /*   By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/26 16:21:04 by aulicna           #+#    #+#             */
-/*   Updated: 2024/03/06 09:49:16 by aulicna          ###   ########.fr       */
+/*   Updated: 2024/03/06 15:04:08 by aulicna          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,30 +62,29 @@ static void	perform_move(t_map *map, t_player *player, double move_x,
  */
 static void	handle_keys_move(mlx_t *mlx, t_map *map, t_player *player)
 {
-	double	move_x;
-	double	move_y;
-
+	player->move_x = 0;
+	player->move_y = 0;
 	if (mlx_is_key_down(mlx, MLX_KEY_W) || mlx_is_key_down(mlx, MLX_KEY_UP))
 	{
-		move_x = cos(player->p_a) * PLAYER_SPEED;
-		move_y = sin(player->p_a) * PLAYER_SPEED;
+		player->move_x = cos(player->p_a) * PLAYER_SPEED;
+		player->move_y = sin(player->p_a) * PLAYER_SPEED;
 	}
 	if (mlx_is_key_down(mlx, MLX_KEY_S) || mlx_is_key_down(mlx, MLX_KEY_DOWN))
 	{
-		move_x = -cos(player->p_a) * PLAYER_SPEED;
-		move_y = -sin(player->p_a) * PLAYER_SPEED;
+		player->move_x = -cos(player->p_a) * PLAYER_SPEED;
+		player->move_y = -sin(player->p_a) * PLAYER_SPEED;
 	}
 	if (mlx_is_key_down(mlx, MLX_KEY_D))
 	{
-		move_x = -sin(player->p_a) * PLAYER_SPEED;
-		move_y = cos(player->p_a) * PLAYER_SPEED;
+		player->move_x = -sin(player->p_a) * PLAYER_SPEED;
+		player->move_y = cos(player->p_a) * PLAYER_SPEED;
 	}
 	if (mlx_is_key_down(mlx, MLX_KEY_A))
 	{
-		move_x = sin(player->p_a) * PLAYER_SPEED;
-		move_y = -cos(player->p_a) * PLAYER_SPEED;
+		player->move_x = sin(player->p_a) * PLAYER_SPEED;
+		player->move_y = -cos(player->p_a) * PLAYER_SPEED;
 	}
-	perform_move(map, player, move_x, move_y);
+	perform_move(map, player, player->move_x, player->move_y);
 }
 
 /**
@@ -135,7 +134,7 @@ void	handle_key_actions(void *param)
 	map = game->map;
 	if (mlx_is_key_down(game->mlx, MLX_KEY_ESCAPE))
 	{
-		free_game_struct(game);
+		free_game_full(game);
 		exit(0);
 	}
 	handle_keys_move(game->mlx, map, player);

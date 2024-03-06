@@ -6,7 +6,7 @@
 /*   By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/05 12:16:47 by aulicna           #+#    #+#             */
-/*   Updated: 2024/03/06 09:49:05 by aulicna          ###   ########.fr       */
+/*   Updated: 2024/03/06 14:52:13 by aulicna          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@
  * @param	image		pointer to the image where the square is drawn
  * @param	draw_info	struct with the drawing info (position, size, color)
  */
-void	draw_square(mlx_image_t *image, t_draw_info draw_info)
+void	draw_square(mlx_image_t *image, t_draw_info *draw_info)
 {
 	int	x;
 	int	y;
@@ -30,15 +30,15 @@ void	draw_square(mlx_image_t *image, t_draw_info draw_info)
 	int	pxl_y;
 
 	x = 0;
-	while (x < draw_info.size)
+	while (x < draw_info->size)
 	{
 		y = 0;
-		while (y < draw_info.size)
+		while (y < draw_info->size)
 		{
-			pxl_x = (draw_info.x1 - draw_info.size / 2) + x;
-			pxl_y = (draw_info.y1 - draw_info.size / 2) + y;
+			pxl_x = (draw_info->x1 - draw_info->size / 2) + x;
+			pxl_y = (draw_info->y1 - draw_info->size / 2) + y;
 			if (pxl_x >= 0 && pxl_x <= WIDTH && pxl_y >= 0 && pxl_y <= HEIGHT)
-				mlx_put_pixel(image, pxl_x, pxl_y, draw_info.color);
+				mlx_put_pixel(image, pxl_x, pxl_y, draw_info->color);
 			y++;
 		}
 		x++;
@@ -55,12 +55,12 @@ void	draw_square(mlx_image_t *image, t_draw_info draw_info)
  * @param	draw_info		struct with the drawing info (start and end points)
  * @return	t_draw_delta	struct with deltas and the length of the line
  */
-static t_draw_delta	calculate_deltas(t_draw_info draw_info)
+static t_draw_delta	calculate_deltas(t_draw_info *draw_info)
 {
 	t_draw_delta	delta;
 
-	delta.delta_x = draw_info.x2 - draw_info.x1;
-	delta.delta_y = draw_info.y2 - draw_info.y1;
+	delta.delta_x = draw_info->x2 - draw_info->x1;
+	delta.delta_y = draw_info->y2 - draw_info->y1;
 	delta.length = sqrt(pow(delta.delta_x, 2) + pow(delta.delta_y, 2));
 	delta.delta_x /= delta.length;
 	delta.delta_y /= delta.length;
@@ -77,19 +77,19 @@ static t_draw_delta	calculate_deltas(t_draw_info draw_info)
  * @param	image		pointer to the image where the line is drawn
  * @param	draw_info	struct with the drawing info (start, end color)
  */
-void	draw_line(mlx_image_t *image, t_draw_info draw_info)
+void	draw_line(mlx_image_t *image, t_draw_info *draw_info)
 {
 	t_draw_delta	delta;
 	double			pxl_x;
 	double			pxl_y;
 
 	delta = calculate_deltas(draw_info);
-	pxl_x = draw_info.x1;
-	pxl_y = draw_info.y1;
+	pxl_x = draw_info->x1;
+	pxl_y = draw_info->y1;
 	while (delta.length)
 	{
 		if (pxl_x >= 0 && pxl_x <= WIDTH && pxl_y >= 0 && pxl_y <= HEIGHT)
-			mlx_put_pixel(image, pxl_x, pxl_y, draw_info.color);
+			mlx_put_pixel(image, pxl_x, pxl_y, draw_info->color);
 		else
 			break ;
 		pxl_x += delta.delta_x;

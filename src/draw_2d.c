@@ -6,7 +6,7 @@
 /*   By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/05 12:12:59 by aulicna           #+#    #+#             */
-/*   Updated: 2024/03/06 09:48:53 by aulicna          ###   ########.fr       */
+/*   Updated: 2024/03/06 14:53:38 by aulicna          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,7 @@ void	draw_2d_map_grid(t_game *game)
 				draw_info.color = 0xFFFFFFFF;
 			else if (game->map->grid[i][j] == '0')
 				draw_info.color = 0xB99470FF;
-			draw_square(game->image, draw_info);
+			draw_square(game->image, &draw_info);
 			draw_info.x1 += TILE_SIZE_2D;
 			j++;
 		}
@@ -75,7 +75,7 @@ void	draw_2d_rays(mlx_image_t *image, t_player *player, t_ray *ray)
 	draw_info.y2 = ray->r_y / MINI_MAP;
 	draw_info.x2 = ray->r_x / MINI_MAP;
 	draw_info.color = ray->color;
-	draw_line(image, draw_info);
+	draw_line(image, &draw_info);
 }
 
 /**
@@ -99,10 +99,10 @@ void	draw_2d_player(mlx_image_t *image, t_player *player)
 	draw_info.y1 = player->p_y / MINI_MAP;
 	draw_info.x1 = player->p_x / MINI_MAP;
 	draw_info.size = PLAYER_SIZE / MINI_MAP;
-	draw_square(image, draw_info);
+	draw_square(image, &draw_info);
 	draw_info.y1 = player->p_y / MINI_MAP;
 	draw_info.x1 = player->p_x / MINI_MAP;
 	draw_info.y2 = (player->p_y + 50 * sin(player->p_a)) / MINI_MAP;
 	draw_info.x2 = (player->p_x + 50 * cos(player->p_a)) / MINI_MAP;
-	draw_line(image, draw_info);
+	draw_line(image, &draw_info);
 }
