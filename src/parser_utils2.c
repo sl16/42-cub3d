@@ -17,18 +17,18 @@ void	copy_map(t_map *map, t_game *game)
 
 	map_start = map->grid;
 	map->grid = NULL;
-	map->grid = malloc(sizeof(char *) * (map->height + 1));
+	map->grid = malloc(sizeof(char *) * (map->map_height + 1));
 	if (!map->grid)
 		error_print_exit(ERR_MALLOC_MAP, game);
 	i = -1;
-	while (++i < map->height)
+	while (++i < map->map_height)
 	{
-		map->grid[i] = malloc(sizeof(char *) * (map->width + 1));
+		map->grid[i] = malloc(sizeof(char *) * (map->map_width + 1));
 		if (!map->grid[i])
 			error_print_exit(ERR_MALLOC_MAP, game);
 		ft_strlcpy(map->grid[i], map_start[i], ft_strlen(map_start[i]) + 1);
 		j = ft_strlen(map->grid[i]);
-		while (j < map->width)
+		while (j < map->map_width)
 		{
 			map->grid[i][j] = ' ';
 			j++;

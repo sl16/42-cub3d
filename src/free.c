@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   free.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/03/06 15:23:00 by aulicna           #+#    #+#             */
+/*   Updated: 2024/03/06 15:23:01 by aulicna          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../inc/cub3d.h"
 
 /**
@@ -46,7 +58,8 @@ int	free_map(t_map *map)
 }
 
 /**
- * This function frees the memory allocated for the game and its map.
+ * This function frees the memory allocated for the game and its map
+ * in the parser part of the code.
  * It first checks if the game's map is not NULL and calls the `free_map`
  * function to free the map.
  * Then, it frees the memory allocated for the game struct itself.
@@ -54,11 +67,34 @@ int	free_map(t_map *map)
  * @param game A pointer to the game structure.
  * @return 0 on success.
  */
-int	free_game(t_game *game)
+int	free_game_parser(t_game *game)
 {
 	if (game->map)
 		free_map(game->map);
 	if (game)
 		free(game);
 	return (0);
+}
+
+/**
+ * @brief	Frees all the dynamically allocated memory in the program.
+ * 
+ * It checks and frees map, player and ray structs. Then it handles the closing
+ * of mxl and finally frees the game struct.
+ * 
+ * @param	game	pointer to the game structure
+ */
+void	free_game_full(t_game *game)
+{
+	if (game->map)
+		free_map(game->map);
+	if (game->player)
+		free(game->player);
+	if (game->ray)
+		free(game->ray);
+	mlx_delete_image(game->mlx, game->image);
+	mlx_close_window(game->mlx);
+	mlx_terminate(game->mlx);
+	if (game)
+		free(game);
 }

@@ -49,11 +49,11 @@ static void	check_top_and_bottom_walls(t_map *map, t_game *game)
 		i++;
 	}
 	i = 0;
-	i = increment_if_space(map->grid[map->height - 1], i);
-	while (map->grid[map->height - 1][i] != '\0')
+	i = increment_if_space(map->grid[map->map_height - 1], i);
+	while (map->grid[map->map_height - 1][i] != '\0')
 	{
-		if (map->grid[map->height - 1][i] != '1'
-			&& !is_space(map->grid[map->height - 1][i]))
+		if (map->grid[map->map_height - 1][i] != '1'
+			&& !is_space(map->grid[map->map_height - 1][i]))
 			error_print_exit(ERR_MAP_NOT_CLOSED, game);
 		i++;
 	}
@@ -72,7 +72,7 @@ static void	check_side_walls(t_map *map, t_game *game)
 	int	j;
 
 	i = 1;
-	while (i < map->height - 1)
+	while (i < map->map_height - 1)
 	{
 		j = 0;
 		j = increment_if_space(map->grid[i], j);
@@ -100,7 +100,7 @@ static void	check_side_walls(t_map *map, t_game *game)
  */
 static void	check_spaces(int x, int y, t_map *map, t_game *game)
 {
-	if (y == 0 || y == map->height - 1 || !is_space(map->grid[y][x]))
+	if (y == 0 || y == map->map_height - 1 || !is_space(map->grid[y][x]))
 		return ;
 	if (x == 0)
 		x++;
@@ -136,7 +136,7 @@ void	checker_map(t_map *map, t_game *game)
 	check_top_and_bottom_walls(map, game);
 	check_side_walls(map, game);
 	i = 0;
-	while (i < map->height)
+	while (i < map->map_height)
 	{
 		j = 0;
 		j = increment_if_space(map->grid[i], j);

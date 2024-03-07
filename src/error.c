@@ -22,6 +22,6 @@ void	error_print_exit(char *error_message, t_game *game)
 {
 	ft_printf("Error\n%s\n", error_message);
 	if (game)
-		free_game(game);
+		free_game_parser(game);
 	exit(1);
 }
