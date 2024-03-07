@@ -6,11 +6,31 @@
 /*   By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/26 16:21:04 by aulicna           #+#    #+#             */
-/*   Updated: 2024/03/06 15:04:08 by aulicna          ###   ########.fr       */
+/*   Updated: 2024/03/07 21:13:40 by aulicna          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/cub3d.h"
+
+/**
+ * @brief	Checks if the specified grid cell in the map is a space
+ * that the player can move into.
+ * 
+ * The player can step into a cell if it is either empty ('0') or a player
+ * start position ('P').
+ *
+ * @param	map		pointer to the map struct
+ * @param	grid_y	the y coordinate of the grid cell
+ * @param	grid_x	the x coordinate of the grid cell
+ * @return	true if the player can step into the cell, false otherwise
+ */
+bool	can_step_in(t_map *map, int grid_y, int grid_x)
+{
+	if (map->grid[grid_y][grid_x] == '0'
+		|| map->grid[grid_y][grid_x] == 'P')
+		return (true);
+	return (false);
+}
 
 /**
  * @brief	Performs the movement of the player.
@@ -19,32 +39,37 @@
  * It checks if the new position is within the map boundaries and if the new
  * position is not a wall. If the new position is valid, it updates
  * the player's position.
+ * 
+ * The x and y movements are handle separately to allow for 'sliding along
+ * the walls' where the movement in one direction is blocked, but the player can
+ * still move in the other direction if it's unblocked.
  *
  * @param	map		pointer to the map struct
  * @param	player	pointer to the player struct
  * @param	move_x	the x component of the move
- * @param	move_y	the y component of the move
  */
-static void	perform_move(t_map *map, t_player *player, double move_x,
-	double move_y)
+static void	perform_move(t_map *map, t_player *player)
 {
 	int	new_p_x;
 	int	new_p_y;
 	int	grid_x;
 	int	grid_y;
 
-	new_p_x = roundf(player->p_x + move_x);
-	new_p_y = roundf(player->p_y + move_y);
+	new_p_x = roundf(player->p_x + player->move_x);
 	grid_x = new_p_x / TILE_SIZE;
-	grid_y = new_p_y / TILE_SIZE;
-	if (grid_y >= 0 && grid_y < HEIGHT && grid_x >= 0 && grid_x < WIDTH)
+	grid_y = player->p_y / TILE_SIZE;
+	if (grid_x >= 0 && grid_x < WIDTH)
 	{
-		if (map->grid[grid_y][grid_x] == '0'
-			|| map->grid[grid_y][grid_x] == 'P')
-		{
+		if (can_step_in(map, grid_y, grid_x))
 			player->p_x = new_p_x;
+	}
+	new_p_y = roundf(player->p_y + player->move_y);
+	grid_y = new_p_y / TILE_SIZE;
+	grid_x = player->p_x / TILE_SIZE;
+	if (grid_y >= 0 && grid_y < HEIGHT)
+	{
+		if (can_step_in(map, grid_y, grid_x))
 			player->p_y = new_p_y;
-		}
 	}
 }
 
@@ -84,7 +109,7 @@ static void	handle_keys_move(mlx_t *mlx, t_map *map, t_player *player)
 		player->move_x = sin(player->p_a) * PLAYER_SPEED;
 		player->move_y = -cos(player->p_a) * PLAYER_SPEED;
 	}
-	perform_move(map, player, player->move_x, player->move_y);
+	perform_move(map, player);
 }
 
 /**
