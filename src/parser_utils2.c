@@ -66,3 +66,43 @@ void	convert_spaces_to_walls(t_map *map)
 		i++;
 	}
 }
+
+/**
+ * @brief Checks if the characters adjacent to a space are either a space or
+ * a wall in the first line of the map.
+ * 
+ * @param x The x-coordinate of the position to check.
+ * @param y The y-coordinate of the position to check.
+ * @param map Pointer to the map structure.
+ * @param game Pointer to the game structure.
+ */
+void	check_top_spaces(int x, int y, t_map *map, t_game *game)
+{
+	if (map->grid[y][x - 1] != '1' && !is_space(map->grid[y][x - 1]))
+		error_print_exit(ERR_MAP_NOT_CLOSED, game);
+	if (map->grid[y][x + 1] != '1' && !is_space(map->grid[y][x + 1]))
+		error_print_exit(ERR_MAP_NOT_CLOSED, game);
+	if (x < (int) ft_strlen(map->grid[y + 1])
+		&& (map->grid[y + 1][x] != '1' && !is_space(map->grid[y + 1][x])))
+		error_print_exit(ERR_MAP_NOT_CLOSED, game);
+}
+
+/**
+ * @brief Checks if the characters adjacent to a space are either a space or
+ * a wall in the last line of the map.
+ * 
+ * @param x The x-coordinate of the position to check.
+ * @param y The y-coordinate of the position to check.
+ * @param map Pointer to the map structure.
+ * @param game Pointer to the game structure.
+ */
+void	check_bot_spaces(int x, int y, t_map *map, t_game *game)
+{
+	if (map->grid[y][x - 1] != '1' && !is_space(map->grid[y][x - 1]))
+		error_print_exit(ERR_MAP_NOT_CLOSED, game);
+	if (map->grid[y][x + 1] != '1' && !is_space(map->grid[y][x + 1]))
+		error_print_exit(ERR_MAP_NOT_CLOSED, game);
+	if (x < (int) ft_strlen(map->grid[y - 1])
+		&& (map->grid[y - 1][x] != '1' && !is_space(map->grid[y - 1][x])))
+		error_print_exit(ERR_MAP_NOT_CLOSED, game);
+}
