@@ -6,7 +6,7 @@
 /*   By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/05 12:12:59 by aulicna           #+#    #+#             */
-/*   Updated: 2024/03/06 14:53:38 by aulicna          ###   ########.fr       */
+/*   Updated: 2024/03/07 22:50:10 by aulicna          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,30 +24,30 @@
  *
  * @param	game	pointer to the game struct
  */
-void	draw_2d_map_grid(t_game *game)
+void	draw_2d_map_grid(t_game *game, double tile_size_2d)
 {
 	int			i;
 	int			j;
 	t_draw_info	draw_info;
 
 	i = 0;
-	draw_info.y1 = TILE_SIZE_2D / 2;
+	draw_info.y1 =  tile_size_2d / 2;
 	while (game->map->grid[i])
 	{
-		draw_info.x1 = TILE_SIZE_2D / 2;
+		draw_info.x1 =  tile_size_2d / 2;
 		j = 0;
 		while (game->map->grid[i][j])
 		{
-			draw_info.size = TILE_SIZE_2D;
+			draw_info.size =  tile_size_2d;
 			if (game->map->grid[i][j] == '1')
 				draw_info.color = 0xFFFFFFFF;
 			else if (game->map->grid[i][j] == '0')
 				draw_info.color = 0xB99470FF;
 			draw_square(game->image, &draw_info);
-			draw_info.x1 += TILE_SIZE_2D;
+			draw_info.x1 +=  tile_size_2d;
 			j++;
 		}
-		draw_info.y1 += TILE_SIZE_2D;
+		draw_info.y1 +=  tile_size_2d;
 		i++;
 	}
 }
@@ -66,14 +66,15 @@ void	draw_2d_map_grid(t_game *game)
  * @param	player		pointer to the player struct
  * @param	ray			pointer to the ray being drawn
  */
-void	draw_2d_rays(mlx_image_t *image, t_player *player, t_ray *ray)
+void	draw_2d_rays(mlx_image_t *image, t_player *player, t_ray *ray,
+	double mini_map_scale)
 {
 	t_draw_info	draw_info;
 
-	draw_info.y1 = player->p_y / MINI_MAP;
-	draw_info.x1 = player->p_x / MINI_MAP;
-	draw_info.y2 = ray->r_y / MINI_MAP;
-	draw_info.x2 = ray->r_x / MINI_MAP;
+	draw_info.y1 = player->p_y / mini_map_scale;
+	draw_info.x1 = player->p_x / mini_map_scale;
+	draw_info.y2 = ray->r_y / mini_map_scale;
+	draw_info.x2 = ray->r_x / mini_map_scale;
 	draw_info.color = ray->color;
 	draw_line(image, &draw_info);
 }
@@ -91,18 +92,19 @@ void	draw_2d_rays(mlx_image_t *image, t_player *player, t_ray *ray)
  * @param	image		pointer to the image where the player is drawn
  * @param	player		pointer to the player struct
  */
-void	draw_2d_player(mlx_image_t *image, t_player *player)
+void	draw_2d_player(mlx_image_t *image, t_player *player,
+	double mini_map_scale)
 {
 	t_draw_info	draw_info;
 
 	draw_info.color = 0xFFFF00FF;
-	draw_info.y1 = player->p_y / MINI_MAP;
-	draw_info.x1 = player->p_x / MINI_MAP;
-	draw_info.size = PLAYER_SIZE / MINI_MAP;
+	draw_info.y1 = player->p_y / mini_map_scale;
+	draw_info.x1 = player->p_x / mini_map_scale;
+	draw_info.size = PLAYER_SIZE / mini_map_scale;
 	draw_square(image, &draw_info);
-	draw_info.y1 = player->p_y / MINI_MAP;
-	draw_info.x1 = player->p_x / MINI_MAP;
-	draw_info.y2 = (player->p_y + 50 * sin(player->p_a)) / MINI_MAP;
-	draw_info.x2 = (player->p_x + 50 * cos(player->p_a)) / MINI_MAP;
+	draw_info.y1 = player->p_y / mini_map_scale;
+	draw_info.x1 = player->p_x / mini_map_scale;
+	draw_info.y2 = (player->p_y + 50 * sin(player->p_a)) / mini_map_scale;
+	draw_info.x2 = (player->p_x + 50 * cos(player->p_a)) / mini_map_scale;
 	draw_line(image, &draw_info);
 }

@@ -6,11 +6,27 @@
 /*   By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/26 16:19:30 by aulicna           #+#    #+#             */
-/*   Updated: 2024/03/06 14:41:18 by aulicna          ###   ########.fr       */
+/*   Updated: 2024/03/07 21:55:52 by aulicna          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/cub3d.h"
+
+double	get_tile_size_2d(t_map *map)
+{
+	double	tmp_tile_from_width;
+	double	tmp_tile_from_height;
+
+	tmp_tile_from_width = 400 / map->map_width;
+	if (tmp_tile_from_width > 16)
+		tmp_tile_from_width = 16;
+	tmp_tile_from_height = 200 / map->map_height;
+	if (tmp_tile_from_height > 16)
+		tmp_tile_from_height = 16;
+	if (tmp_tile_from_width > tmp_tile_from_height)
+		return (tmp_tile_from_height);
+	return (tmp_tile_from_width);
+}
 
 double	get_player_angle(char start_dir)
 {
@@ -32,6 +48,8 @@ void	init_game_struct(t_game *game)
 	game->player->p_y = (game->map->start_y * TILE_SIZE) + (TILE_SIZE / 2);
 	game->player->p_a = get_player_angle(game->map->start_dir);
 	game->player->fov_rd = (FOV * M_PI) / 180;
+	game->map->tile_size_2d = get_tile_size_2d(game->map);
+	game->map->mini_map_scale = TILE_SIZE / game->map->tile_size_2d;
 }
 
 bool	init_mlx42(t_game *game)
@@ -78,6 +96,8 @@ int	init_empty_struct(t_game *game)
 	game->map->grid = NULL;
 	game->map->map_width = 0;
 	game->map->map_height = 0;
+	game->map->tile_size_2d = 0;
+	game->map->mini_map_scale = 0;
 	game->map->txt_no = NULL;
 	game->map->txt_so = NULL;
 	game->map->txt_we = NULL;

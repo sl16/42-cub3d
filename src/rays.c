@@ -6,7 +6,7 @@
 /*   By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/05 11:58:13 by aulicna           #+#    #+#             */
-/*   Updated: 2024/03/06 15:26:52 by aulicna          ###   ########.fr       */
+/*   Updated: 2024/03/07 22:52:57 by aulicna          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -329,7 +329,7 @@ void	cast_rays_2d(t_game *game, t_player *player, t_ray *ray)
 {
 	int	ray_counter;
 
-	draw_2d_map_grid(game);
+	draw_2d_map_grid(game, game->map->tile_size_2d);
 	ray->r_a = player->p_a - (player->fov_rd / 2);
 	ray_counter = 0;
 	while (ray_counter < WIDTH)
@@ -338,9 +338,9 @@ void	cast_rays_2d(t_game *game, t_player *player, t_ray *ray)
 		calculate_vertical_hit(game->map, player, ray);
 		calculate_horizontal_hit(game->map, player, ray);
 		pick_shortest_ray(ray);
-		draw_2d_rays(game->image, player, ray);
+		draw_2d_rays(game->image, player, ray, game->map->mini_map_scale);
 		ray->r_a += (player->fov_rd / WIDTH);
 		ray_counter++;
 	}
-	draw_2d_player(game->image, player);
+	draw_2d_player(game->image, player, game->map->mini_map_scale);
 }

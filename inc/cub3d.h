@@ -19,8 +19,6 @@
 # define WIDTH 1280
 # define HEIGHT 768
 # define TILE_SIZE 32
-# define TILE_SIZE_2D 16
-# define MINI_MAP 2
 # define FOV 60
 # define ROTATION_SPEED 0.045
 # define PLAYER_SPEED 5
@@ -55,6 +53,8 @@ typedef struct s_map
 	char	**grid;
 	int		map_width;
 	int		map_height;
+	double	tile_size_2d;
+	double	mini_map_scale;
 	int		start_count;
 	int		start_x;
 	int		start_y;
@@ -139,9 +139,11 @@ void	cast_rays_2d(t_game *game, t_player *player, t_ray *ray);
 double	normalize_angle(double angle);
 
 // draw_2d.c
-void	draw_2d_map_grid(t_game *game);
-void	draw_2d_rays(mlx_image_t *image, t_player *player, t_ray *ray);
-void	draw_2d_player(mlx_image_t *image, t_player *player);
+void	draw_2d_map_grid(t_game *game, double tile_size_2d);
+void	draw_2d_rays(mlx_image_t *image, t_player *player, t_ray *ray,
+	double mini_map_scale);
+void	draw_2d_player(mlx_image_t *image, t_player *player,
+	double mini_map_scale);
 
 // draw_3d.c
 void	draw_3d_game(t_game *game, int ray_counter);
