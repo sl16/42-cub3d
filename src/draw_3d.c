@@ -6,7 +6,7 @@
 /*   By: vbartos <vbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/05 12:14:29 by aulicna           #+#    #+#             */
-/*   Updated: 2024/03/07 22:14:28 by vbartos          ###   ########.fr       */
+/*   Updated: 2024/03/08 16:56:57 by vbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,16 +58,15 @@ int	get_colour_from_pixel(u_int8_t *pixel)
 	return (pixel[0] << 24 | pixel[1] << 16 | pixel[2] << 8 | pixel[3]);
 }
 
-static int	get_px_height(mlx_texture_t *texture, double wall_height, int curr_height)
+static int	get_px_height(mlx_texture_t *texture, double wall_height,
+	double curr_height, double wall_end)
 {
-	int		height;
-	float	height_divided;
+	int		px_height;
+	double	tile_increment;
 
-	if (wall_height > HEIGHT)
-		curr_height += (wall_height - HEIGHT) / 2;
-	height_divided = (texture->height / wall_height);
-	height = floor((height_divided * curr_height)) * texture->height;
-	return (height);
+	tile_increment = wall_height / TILE_SIZE;
+	px_height = (wall_end - wall_height);
+	return (px_height);
 }
 
 static void	draw_3d_column_wall(t_game *game, int x, double start,
@@ -76,14 +75,15 @@ static void	draw_3d_column_wall(t_game *game, int x, double start,
 	u_int8_t	*pixel;
 	int			pixel_texture_location;
 
-	pixel_texture_location = get_px_height(texture, wall_height, start);
+	pixel_texture_location = get_px_height(texture, wall_height, start, stop);
 	// pixel_texture_location += width_pixels;
 	pixel_texture_location *= texture->bytes_per_pixel;
 	pixel = &texture->pixels[pixel_texture_location];
 
 	while (start < stop)
 	{
-		mlx_put_pixel(game->image, x, start, get_colour_from_pixel(pixel));
+		// mlx_put_pixel(game->image, x, start, get_colour_from_pixel(pixel));
+		mlx_put_pixel(game->image, x, start, 000000);
 		start++;
 	}
 }
