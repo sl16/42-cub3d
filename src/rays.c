@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   rays.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+        */
+/*   By: vbartos <vbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/05 11:58:13 by aulicna           #+#    #+#             */
-/*   Updated: 2024/03/06 15:26:52 by aulicna          ###   ########.fr       */
+/*   Updated: 2024/03/07 21:52:40 by vbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -289,6 +289,7 @@ void	pick_shortest_ray(t_ray *ray)
 void	cast_rays_3d(t_game *game, t_player *player, t_ray *ray)
 {
 	int	ray_counter;
+	mlx_texture_t* texture = mlx_load_png("./textures/32x32_test.png");
 
 	ray->r_a = player->p_a - (player->fov_rd / 2);
 	ray_counter = 0;
@@ -298,7 +299,7 @@ void	cast_rays_3d(t_game *game, t_player *player, t_ray *ray)
 		calculate_vertical_hit(game->map, player, ray);
 		calculate_horizontal_hit(game->map, player, ray);
 		pick_shortest_ray(ray);
-		draw_3d_game(game, ray_counter);
+		draw_3d_game(game, ray_counter, texture);
 		ray->r_a += (player->fov_rd / WIDTH);
 		ray_counter++;
 	}

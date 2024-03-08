@@ -104,6 +104,7 @@ typedef struct s_game
 	t_map		*map;
 	t_player	*player;
 	t_ray		*ray;
+	
 }	t_game;
 
 typedef struct s_draw_info
@@ -145,7 +146,7 @@ void	draw_2d_rays(mlx_image_t *image, t_player *player, t_ray *ray);
 void	draw_2d_player(mlx_image_t *image, t_player *player);
 
 // draw_3d.c
-void	draw_3d_game(t_game *game, int ray_counter);
+void	draw_3d_game(t_game *game, int ray_counter, mlx_texture_t* texture);
 
 // draw_utils.c
 void	draw_square(mlx_image_t *image, t_draw_info *draw_info);

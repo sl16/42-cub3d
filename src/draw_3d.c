@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   draw_3d.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+        */
+/*   By: vbartos <vbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/05 12:14:29 by aulicna           #+#    #+#             */
-/*   Updated: 2024/03/06 15:26:16 by aulicna          ###   ########.fr       */
+/*   Updated: 2024/03/07 22:14:28 by vbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,6 +53,41 @@ static void	draw_3d_column(t_game *game, int x, double start,
 	}
 }
 
+int	get_colour_from_pixel(u_int8_t *pixel)
+{
+	return (pixel[0] << 24 | pixel[1] << 16 | pixel[2] << 8 | pixel[3]);
+}
+
+static int	get_px_height(mlx_texture_t *texture, double wall_height, int curr_height)
+{
+	int		height;
+	float	height_divided;
+
+	if (wall_height > HEIGHT)
+		curr_height += (wall_height - HEIGHT) / 2;
+	height_divided = (texture->height / wall_height);
+	height = floor((height_divided * curr_height)) * texture->height;
+	return (height);
+}
+
+static void	draw_3d_column_wall(t_game *game, int x, double start,
+	double stop, double wall_height, mlx_texture_t* texture)
+{
+	u_int8_t	*pixel;
+	int			pixel_texture_location;
+
+	pixel_texture_location = get_px_height(texture, wall_height, start);
+	// pixel_texture_location += width_pixels;
+	pixel_texture_location *= texture->bytes_per_pixel;
+	pixel = &texture->pixels[pixel_texture_location];
+
+	while (start < stop)
+	{
+		mlx_put_pixel(game->image, x, start, get_colour_from_pixel(pixel));
+		start++;
+	}
+}
+
 /**
  * @brief	Draws a 3D representation of the game world for a given ray.
  *
@@ -74,7 +109,7 @@ static void	draw_3d_column(t_game *game, int x, double start,
  * @param	game		pointer to the game state
  * @param	ray_counter	index of the current ray being cast
  */
-void	draw_3d_game(t_game *game, int ray_counter)
+void	draw_3d_game(t_game *game, int ray_counter, mlx_texture_t* texture)
 {
 	double	wall_height;
 	double	wall_end;
@@ -90,7 +125,7 @@ void	draw_3d_game(t_game *game, int ray_counter)
 		wall_end = HEIGHT;
 	if (wall_start < 0)
 		wall_start = 0;
-	draw_3d_column(game, ray_counter, wall_start, wall_end);
+	draw_3d_column_wall(game, ray_counter, wall_start, wall_end, wall_height, texture);
 	game->ray->color = get_color(&game->map->clr_ceiling);
 	draw_3d_column(game, ray_counter, 0, wall_start);
 	game->ray->color = get_color(&game->map->clr_floor);
