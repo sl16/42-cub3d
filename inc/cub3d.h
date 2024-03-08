@@ -132,6 +132,7 @@ typedef enum s_orientation
 // init.c
 bool	init_mlx42(t_game *game);
 void	init_game_struct(t_game *game);
+int		init_empty_struct(t_game *game);
 
 // rays.c
 void	cast_rays_3d(t_game *game, t_player *player, t_ray *ray);
@@ -154,30 +155,36 @@ void	print_grid(char **grid, int map_height);
 // keys.c
 void	handle_key_actions(void *param);
 
-// free.c
-void	free_game_full(t_game *game);
-
+// error.c
 int		error_print(char *error_message);
 void	error_print_exit(char *error_message, t_game *game);
 
+// free.c
 int		free_game_parser(t_game *game);
+void	free_game_full(t_game *game);
 int		free_map(t_map *map);
 int		free_str_arr(char **arr);
 
-int		init_empty_struct(t_game *game);
+// checker_arg.c
 int		checker_arg(int argc, char **argv, t_game *game);
 
+// parser.c, parser_utils.c, parser_utils2.c
 int		parser(t_game *game);
 int		is_space(char input);
 int		is_wall(char input);
+int		line_has_spaces_only(char *line);
 int		increment_if_space(char *input, int i);
 int		find_last_char(char *input);
 void	get_map_dimensions(t_map *map);
 void	copy_map(t_map *map, t_game *game);
 void	convert_spaces_to_walls(t_map *map);
+void	check_top_spaces(int x, int y, t_map *map, t_game *game);
+void	check_bot_spaces(int x, int y, t_map *map, t_game *game);
 
+// checker_map.c
 void	checker_map(t_map *map, t_game *game);
 
+// debug.c
 int		print_map(char **map);
 int		print_values(t_game *game);
 

@@ -89,9 +89,8 @@ static void	check_side_walls(t_map *map, t_game *game)
 
 /**
  * @brief Checks if the characters adjacent to a space are either a space or
- * a wall. The first and last lines and the first and last characters in
- * a line are ignored (as they are checked by other functions or the adjacency
- * and accessing their neighbours would cause a segfault).
+ * a wall. The first and last lines of the map are handled by altered functions
+ * to prevent accessing a non-existent array index and segfaulting.
  * 
  * @param x The x-coordinate of the position to check.
  * @param y The y-coordinate of the position to check.
@@ -100,12 +99,20 @@ static void	check_side_walls(t_map *map, t_game *game)
  */
 static void	check_spaces(int x, int y, t_map *map, t_game *game)
 {
-	if (y == 0 || y == map->map_height - 1 || !is_space(map->grid[y][x]))
-		return ;
 	if (x == 0)
 		x++;
 	if (x == (int) ft_strlen(map->grid[y]) - 1)
 		x--;
+	if (y == 0)
+	{
+		check_top_spaces(x, y, map, game);
+		return ;
+	}
+	if (y == map->map_height - 1)
+	{
+		check_bot_spaces(x, y, map, game);
+		return ;
+	}
 	if (map->grid[y][x - 1] != '1' && !is_space(map->grid[y][x - 1]))
 		error_print_exit(ERR_MAP_ADJACENT, game);
 	if (map->grid[y][x + 1] != '1' && !is_space(map->grid[y][x + 1]))
@@ -143,7 +150,8 @@ void	checker_map(t_map *map, t_game *game)
 		while (map->grid[i][j] != '\0')
 		{
 			check_chars(j, i, map, game);
-			check_spaces(j, i, map, game);
+			if (is_space(map->grid[i][j]))
+				check_spaces(j, i, map, game);
 			j++;
 		}
 		i++;
