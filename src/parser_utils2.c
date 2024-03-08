@@ -106,3 +106,26 @@ void	check_bot_spaces(int x, int y, t_map *map, t_game *game)
 		&& (map->grid[y - 1][x] != '1' && !is_space(map->grid[y - 1][x])))
 		error_print_exit(ERR_MAP_NOT_CLOSED, game);
 }
+
+/**
+ * Checks if a line contains only spaces.
+ * 
+ * The function is intended for use in if statements, therefore 1 is returned
+ * on success.
+ *
+ * @param line The line to check.
+ * @return 1 if the line contains only spaces, 0 otherwise.
+ */
+int	line_has_spaces_only(char *line)
+{
+	int	i;
+
+	i = 0;
+	while (line[i] != '\0')
+	{
+		if (!is_space(line[i]))
+			return (0);
+		i++;
+	}
+	return (1);
+}

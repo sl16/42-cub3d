@@ -172,6 +172,7 @@ int		checker_arg(int argc, char **argv, t_game *game);
 int		parser(t_game *game);
 int		is_space(char input);
 int		is_wall(char input);
+int		line_has_spaces_only(char *line);
 int		increment_if_space(char *input, int i);
 int		find_last_char(char *input);
 void	get_map_dimensions(t_map *map);

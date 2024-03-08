@@ -128,8 +128,9 @@ static void	find_map_in_file(t_map *map, t_game *game)
 		j = 0;
 		while (map->parsed_file[i][j] != '\0')
 		{
-			if (map->parsed_file[i][j] != '1'
+			if ((map->parsed_file[i][j] != '1'
 				&& !is_space(map->parsed_file[i][j]))
+				|| line_has_spaces_only(map->parsed_file[i]))
 				break ;
 			j++;
 			if (map->parsed_file[i][j] == '\0')
