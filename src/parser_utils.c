@@ -100,5 +100,8 @@ void	get_map_dimensions(t_map *map)
 		i++;
 	}
 	map->map_width = max_width;
-	map->map_height = i;
+	i--;
+	while (line_has_spaces_only(map->grid[i]))
+		i--;
+	map->map_height = i + 1;
 }
