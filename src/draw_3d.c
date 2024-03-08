@@ -6,7 +6,7 @@
 /*   By: vbartos <vbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/05 12:14:29 by aulicna           #+#    #+#             */
-/*   Updated: 2024/03/08 16:56:57 by vbartos          ###   ########.fr       */
+/*   Updated: 2024/03/08 17:41:49 by vbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,9 +63,13 @@ static int	get_px_height(mlx_texture_t *texture, double wall_height,
 {
 	int		px_height;
 	double	tile_increment;
+	int		wall_start;
 
 	tile_increment = wall_height / TILE_SIZE;
-	px_height = (wall_end - wall_height);
+	wall_start = (wall_end - wall_height) - curr_height;
+	while(wall_start < curr_height)
+		wall_start += tile_increment;
+	px_height = (wall_start % TILE_SIZE) * texture->height;
 	return (px_height);
 }
 
@@ -76,14 +80,14 @@ static void	draw_3d_column_wall(t_game *game, int x, double start,
 	int			pixel_texture_location;
 
 	pixel_texture_location = get_px_height(texture, wall_height, start, stop);
-	// pixel_texture_location += width_pixels;
+	pixel_texture_location += x % TILE_SIZE;
 	pixel_texture_location *= texture->bytes_per_pixel;
 	pixel = &texture->pixels[pixel_texture_location];
 
 	while (start < stop)
 	{
-		// mlx_put_pixel(game->image, x, start, get_colour_from_pixel(pixel));
-		mlx_put_pixel(game->image, x, start, 000000);
+		mlx_put_pixel(game->image, x, start, get_colour_from_pixel(pixel));
+		// mlx_put_pixel(game->image, x, start, 000000);
 		start++;
 	}
 }
