@@ -6,12 +6,11 @@
 /*   By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/26 16:21:04 by aulicna           #+#    #+#             */
-/*   Updated: 2024/03/07 21:13:40 by aulicna          ###   ########.fr       */
+/*   Updated: 2024/03/09 15:02:26 by aulicna          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/cub3d.h"
-
 /**
  * @brief	Checks if the specified grid cell in the map is a space
  * that the player can move into.
@@ -26,8 +25,7 @@
  */
 bool	can_step_in(t_map *map, int grid_y, int grid_x)
 {
-	if (map->grid[grid_y][grid_x] == '0'
-		|| map->grid[grid_y][grid_x] == 'P')
+	if (map->grid[grid_y][grid_x] == '0')
 		return (true);
 	return (false);
 }
@@ -58,7 +56,7 @@ static void	perform_move(t_map *map, t_player *player)
 	new_p_x = roundf(player->p_x + player->move_x);
 	grid_x = new_p_x / TILE_SIZE;
 	grid_y = player->p_y / TILE_SIZE;
-	if (grid_x >= 0 && grid_x < WIDTH)
+	if (grid_x >= 0 && grid_x < map->map_width)
 	{
 		if (can_step_in(map, grid_y, grid_x))
 			player->p_x = new_p_x;
@@ -66,7 +64,7 @@ static void	perform_move(t_map *map, t_player *player)
 	new_p_y = roundf(player->p_y + player->move_y);
 	grid_y = new_p_y / TILE_SIZE;
 	grid_x = player->p_x / TILE_SIZE;
-	if (grid_y >= 0 && grid_y < HEIGHT)
+	if (grid_y >= 0 && grid_y < map->map_height)
 	{
 		if (can_step_in(map, grid_y, grid_x))
 			player->p_y = new_p_y;

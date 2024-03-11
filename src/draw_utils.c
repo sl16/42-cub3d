@@ -6,7 +6,7 @@
 /*   By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/05 12:16:47 by aulicna           #+#    #+#             */
-/*   Updated: 2024/03/06 14:52:13 by aulicna          ###   ########.fr       */
+/*   Updated: 2024/03/09 14:57:15 by aulicna          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ void	draw_square(mlx_image_t *image, t_draw_info *draw_info)
 		{
 			pxl_x = (draw_info->x1 - draw_info->size / 2) + x;
 			pxl_y = (draw_info->y1 - draw_info->size / 2) + y;
-			if (pxl_x >= 0 && pxl_x <= WIDTH && pxl_y >= 0 && pxl_y <= HEIGHT)
+			if (pxl_x >= 0 && pxl_x < WIDTH && pxl_y >= 0 && pxl_y < HEIGHT)
 				mlx_put_pixel(image, pxl_x, pxl_y, draw_info->color);
 			y++;
 		}

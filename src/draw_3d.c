@@ -6,29 +6,11 @@
 /*   By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/05 12:14:29 by aulicna           #+#    #+#             */
-/*   Updated: 2024/03/11 16:08:33 by aulicna          ###   ########.fr       */
+/*   Updated: 2024/03/12 00:09:33 by aulicna          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/cub3d.h"
-
-/**
- * @brief	Converts a color represented in RGBA components into a single
- * 32-bit integer.
- *
- * Example:
- * t_clr color = {255, 127, 0, 255};
- * uint32_t int_color = get_color(&color);
- * -> int_color is now 0xFF7F00FF
- * 
- * @param	color	pointer to a t_clr structure which contains the red, green,
- * 					blue, and alpha components of a color.
- * @return	uint32	color as an uint32
- */
-uint32_t	get_color(t_clr *color)
-{
-	return ((color->r << 24) | (color->g << 16) | (color->b << 8) | color->a);
-}
 
 /**
  * @brief	Draws a single vertical column of pixels for a 3D wall.
@@ -53,7 +35,7 @@ static void	draw_3d_column(t_game *game, int x, double start,
 	}
 }
 
-// add checking for invalid files
+// to be replaced in parser: function checking if the files exist via load_png + delete_texture (to free memory at the end too))
 void	load_textures(t_map *map)
 {
 	map->mlx_txt_no = mlx_load_png(map->txt_no);	
@@ -81,7 +63,8 @@ static	mlx_texture_t	*get_texture(t_map *map, t_ray *ray)
 	return (0);
 }
 
-void	draw_wall(t_game *game, int x, double start, double stop)
+// replaced with draw_wall below
+void	draw_wall_old(t_game *game, int x, double start, double stop)
 {
 	while (start < stop)
 	{
@@ -101,7 +84,7 @@ t_clr reverse_bytes(t_clr color)
 	return (reversed_color);
 }
 
-void	draw_wall_new(t_game *game, t_ray *ray, int x, double wall_start, double wall_end, double wall_height)
+void	draw_wall(t_game *game, t_ray *ray, int x, double wall_start, double wall_end, double wall_height)
 {
 	mlx_texture_t	*txt;
 	double		txt_x;
@@ -110,19 +93,49 @@ void	draw_wall_new(t_game *game, t_ray *ray, int x, double wall_start, double wa
 	t_clr		*txt_color_array;
 	t_clr	color;
 
+	// gets the texture for the wall, determined by the orientation and direction of the ray
 	txt = get_texture(game->map, ray);
+	// gets a point to the pixel data of the texture
+	// each pixel is represented as a t_clr struct (rgba)
+	// Details:
+	// Pixels hold the raw pixels of the texture as a 1D array
+	// each element of pixels (byte, bcs it's of type uint8_t) represents of pixel's colors (r, g, b or a)
+	// When casted into t_clr (or uint32_t) each element represents one whole pixel as it can hold 4 bytes
+	// this is done so that we can later directly access the color of the whole pixel that we are interested in
 	txt_color_array = (t_clr *)txt->pixels;
-	txt_factor = (double)txt->height / wall_height;
+	// Calculates the factor by which the texture should be scaled to fit the height of the wall
+	// If the wall slice is taller than the texture, the texture will be stretched
+	// If it's shorter, the texture will be squished
+	txt_factor = (double)(floor(txt->height / TILE_SIZE) * TILE_SIZE) / wall_height;
+	// the if-else statement determines the x-coordinate of the texture
 	if (game->ray->angle_orientation ==  HORIZONTAL)	
-		txt_x = fmodf(ray->hy, TILE_SIZE) / TILE_SIZE * txt->width;
+	// When the ray hit the wall horizontally, it means it hit it at the y-coordinate
+	// Fmod gets the exact position where the ray hit the wall on the y-axis relative to the size of a tile
+	// that is done by taking the remainder of the division of ray->hy by TILE_SIZE, which effectively gives the y-coordinate within the bounds of the current tile
+	// This value is then divided by TILE_SIZE to normalize it to a range between 0 and 1.
+	// this is necessary because texture coordinates are typically defined in a range from 0 to 1, where 0 represents one edge of the texture and 1 represents the opposite edge.
+	// Finally, this normalized value is multiplied by txt->width to scale it to the width of the texture
+	// this gives the x-coordinate of the texture that corresponds to the point on the wall where the ray hit.
+		txt_x = fmod(ray->r_y, TILE_SIZE) / TILE_SIZE * txt->width;
 	else if (game->ray->angle_orientation == VERTICAL)
-		txt_x = fmodf(ray->vx, TILE_SIZE) / TILE_SIZE * txt->width;
+		txt_x = fmod(ray->r_x, TILE_SIZE) / TILE_SIZE * txt->width;
+	// HEIGHT / 2 is used to adjust the y-coordinate to be relative to the middle of the screen (doesn't neccessarily mean that the wall will be in the middle)
+	// Wall_height / 2 then offsets the starting point, so that half of the wall is drawn to the middle point and the other from it
+	// Finally the scaling factor is used to get the y-coordinate of the texture that corresponds to the y-coordinate on the screen
 	txt_y = ((wall_start - (HEIGHT / 2) + (wall_height / 2)) * txt_factor);
 	while (wall_start < wall_end)
 	{
+		// Indexing:
+		//  The texture's pixel data is stored in a one-dimensional array, but it represents a two-dimensional image.
+		//  therefore, we need to convert the 2D coordinates (txt_x, txt_y) into a 1D index to access the correct pixel.
+		//	Txt_y * txt->width finds the start of the row (first pixel) in the 1D array that corresponds to the y-coordinate on the texture
+		//  + txt_x finds the x-coordinate within the row as it moves from the beginning of the row to the correct pixel
+		// Reverse_bytes:
+		//  
 		color = reverse_bytes(txt_color_array[(int)txt_y * txt->width + (int)txt_x]);
 		//color = txt_color_array[(int)txt_y * txt->width + (int)txt_x];
 		mlx_put_pixel(game->image, x, wall_start, color.rgba);
+		// Moves the y-coordinate ensuring that the texture is scaled to the height of the wall
 		txt_y += txt_factor;
 		wall_start++;
 	}
@@ -165,13 +178,11 @@ void	draw_3d_game(t_game *game, int ray_counter)
 		wall_end = HEIGHT;
 	if (wall_start < 0)
 		wall_start = 0;
-	//draw_wall(game, ray_counter, wall_start, wall_end);
-	draw_wall_new(game, game->ray, ray_counter, wall_start, wall_end, wall_height);
-//	game->ray->color = get_color(&game->map->clr_ceiling);
+	//draw_wall_old(game, ray_counter, wall_start, wall_end);
+	draw_wall(game, game->ray, ray_counter, wall_start, wall_end, wall_height);
 	game->ray->color = reverse_bytes(game->map->clr_ceiling).rgba;
 //	game->ray->color = game->map->clr_ceiling.rgba;
 	draw_3d_column(game, ray_counter, 0, wall_start);
-//	game->ray->color = get_color(&game->map->clr_floor);
 	game->ray->color = reverse_bytes(game->map->clr_floor).rgba;
 //	game->ray->color = game->map->clr_floor.rgba;
 	draw_3d_column(game, ray_counter, wall_end, HEIGHT);
