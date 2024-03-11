@@ -46,6 +46,18 @@ typedef union u_clr
 	};
 }				t_clr;
 
+//typedef union u_clr
+//{
+//	unsigned int	rgba;
+//	struct
+//	{
+//		unsigned char	a;
+//		unsigned char	b;
+//		unsigned char	g;
+//		unsigned char	r;
+//	};
+//}				t_clr;
+
 typedef struct s_map
 {
 	int		fd;
@@ -63,6 +75,10 @@ typedef struct s_map
 	char	*txt_so;
 	char	*txt_we;
 	char	*txt_ea;
+	mlx_texture_t	*mlx_txt_no;
+	mlx_texture_t	*mlx_txt_so;
+	mlx_texture_t	*mlx_txt_we;
+	mlx_texture_t	*mlx_txt_ea;
 	t_clr	clr_floor;
 	t_clr	clr_ceiling;
 }				t_map;
@@ -84,17 +100,18 @@ typedef struct s_ray
 	double	r_y;
 	double	angle_nor; // normalized ray angle
 	double	angle_diff;
-	double	vy;
-	double	vx;
-	double	dist_ver;
-	double	hy;
-	double	hx;
-	double	dist_hor;
+	int		angle_orientation;
+	double	vy; // vertical ray hit
+	double	vx; // vertical ray hit
+	double	dist_ver; // vertical ray hit
+	double	hy;	// horizontal ray hit
+	double	hx;	// horizontal ray hit
+	double	dist_hor;	// horizontal ray hit
 	double	dist_total; // distance to the wall
 	double	y_step;
 	double	x_step;
 	int		pixel;
-	int		color;
+	uint32_t		color;
 }	t_ray;
 
 typedef struct s_game
@@ -128,6 +145,10 @@ typedef enum s_orientation
 	HORIZONTAL,
 	VERTICAL
 }	t_orientation;
+
+
+// TEXTURES
+void	load_textures(t_map *map);
 
 // init.c
 bool	init_mlx42(t_game *game);

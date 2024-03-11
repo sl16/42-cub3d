@@ -6,7 +6,7 @@
 /*   By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/28 11:37:55 by aulicna           #+#    #+#             */
-/*   Updated: 2024/03/06 15:18:58 by aulicna          ###   ########.fr       */
+/*   Updated: 2024/03/11 11:14:28 by aulicna          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,6 +56,7 @@ int	main(int argc, char **argv)
 		free_game_full(game);
 		return (1);
 	}
+	load_textures(game->map);
 	mlx_loop_hook(game->mlx, &game_loop, game);
 	mlx_loop_hook(game->mlx, &handle_key_actions, game);
 	mlx_loop(game->mlx);

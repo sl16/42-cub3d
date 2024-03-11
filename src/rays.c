@@ -6,7 +6,7 @@
 /*   By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/05 11:58:13 by aulicna           #+#    #+#             */
-/*   Updated: 2024/03/07 22:52:57 by aulicna          ###   ########.fr       */
+/*   Updated: 2024/03/11 11:21:33 by aulicna          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -248,6 +248,7 @@ void	pick_shortest_ray(t_ray *ray)
 	if (ray->dist_hor < ray->dist_ver)
 	{
 		ray->dist_total = ray->dist_hor;
+		ray->angle_orientation = HORIZONTAL;
 		ray->r_x = ray->hx;
 		ray->r_y = ray->hy;
 		if (ray->angle_nor > M_PI / 2 && ray->angle_nor < 3 * (M_PI / 2))
@@ -258,6 +259,7 @@ void	pick_shortest_ray(t_ray *ray)
 	else
 	{
 		ray->dist_total = ray->dist_ver;
+		ray->angle_orientation = VERTICAL;
 		ray->r_x = ray->vx;
 		ray->r_y = ray->vy;
 		if (ray->angle_nor > 0 && ray->angle_nor < M_PI)
