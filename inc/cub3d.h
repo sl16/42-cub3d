@@ -6,6 +6,7 @@
 # define ERR_ARGC			"Provide a path to your desired map only."
 # define ERR_ARGV			"Provide a .cub file."
 # define ERR_OPEN			"File cannot be opened."
+# define ERR_TXT_OPEN		"A texture file cannot be opened."
 # define ERR_MISSING_VALUE	"The provided map is missing a required value."
 # define ERR_MAP_NOT_FOUND	"No valid map found in provided file."
 # define ERR_MAP_NOT_CLOSED	"The map's perimeter is not enclosed in walls."
@@ -168,8 +169,11 @@ int		free_str_arr(char **arr);
 // checker_arg.c
 int		checker_arg(int argc, char **argv, t_game *game);
 
-// parser.c, parser_utils.c, parser_utils2.c
+// parser_file.c, parser_values.c, parser_utils.c, parser_utils2.c
 int		parser(t_game *game);
+char	*value_parser(char *value, char **parsed_file);
+void	clr_parser(char *value, char **parsed_file, t_game *game);
+void	files_exist(t_game *game);
 int		is_space(char input);
 int		is_wall(char input);
 int		line_has_spaces_only(char *line);
