@@ -101,6 +101,7 @@ typedef struct s_game
 {
 	mlx_t		*mlx;
 	mlx_image_t	*image;
+	mlx_image_t	*animation;
 	t_map		*map;
 	t_player	*player;
 	t_ray		*ray;
@@ -187,5 +188,12 @@ void	checker_map(t_map *map, t_game *game);
 // debug.c
 int		print_map(char **map);
 int		print_values(t_game *game);
+
+// animation.c
+void	put_img_to_img(mlx_image_t* dst, mlx_image_t* src, int x, int y);
+int		put_pixel_valid(mlx_image_t* img, uint32_t x, uint32_t y);
+int32_t	mlx_get_pixel(mlx_image_t* image, uint32_t x, uint32_t y);
+int 	get_rgba(int r, int g, int b, int a);
+void	play_animation(t_game *game);
 
 #endif

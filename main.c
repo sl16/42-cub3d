@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+        */
+/*   By: vbartos <vbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/28 11:37:55 by aulicna           #+#    #+#             */
-/*   Updated: 2024/03/06 15:18:58 by aulicna          ###   ########.fr       */
+/*   Updated: 2024/03/12 12:39:44 by vbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,7 @@ void	game_loop(void *param)
 	}
 	cast_rays_3d(game, game->player, game->ray);
 	cast_rays_2d(game, game->player, game->ray);
+	play_animation(game);
 	if (mlx_image_to_window(game->mlx, game->image, 0, 0) == -1)
 	{
 		mlx_close_window(game->mlx);
@@ -56,6 +57,9 @@ int	main(int argc, char **argv)
 		free_game_full(game);
 		return (1);
 	}
+	mlx_texture_t* texture = mlx_load_png("./textures/txt_32x32.png");
+	game->animation = mlx_texture_to_image(game->mlx, texture);
+	mlx_resize_image(game->animation, 100, 100);
 	mlx_loop_hook(game->mlx, &game_loop, game);
 	mlx_loop_hook(game->mlx, &handle_key_actions, game);
 	mlx_loop(game->mlx);
