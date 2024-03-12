@@ -6,7 +6,7 @@
 /*   By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/26 16:21:04 by aulicna           #+#    #+#             */
-/*   Updated: 2024/03/09 15:02:26 by aulicna          ###   ########.fr       */
+/*   Updated: 2024/03/12 23:18:29 by aulicna          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,18 +53,20 @@ static void	perform_move(t_map *map, t_player *player)
 	int	grid_x;
 	int	grid_y;
 
-	new_p_x = roundf(player->p_x + player->move_x);
-	grid_x = new_p_x / TILE_SIZE;
-	grid_y = player->p_y / TILE_SIZE;
-	if (grid_x >= 0 && grid_x < map->map_width)
+	new_p_x = round(player->p_x + player->move_x);
+	grid_x = (new_p_x / TILE_SIZE);
+	//grid_y = player->p_y / TILE_SIZE;
+	grid_y = (player->p_y - (TILE_SIZE / 2)) / TILE_SIZE;
+	if (grid_x >= 0 && grid_x < map->map_width - 1)
 	{
 		if (can_step_in(map, grid_y, grid_x))
 			player->p_x = new_p_x;
 	}
-	new_p_y = roundf(player->p_y + player->move_y);
-	grid_y = new_p_y / TILE_SIZE;
-	grid_x = player->p_x / TILE_SIZE;
-	if (grid_y >= 0 && grid_y < map->map_height)
+	new_p_y = round(player->p_y + player->move_y);
+	grid_y = (new_p_y / TILE_SIZE);
+	//grid_x = player->p_x / TILE_SIZE;
+	grid_x = (player->p_x - (TILE_SIZE / 2)) / TILE_SIZE;
+	if (grid_y >= 0 && grid_y < map->map_height - 1)
 	{
 		if (can_step_in(map, grid_y, grid_x))
 			player->p_y = new_p_y;
@@ -74,7 +76,7 @@ static void	perform_move(t_map *map, t_player *player)
 /**
  * @brief	Handles the movement keys.
  *
- * This function checks if the movement keys (W, S, A, D, UP, DOWN) are pressed.
+ * Thisunction checks if the movement keys (W, S, A, D, UP, DOWN) are pressed.
  * If a key is pressed, it calculates the move in the x and y directions based
  * on the player's angle and speed. It then calls the perform_move function
  * to perform the move.

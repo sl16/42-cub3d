@@ -6,7 +6,7 @@
 /*   By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/12 17:01:23 by aulicna           #+#    #+#             */
-/*   Updated: 2024/03/12 17:55:12 by aulicna          ###   ########.fr       */
+/*   Updated: 2024/03/12 20:18:47 by aulicna          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@
  * @param	stop	y-coordinate to stop drawing at
  *
  */
-static void	draw_3d_column(t_game *game, int x, double start,
+void	draw_3d_column(t_game *game, int x, double start,
 	double stop)
 {
 	while (start < stop)
@@ -81,7 +81,7 @@ static	mlx_texture_t	*get_texture(t_map *map, t_ray *ray)
  * @param	color	original color
  * @return	t_clr	color with reversed byte order
  */
-t_clr	reverse_bytes(t_clr color)
+static t_clr	reverse_bytes(t_clr color)
 {
 	t_clr	reversed_color;
 

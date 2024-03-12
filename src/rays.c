@@ -6,7 +6,7 @@
 /*   By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/05 11:58:13 by aulicna           #+#    #+#             */
-/*   Updated: 2024/03/12 17:59:54 by aulicna          ###   ########.fr       */
+/*   Updated: 2024/03/12 22:16:09 by aulicna          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,9 +71,9 @@ int	wall_hit(t_map *map, double x, double y)
 		return (0);
 	m_x = floor (x / TILE_SIZE);
 	m_y = floor (y / TILE_SIZE);
-	if (m_y >= map->map_height || m_y <= 0 || m_x >= map->map_width || m_x <= 0)
+	if (m_y >= map->map_height || m_y < 0 || m_x >= map->map_width || m_x < 0)
 		return (0);
-	if (map->grid[m_y] && m_x <= (int)strlen(map->grid[m_y]))
+	if (map->grid[m_y] && m_x < (int)strlen(map->grid[m_y]))
 		if (map->grid[m_y][m_x] == '1')
 			return (0);
 	return (1);
@@ -295,6 +295,35 @@ void	cast_rays_3d(t_game *game, t_player *player, t_ray *ray)
 	}
 }
 
+void	draw_2d_game(t_game *game, int ray_counter)
+{
+	t_wall	wall;
+	t_draw_info	draw_info;
+	(void) ray_counter;
+
+	game->ray->angle_diff = normalize_angle(game->ray->r_a - game->player->p_a);
+	game->ray->dist_total *= cos(game->ray->angle_diff);
+	wall.wall_height = (TILE_SIZE / game->ray->dist_total)
+		* ((WIDTH / 2) / tan(game->player->fov_rd / 2)) / game->map->mini_map_scale;
+	wall.wall_start = ((HEIGHT / 2) - (wall.wall_height / 2)) / game->map->mini_map_scale;
+	wall.wall_end = ((HEIGHT / 2) + (wall.wall_height / 2)) / game->map->mini_map_scale;
+	if (wall.wall_end > HEIGHT)
+		wall.wall_end = HEIGHT;
+	if (wall.wall_start < 0)
+		wall.wall_start = 0;
+	game->ray->color = 0x00FF00FF;
+	draw_info.x1 = game->player->p_x / game->map->mini_map_scale;
+	draw_info.y1 = game->player->p_y / game->map->mini_map_scale;
+	draw_info.x1 = game->ray->r_x / game->map->mini_map_scale;
+	draw_info.y2 = game->ray->r_y / game->map->mini_map_scale;
+	draw_line(game->image, &draw_info);
+//	draw_wall(game, game->ray, ray_counter, wall);
+//	game->ray->color = game->map->clr_ceiling.rgba;
+//	draw_3d_column(game, ray_counter, 0, wall.wall_start);
+//	game->ray->color = game->map->clr_floor.rgba;
+//	draw_3d_column(game, ray_counter, wall.wall_end, HEIGHT);
+}
+
 /**
  * @brief	Casts rays from player's position in 2D.
  *
@@ -329,9 +358,11 @@ void	cast_rays_2d(t_game *game, t_player *player, t_ray *ray)
 		calculate_vertical_hit(game->map, player, ray);
 		calculate_horizontal_hit(game->map, player, ray);
 		pick_shortest_ray(ray);
-		draw_2d_rays(game->image, player, ray, game->map->mini_map_scale);
+		ray->color = 0xFF0000FF;
+	//	draw_2d_rays(game->image, player, ray, game->map->mini_map_scale);
+	//	draw_2d_game(game, ray_counter);
 		ray->r_a += (player->fov_rd / WIDTH);
 		ray_counter++;
 	}
-	draw_2d_player(game->image, player, game->map->mini_map_scale);
+	//draw_2d_player(game->image, player, game->map->mini_map_scale);
 }

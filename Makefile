@@ -57,7 +57,7 @@ fclean: clean
 	@rm -f $(NAME)
 	@rm -f libftprintf.a
 	@make fclean -s -C $(LIBFT_PATH)
-	@rm -rf $(MLX_DIR)/build
+#	@rm -rf $(MLX_DIR)/build
 	@echo "✅ executable files deleted"
 
 re: fclean all

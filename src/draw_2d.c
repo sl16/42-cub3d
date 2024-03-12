@@ -6,11 +6,33 @@
 /*   By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/05 12:12:59 by aulicna           #+#    #+#             */
-/*   Updated: 2024/03/12 17:55:50 by aulicna          ###   ########.fr       */
+/*   Updated: 2024/03/12 23:00:07 by aulicna          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/cub3d.h"
+# define TILE_SIZE_2D 16
+
+
+uint32_t	color_minimap(t_map *map, t_player *player, int m_x, int m_y)
+{
+	(void) player;
+	if (m_y >= map->map_height || m_y < 0 || m_x >= map->map_width || m_x < 0)
+		return (0x000000FF);
+	if (map->grid[m_y] && m_x < (int)strlen(map->grid[m_y]))
+		if (map->grid[m_y][m_x] == '1')
+			return (0xFFFFFFFF);
+	int p_x = (player->p_x - (TILE_SIZE / 2)) / TILE_SIZE;
+	int p_y = (player->p_y - (TILE_SIZE / 2)) / TILE_SIZE;
+	if (m_x == p_x && m_y == p_y)
+	{
+		printf("x: %d\n", p_x);
+		printf("y: %d\n", p_y);
+		return (0xFFFF00FF);
+	}
+	return (0x0000FFFF);
+
+}
 
 /**
  * @brief	Draws a 2D grid map of the game world.
@@ -26,30 +48,65 @@
  */
 void	draw_2d_map_grid(t_game *game, double tile_size_2d)
 {
-	int			i;
-	int			j;
+	(void) tile_size_2d;
+	t_player *player = game->player;
 	t_draw_info	draw_info;
-
-	i = 0;
-	draw_info.y1 = tile_size_2d / 2;
-	while (game->map->grid[i])
+	int			start_x = (game->player->p_x - (TILE_SIZE / 2)) / TILE_SIZE;
+	int			start_y = (game->player->p_y - (TILE_SIZE / 2)) / TILE_SIZE;
+	int			offset_x = 5 - start_x;
+	int			offset_y = 5 - start_y;
+	int			m_x;
+	int			m_y;
+	for (int y = -5; y <= 5; y++)
 	{
-		draw_info.x1 = tile_size_2d / 2;
-		j = 0;
-		while (game->map->grid[i][j])
+		for (int x = -5; x <= 5; x++)
 		{
-			draw_info.size = tile_size_2d;
-			if (game->map->grid[i][j] == '1')
-				draw_info.color = 0xFFFFFFFF;
-			else if (game->map->grid[i][j] == '0')
-				draw_info.color = 0xB99470FF;
+			m_x = start_x + x;
+			m_y = start_y + y;
+			uint32_t color = color_minimap(game->map, game->player, m_x, m_y);
+
+			if (x == 0 && y == 0)
+				color = 0x00FF00FF;
+			draw_info.y1 = (start_y + y + offset_y) * TILE_SIZE_2D + TILE_SIZE_2D / 2;
+			draw_info.x1 = (start_x + x + offset_x) * TILE_SIZE_2D + TILE_SIZE_2D / 2;
+			draw_info.color = color;
+			draw_info.size = TILE_SIZE_2D;
 			draw_square(game->image, &draw_info);
-			draw_info.x1 += tile_size_2d;
-			j++;
 		}
-		draw_info.y1 += tile_size_2d;
-		i++;
 	}
+	draw_info.color = 0xFFFF00FF;
+	draw_info.color = color_minimap(game->map, game->player, start_x, start_y);
+	draw_info.y1 = (start_y + offset_y) * TILE_SIZE_2D + TILE_SIZE_2D / 2;
+	draw_info.x1 = (start_x + offset_x) * TILE_SIZE_2D + TILE_SIZE_2D / 2;
+	draw_info.size = PLAYER_SIZE;
+	draw_square(game->image, &draw_info);
+	draw_info.y2 = draw_info.y1 + PLAYER_SIZE * 2 * sin(player->p_a);
+	draw_info.x2 = draw_info.x1 + PLAYER_SIZE * 2 * cos(player->p_a);
+	draw_line(game->image, &draw_info);
+//	int			i;
+//	int			j;
+//	t_draw_info	draw_info;
+//
+//	i = 0;
+//	draw_info.y1 = tile_size_2d / 2;
+//	while (game->map->grid[i])
+//	{
+//		draw_info.x1 = tile_size_2d / 2;
+//		j = 0;
+//		while (game->map->grid[i][j])
+//		{
+//			draw_info.size = tile_size_2d;
+//			if (game->map->grid[i][j] == '1')
+//				draw_info.color = 0xFFFFFFFF;
+//			else if (game->map->grid[i][j] == '0')
+//				draw_info.color = 0xB99470FF;
+//			draw_square(game->image, &draw_info);
+//			draw_info.x1 += tile_size_2d;
+//			j++;
+//		}
+//		draw_info.y1 += tile_size_2d;
+//		i++;
+//	}
 }
 
 /**
