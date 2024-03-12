@@ -13,6 +13,7 @@ SRC = main.c\
 		src/parser_values.c\
 		src/parser_utils.c\
 		src/parser_utils2.c\
+		src/parser_utils3.c\
 		src/free.c\
 		src/error.c\
 		src/debug.c

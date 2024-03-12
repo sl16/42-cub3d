@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+        */
+/*   By: vbartos <vbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/28 11:37:55 by aulicna           #+#    #+#             */
-/*   Updated: 2024/03/06 15:18:58 by aulicna          ###   ########.fr       */
+/*   Updated: 2024/03/12 08:13:19 by vbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,6 +50,7 @@ int	main(int argc, char **argv)
 	parser(game);
 	checker_map(game->map, game);
 	init_game_struct(game);
+	print_values(game);
 	print_grid(game->map->grid, game->map->map_height);
 	if (!init_mlx42(game))
 	{
