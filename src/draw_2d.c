@@ -6,7 +6,7 @@
 /*   By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/05 12:12:59 by aulicna           #+#    #+#             */
-/*   Updated: 2024/03/07 22:50:10 by aulicna          ###   ########.fr       */
+/*   Updated: 2024/03/12 17:55:50 by aulicna          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,23 +31,23 @@ void	draw_2d_map_grid(t_game *game, double tile_size_2d)
 	t_draw_info	draw_info;
 
 	i = 0;
-	draw_info.y1 =  tile_size_2d / 2;
+	draw_info.y1 = tile_size_2d / 2;
 	while (game->map->grid[i])
 	{
-		draw_info.x1 =  tile_size_2d / 2;
+		draw_info.x1 = tile_size_2d / 2;
 		j = 0;
 		while (game->map->grid[i][j])
 		{
-			draw_info.size =  tile_size_2d;
+			draw_info.size = tile_size_2d;
 			if (game->map->grid[i][j] == '1')
 				draw_info.color = 0xFFFFFFFF;
 			else if (game->map->grid[i][j] == '0')
 				draw_info.color = 0xB99470FF;
 			draw_square(game->image, &draw_info);
-			draw_info.x1 +=  tile_size_2d;
+			draw_info.x1 += tile_size_2d;
 			j++;
 		}
-		draw_info.y1 +=  tile_size_2d;
+		draw_info.y1 += tile_size_2d;
 		i++;
 	}
 }

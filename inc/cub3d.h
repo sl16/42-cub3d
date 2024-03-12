@@ -39,48 +39,36 @@ typedef union u_clr
 	unsigned int	rgba;
 	struct
 	{
-		unsigned char	r;
-		unsigned char	g;
-		unsigned char	b;
 		unsigned char	a;
+		unsigned char	b;
+		unsigned char	g;
+		unsigned char	r;
 	};
 }				t_clr;
 
-//typedef union u_clr
-//{
-//	unsigned int	rgba;
-//	struct
-//	{
-//		unsigned char	a;
-//		unsigned char	b;
-//		unsigned char	g;
-//		unsigned char	r;
-//	};
-//}				t_clr;
-
 typedef struct s_map
 {
-	int		fd;
-	char	**parsed_file;
-	char	**grid;
-	int		map_width;
-	int		map_height;
-	double	tile_size_2d;
-	double	mini_map_scale;
-	int		start_count;
-	int		start_x;
-	int		start_y;
-	char	start_dir;
-	char	*txt_no;
-	char	*txt_so;
-	char	*txt_we;
-	char	*txt_ea;
+	int				fd;
+	char			**parsed_file;
+	char			**grid;
+	int				map_width;
+	int				map_height;
+	double			tile_size_2d;
+	double			mini_map_scale;
+	int				start_count;
+	int				start_x;
+	int				start_y;
+	char			start_dir;
+	char			*txt_no;
+	char			*txt_so;
+	char			*txt_we;
+	char			*txt_ea;
 	mlx_texture_t	*mlx_txt_no;
 	mlx_texture_t	*mlx_txt_so;
 	mlx_texture_t	*mlx_txt_we;
 	mlx_texture_t	*mlx_txt_ea;
-	t_clr	clr_floor;
-	t_clr	clr_ceiling;
+	t_clr			clr_floor;
+	t_clr			clr_ceiling;
 }				t_map;
 
 typedef struct s_player
@@ -95,23 +83,24 @@ typedef struct s_player
 
 typedef struct s_ray
 {
-	double	r_a; // ray angle
-	double	r_x;
-	double	r_y;
-	double	angle_nor; // normalized ray angle
-	double	angle_diff;
-	int		angle_orientation;
-	double	vy; // vertical ray hit
-	double	vx; // vertical ray hit
-	double	dist_ver; // vertical ray hit
-	double	hy;	// horizontal ray hit
-	double	hx;	// horizontal ray hit
-	double	dist_hor;	// horizontal ray hit
-	double	dist_total; // distance to the wall
-	double	y_step;
-	double	x_step;
-	int		pixel;
-	uint32_t		color;
+	int			ray_counter;
+	double		r_a; // ray angle
+	double		r_x;
+	double		r_y;
+	double		angle_nor; // normalized ray angle
+	double		angle_diff;
+	int			angle_orientation;
+	double		vy; // vertical ray hit
+	double		vx; // vertical ray hit
+	double		dist_ver; // vertical ray hit
+	double		hy;	// horizontal ray hit
+	double		hx;	// horizontal ray hit
+	double		dist_hor;	// horizontal ray hit
+	double		dist_total; // distance to the wall
+	double		y_step;
+	double		x_step;
+	int			pixel;
+	uint32_t	color;
 }	t_ray;
 
 typedef struct s_game
@@ -122,6 +111,13 @@ typedef struct s_game
 	t_player	*player;
 	t_ray		*ray;
 }	t_game;
+
+typedef struct s_wall
+{
+	double	wall_start;
+	double	wall_end;
+	double	wall_height;
+}	t_wall;
 
 typedef struct s_draw_info
 {
@@ -146,8 +142,7 @@ typedef enum s_orientation
 	VERTICAL
 }	t_orientation;
 
-
-// TEXTURES
+// TEMPORARY
 void	load_textures(t_map *map);
 
 // init.c
@@ -163,9 +158,9 @@ double	normalize_angle(double angle);
 // draw_2d.c
 void	draw_2d_map_grid(t_game *game, double tile_size_2d);
 void	draw_2d_rays(mlx_image_t *image, t_player *player, t_ray *ray,
-	double mini_map_scale);
+			double mini_map_scale);
 void	draw_2d_player(mlx_image_t *image, t_player *player,
-	double mini_map_scale);
+			double mini_map_scale);
 
 // draw_3d.c
 void	draw_3d_game(t_game *game, int ray_counter);

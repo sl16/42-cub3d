@@ -6,7 +6,7 @@
 /*   By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/05 11:58:13 by aulicna           #+#    #+#             */
-/*   Updated: 2024/03/11 11:21:33 by aulicna          ###   ########.fr       */
+/*   Updated: 2024/03/12 17:59:54 by aulicna          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -238,9 +238,6 @@ void	calculate_horizontal_hit(t_map *map, t_player *player, t_ray *ray)
  * to the vertical distance, and the intersection point (r_x, r_y) is set
  * to the vertical intersection point (vx, vy).
  * 
- * The color of the ray is also set based on the direction of the ray
- * to indicate a north, south, east or west wall hit.
- *
  * @param	ray		pointer to the ray structure
  */
 void	pick_shortest_ray(t_ray *ray)
@@ -251,10 +248,6 @@ void	pick_shortest_ray(t_ray *ray)
 		ray->angle_orientation = HORIZONTAL;
 		ray->r_x = ray->hx;
 		ray->r_y = ray->hy;
-		if (ray->angle_nor > M_PI / 2 && ray->angle_nor < 3 * (M_PI / 2))
-			ray->color = 0x0000FFFF; // south wall
-		else
-			ray->color = 0x913831FF; // north wall
 	}
 	else
 	{
@@ -262,10 +255,6 @@ void	pick_shortest_ray(t_ray *ray)
 		ray->angle_orientation = VERTICAL;
 		ray->r_x = ray->vx;
 		ray->r_y = ray->vy;
-		if (ray->angle_nor > 0 && ray->angle_nor < M_PI)
-			ray->color = 0x00FF00FF; // east wall
-		else
-			ray->color = 0xB5B5B5FF; // west wall
 	}
 }
 

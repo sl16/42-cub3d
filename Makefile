@@ -14,7 +14,8 @@ SRC = main.c\
 		src/parser_utils2.c\
 		src/free.c\
 		src/error.c\
-		src/debug.c
+		src/debug.c\
+		src/tmp.c
 
 OBJ = $(SRC)
 OBJ := $(OBJ:%.c=%.o)
