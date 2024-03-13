@@ -41,14 +41,14 @@ void  put_img_to_img(mlx_image_t* dst, mlx_image_t* src, int x, int y)
 
 void	play_animation(t_game *game)
 {
-	static int animation_counter = 0;
-	animation_counter++;
+	static float animation_counter = 0;
+	animation_counter+= 0.2;
 	if (animation_counter <= 30)
-		put_img_to_img(game->image, game->animation, 1150, 60 + animation_counter);
+		put_img_to_img(game->image, game->animation, 600, 300 + animation_counter);
 	else if (animation_counter <= 60)
-    {
-    	put_img_to_img(game->image, game->animation, 1150, 120 - animation_counter);
-        if (animation_counter == 60)
+	{
+		put_img_to_img(game->image, game->animation, 600, 360 - animation_counter);
+		if (animation_counter == 60)
 			animation_counter = 0;
-    }
+	}
 }
