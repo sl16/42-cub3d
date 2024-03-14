@@ -22,7 +22,7 @@
 # define FOV 60
 # define ROTATION_SPEED 0.045
 # define PLAYER_SPEED 5
-# define PLAYER_SIZE 8
+# define PLAYER_SIZE 6
 
 # include "../libftprintf/ft_printf.h"
 # include "../MLX42/include/MLX42/MLX42.h"

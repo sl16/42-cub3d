@@ -6,7 +6,7 @@
 /*   By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/26 16:19:30 by aulicna           #+#    #+#             */
-/*   Updated: 2024/03/07 21:55:52 by aulicna          ###   ########.fr       */
+/*   Updated: 2024/03/14 12:25:32 by aulicna          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,8 +42,8 @@ double	get_player_angle(char start_dir)
 
 void	init_game_struct(t_game *game)
 {
-	game->player = calloc(1, sizeof(t_player));
-	game->ray = calloc(1, sizeof(t_ray));
+	game->player = ft_calloc(1, sizeof(t_player));
+	game->ray = ft_calloc(1, sizeof(t_ray));
 	game->player->p_x = (game->map->start_x * TILE_SIZE) + (TILE_SIZE / 2);
 	game->player->p_y = (game->map->start_y * TILE_SIZE) + (TILE_SIZE / 2);
 	game->player->p_a = get_player_angle(game->map->start_dir);

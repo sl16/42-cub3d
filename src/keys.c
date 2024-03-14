@@ -6,7 +6,7 @@
 /*   By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/26 16:21:04 by aulicna           #+#    #+#             */
-/*   Updated: 2024/03/12 23:18:29 by aulicna          ###   ########.fr       */
+/*   Updated: 2024/03/14 13:03:14 by aulicna          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,11 @@
 bool	can_step_in(t_map *map, int grid_y, int grid_x)
 {
 	if (map->grid[grid_y][grid_x] == '0')
+	{
+	//	printf("x: %d\n", grid_x);
+	//	printf("y: %d\n", grid_y);
 		return (true);
+	}
 	return (false);
 }
 
@@ -54,23 +58,42 @@ static void	perform_move(t_map *map, t_player *player)
 	int	grid_y;
 
 	new_p_x = round(player->p_x + player->move_x);
-	grid_x = (new_p_x / TILE_SIZE);
-	//grid_y = player->p_y / TILE_SIZE;
-	grid_y = (player->p_y - (TILE_SIZE / 2)) / TILE_SIZE;
-	if (grid_x >= 0 && grid_x < map->map_width - 1)
+	grid_x = new_p_x / TILE_SIZE;
+	grid_y = player->p_y / TILE_SIZE;
+	if (grid_x >= 0 && grid_x < map->map_width && grid_y >= 0 && grid_y < map->map_height)
 	{
 		if (can_step_in(map, grid_y, grid_x))
+		{
 			player->p_x = new_p_x;
+		}
 	}
 	new_p_y = round(player->p_y + player->move_y);
-	grid_y = (new_p_y / TILE_SIZE);
-	//grid_x = player->p_x / TILE_SIZE;
-	grid_x = (player->p_x - (TILE_SIZE / 2)) / TILE_SIZE;
-	if (grid_y >= 0 && grid_y < map->map_height - 1)
+	grid_y = new_p_y / TILE_SIZE;
+	grid_x = player->p_x / TILE_SIZE;
+	if (grid_y >= 0 && grid_y < map->map_height && grid_x >= 0 && grid_x < map->map_width)
 	{
 		if (can_step_in(map, grid_y, grid_x))
+		{
 			player->p_y = new_p_y;
+		}
 	}
+//	int	new_p_x;
+//	int	new_p_y;
+//	int	grid_x;
+//	int	grid_y;
+//
+//	new_p_x = round(player->p_x + player->move_x);
+//	grid_x = new_p_x / TILE_SIZE;
+//	new_p_y = round(player->p_y + player->move_y);
+//	grid_y = new_p_y / TILE_SIZE;
+//	if (grid_x >= 0 && grid_x < map->map_width && grid_y >= 0 && grid_y < map->map_height)
+//	{
+//		if (can_step_in(map, grid_y, grid_x))
+//		{
+//			player->p_x = new_p_x;
+//			player->p_y = new_p_y;
+//		}
+//	}
 }
 
 /**
@@ -109,7 +132,7 @@ static void	handle_keys_move(mlx_t *mlx, t_map *map, t_player *player)
 		player->move_x = sin(player->p_a) * PLAYER_SPEED;
 		player->move_y = -cos(player->p_a) * PLAYER_SPEED;
 	}
-	perform_move(map, player);
+		perform_move(map, player);
 }
 
 /**

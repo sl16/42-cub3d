@@ -6,7 +6,7 @@
 /*   By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/05 12:12:59 by aulicna           #+#    #+#             */
-/*   Updated: 2024/03/12 23:00:07 by aulicna          ###   ########.fr       */
+/*   Updated: 2024/03/14 13:57:58 by aulicna          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,14 +22,12 @@ uint32_t	color_minimap(t_map *map, t_player *player, int m_x, int m_y)
 	if (map->grid[m_y] && m_x < (int)strlen(map->grid[m_y]))
 		if (map->grid[m_y][m_x] == '1')
 			return (0xFFFFFFFF);
-	int p_x = (player->p_x - (TILE_SIZE / 2)) / TILE_SIZE;
-	int p_y = (player->p_y - (TILE_SIZE / 2)) / TILE_SIZE;
-	if (m_x == p_x && m_y == p_y)
-	{
-		printf("x: %d\n", p_x);
-		printf("y: %d\n", p_y);
-		return (0xFFFF00FF);
-	}
+//	int p_x = (player->p_x - (TILE_SIZE / 2)) / TILE_SIZE;
+//	int p_y = (player->p_y - (TILE_SIZE / 2)) / TILE_SIZE;
+//	if (m_x == p_x && m_y == p_y)
+//	{
+//		return (0xFF0000FF);
+//	}
 	return (0x0000FFFF);
 
 }
@@ -57,16 +55,16 @@ void	draw_2d_map_grid(t_game *game, double tile_size_2d)
 	int			offset_y = 5 - start_y;
 	int			m_x;
 	int			m_y;
-	for (int y = -5; y <= 5; y++)
+	for (int y = -5; y < 5; y++)
 	{
-		for (int x = -5; x <= 5; x++)
+		for (int x = -5; x < 5; x++)
 		{
 			m_x = start_x + x;
 			m_y = start_y + y;
 			uint32_t color = color_minimap(game->map, game->player, m_x, m_y);
 
-			if (x == 0 && y == 0)
-				color = 0x00FF00FF;
+		//	if (x == 0 && y == 0)
+		//		color = 0x00FF00FF;
 			draw_info.y1 = (start_y + y + offset_y) * TILE_SIZE_2D + TILE_SIZE_2D / 2;
 			draw_info.x1 = (start_x + x + offset_x) * TILE_SIZE_2D + TILE_SIZE_2D / 2;
 			draw_info.color = color;
@@ -75,9 +73,8 @@ void	draw_2d_map_grid(t_game *game, double tile_size_2d)
 		}
 	}
 	draw_info.color = 0xFFFF00FF;
-	draw_info.color = color_minimap(game->map, game->player, start_x, start_y);
-	draw_info.y1 = (start_y + offset_y) * TILE_SIZE_2D + TILE_SIZE_2D / 2;
-	draw_info.x1 = (start_x + offset_x) * TILE_SIZE_2D + TILE_SIZE_2D / 2;
+	draw_info.y1 = (start_y + offset_y) * TILE_SIZE_2D + TILE_SIZE_2D;
+	draw_info.x1 = (start_x + offset_x) * TILE_SIZE_2D + TILE_SIZE_2D;
 	draw_info.size = PLAYER_SIZE;
 	draw_square(game->image, &draw_info);
 	draw_info.y2 = draw_info.y1 + PLAYER_SIZE * 2 * sin(player->p_a);
@@ -127,12 +124,26 @@ void	draw_2d_rays(mlx_image_t *image, t_player *player, t_ray *ray,
 	double mini_map_scale)
 {
 	t_draw_info	draw_info;
+	(void) mini_map_scale;
 
-	draw_info.y1 = player->p_y / mini_map_scale;
-	draw_info.x1 = player->p_x / mini_map_scale;
-	draw_info.y2 = ray->r_y / mini_map_scale;
-	draw_info.x2 = ray->r_x / mini_map_scale;
-	draw_info.color = ray->color;
+//	draw_info.y1 = player->p_y / mini_map_scale;
+//	draw_info.x1 = player->p_x / mini_map_scale;
+//	draw_info.y2 = ray->r_y / mini_map_scale;
+//	draw_info.x2 = ray->r_x / mini_map_scale;
+//	draw_info.color = ray->color;
+//	draw_line(image, &draw_info);
+
+	int			start_x = (player->p_x - (TILE_SIZE / 2)) / TILE_SIZE;
+	int			start_y = (player->p_y - (TILE_SIZE / 2)) / TILE_SIZE;
+	draw_info.y1 = (start_y + 5 - start_y) * TILE_SIZE_2D + TILE_SIZE_2D;
+	draw_info.x1 = (start_x + 5 - start_x) * TILE_SIZE_2D + TILE_SIZE_2D;
+	int			ray_x = ray->r_x;
+	int			ray_y = ray->r_y;
+	draw_info.y2 = (ray_y + 5 - ray_y);
+	draw_info.x2 = (ray_x + 5 - ray_x);
+//	draw_info.y2 = draw_info.y1 + PLAYER_SIZE * 2 * sin(ray->r_a);
+//	draw_info.x2 = draw_info.x1 + PLAYER_SIZE * 2 * cos(ray->r_a);
+	draw_info.color = 0xFF0000FF;
 	draw_line(image, &draw_info);
 }
 
