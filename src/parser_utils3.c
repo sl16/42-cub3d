@@ -1,30 +1,36 @@
 #include "../inc/cub3d.h"
 
 /**
- * Checks if the provided texture files exist and can be opened.
+ * Initializes the empty textures in the game structure.
  * 
  * @param game The game structure.
  */
-void	files_exist(t_game *game)
+void	init_empty_textures(t_game *game)
 {
-	int	fd;
+	game->map->mlx_txt_no = NULL;
+	game->map->mlx_txt_so = NULL;
+	game->map->mlx_txt_we = NULL;
+	game->map->mlx_txt_ea = NULL;
+}
 
-	fd = open(game->map->txt_no, O_RDONLY);
-	if (fd == -1)
+/**
+ * Loads and verifies the textures for the game.
+ * 
+ * Uses the mlx_load_png to verify that the parsed path to the textures
+ * is working. If yes, assigns the textures. If no, prints an error message and
+ * exits the program.
+ * 
+ * @param game The game structure.
+ */
+void	load_and_verify_textures(t_game *game)
+{
+	game->map->mlx_txt_no = mlx_load_png(game->map->txt_no);
+	game->map->mlx_txt_so = mlx_load_png(game->map->txt_so);
+	game->map->mlx_txt_we = mlx_load_png(game->map->txt_we);
+	game->map->mlx_txt_ea = mlx_load_png(game->map->txt_ea);
+	if (!(game->map->mlx_txt_no) || !(game->map->mlx_txt_so)
+		|| !(game->map->mlx_txt_we) || !(game->map->mlx_txt_ea))
 		error_print_exit(ERR_TXT_OPEN, game);
-	close(fd);
-	fd = open(game->map->txt_ea, O_RDONLY);
-	if (fd == -1)
-		error_print_exit(ERR_TXT_OPEN, game);
-	close(fd);
-	fd = open(game->map->txt_we, O_RDONLY);
-	if (fd == -1)
-		error_print_exit(ERR_TXT_OPEN, game);
-	close(fd);
-	fd = open(game->map->txt_so, O_RDONLY);
-	if (fd == -1)
-		error_print_exit(ERR_TXT_OPEN, game);
-	close(fd);
 }
 
 /**

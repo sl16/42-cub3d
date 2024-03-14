@@ -95,7 +95,7 @@ int	parser(t_game *game)
 	map->txt_so = value_parser("SO", map->parsed_file);
 	map->txt_we = value_parser("WE", map->parsed_file);
 	map->txt_ea = value_parser("EA", map->parsed_file);
-	files_exist(game);
+	load_and_verify_textures(game);
 	clr_parser("F", map->parsed_file, game);
 	clr_parser("C", map->parsed_file, game);
 	if (!map->txt_no || !map->txt_so || !map->txt_we || !map->txt_ea

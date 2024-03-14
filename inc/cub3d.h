@@ -55,21 +55,25 @@ typedef union u_clr
 
 typedef struct s_map
 {
-	int		fd;
-	char	**parsed_file;
-	char	**grid;
-	int		map_width;
-	int		map_height;
-	int		start_count;
-	int		start_x;
-	int		start_y;
-	char	start_dir;
-	char	*txt_no;
-	char	*txt_so;
-	char	*txt_we;
-	char	*txt_ea;
-	t_clr	clr_floor;
-	t_clr	clr_ceiling;
+	int				fd;
+	char			**parsed_file;
+	char			**grid;
+	int				map_width;
+	int				map_height;
+	int				start_count;
+	int				start_x;
+	int				start_y;
+	char			start_dir;
+	char			*txt_no;
+	char			*txt_so;
+	char			*txt_we;
+	char			*txt_ea;
+	mlx_texture_t	*mlx_txt_no;
+	mlx_texture_t	*mlx_txt_so;
+	mlx_texture_t	*mlx_txt_we;
+	mlx_texture_t	*mlx_txt_ea;
+	t_clr			clr_floor;
+	t_clr			clr_ceiling;
 }				t_map;
 
 typedef struct s_player
@@ -138,6 +142,7 @@ typedef enum s_orientation
 bool	init_mlx42(t_game *game);
 void	init_game_struct(t_game *game);
 int		init_empty_struct(t_game *game);
+void	init_empty_textures(t_game *game);
 
 // rays.c
 void	cast_rays_3d(t_game *game, t_player *player, t_ray *ray);
@@ -178,7 +183,7 @@ int		parser(t_game *game);
 char	*value_parser(char *value, char **parsed_file);
 void	clr_parser(char *value, char **parsed_file, t_game *game);
 int		clr_atoi(const char *nptr, int *intmax_check);
-void	files_exist(t_game *game);
+void	load_and_verify_textures(t_game *game);
 int		is_space(char input);
 int		is_wall(char input);
 int		line_has_spaces_only(char *line);
