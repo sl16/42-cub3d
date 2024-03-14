@@ -51,6 +51,7 @@ int	main(int argc, char **argv)
 	parser(game);
 	checker_map(game->map, game);
 	init_game_struct(game);
+	print_values(game);
 	print_grid(game->map->grid, game->map->map_height);
 	if (!init_mlx42(game))
 	{

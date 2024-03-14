@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   cub3d.h                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: vbartos <vbartos@student.42prague.com>     +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/03/14 14:17:09 by vbartos           #+#    #+#             */
+/*   Updated: 2024/03/14 14:17:11 by vbartos          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #ifndef CUB3D_H
 # define CUB3D_H
 
@@ -6,7 +18,12 @@
 # define ERR_ARGC			"Provide a path to your desired map only."
 # define ERR_ARGV			"Provide a .cub file."
 # define ERR_OPEN			"File cannot be opened."
+# define ERR_TXT_OPEN		"A texture file cannot be opened."
 # define ERR_MISSING_VALUE	"The provided map is missing a required value."
+# define ERR_COLOR			"Provided RGB colors must be set in 0-255 range " \
+							"with no spaces in between or trailing."
+# define ERR_COLOR_INTMAX	"Provided RGB colors must be set in 0-255 range " \
+							"(INTMAX overflow)."
 # define ERR_MAP_NOT_FOUND	"No valid map found in provided file."
 # define ERR_MAP_NOT_CLOSED	"The map's perimeter is not enclosed in walls."
 # define ERR_MAP_EMPTY_LINE	"The map must not contain empty lines."
@@ -50,21 +67,25 @@ typedef union u_clr
 
 typedef struct s_map
 {
-	int		fd;
-	char	**parsed_file;
-	char	**grid;
-	int		map_width;
-	int		map_height;
-	int		start_count;
-	int		start_x;
-	int		start_y;
-	char	start_dir;
-	char	*txt_no;
-	char	*txt_so;
-	char	*txt_we;
-	char	*txt_ea;
-	t_clr	clr_floor;
-	t_clr	clr_ceiling;
+	int				fd;
+	char			**parsed_file;
+	char			**grid;
+	int				map_width;
+	int				map_height;
+	int				start_count;
+	int				start_x;
+	int				start_y;
+	char			start_dir;
+	char			*txt_no;
+	char			*txt_so;
+	char			*txt_we;
+	char			*txt_ea;
+	mlx_texture_t	*mlx_txt_no;
+	mlx_texture_t	*mlx_txt_so;
+	mlx_texture_t	*mlx_txt_we;
+	mlx_texture_t	*mlx_txt_ea;
+	t_clr			clr_floor;
+	t_clr			clr_ceiling;
 }				t_map;
 
 typedef struct s_player
@@ -135,6 +156,7 @@ typedef enum s_orientation
 bool	init_mlx42(t_game *game);
 void	init_game_struct(t_game *game);
 int		init_empty_struct(t_game *game);
+void	init_empty_textures(t_game *game);
 
 // rays.c
 void	cast_rays_3d(t_game *game, t_player *player, t_ray *ray);
@@ -170,8 +192,12 @@ int		free_str_arr(char **arr);
 // checker_arg.c
 int		checker_arg(int argc, char **argv, t_game *game);
 
-// parser.c, parser_utils.c, parser_utils2.c
+// parser_file.c, parser_values.c, parser_utils.c, parser_utils2.c
 int		parser(t_game *game);
+char	*value_parser(char *value, char **parsed_file);
+void	clr_parser(char *value, char **parsed_file, t_game *game);
+int		clr_atoi(const char *nptr, int *intmax_check);
+void	load_and_verify_textures(t_game *game);
 int		is_space(char input);
 int		is_wall(char input);
 int		line_has_spaces_only(char *line);

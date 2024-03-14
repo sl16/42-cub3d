@@ -53,6 +53,14 @@ int	free_map(t_map *map)
 		free(map->txt_we);
 	if (map->txt_ea)
 		free(map->txt_ea);
+	if (map->mlx_txt_no)
+		mlx_delete_texture(map->mlx_txt_no);
+	if (map->mlx_txt_so)
+		mlx_delete_texture(map->mlx_txt_so);
+	if (map->mlx_txt_we)
+		mlx_delete_texture(map->mlx_txt_we);
+	if (map->mlx_txt_ea)
+		mlx_delete_texture(map->mlx_txt_ea);
 	free(map);
 	return (0);
 }

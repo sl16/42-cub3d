@@ -118,5 +118,6 @@ int	init_empty_struct(t_game *game)
 	game->map->start_dir = '\0';
 	game->player = NULL;
 	game->ray = NULL;
+	init_empty_textures(game);
 	return (0);
 }

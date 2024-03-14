@@ -1,7 +1,7 @@
-NO ./textures/stonewallA.png
-SO ./textures/stonewallC.png
-WE ./textures/stonewallB.png
-EA ./textures/stonewallF.png
+               NO      ./textures/32x32_test.png
+SO   ./textures/32x32_test.png
+WE                      ./textures/32x32_test.png      sad
+EA ./textures/32x32_test.png
 
 F 25,230,255
 C 255,40,80
