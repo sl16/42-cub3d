@@ -99,12 +99,13 @@ typedef struct s_ray
 
 typedef struct s_game
 {
-	mlx_t		*mlx;
-	mlx_image_t	*image;
-	mlx_image_t	*animation;
-	t_map		*map;
-	t_player	*player;
-	t_ray		*ray;
+	mlx_t			*mlx;
+	mlx_image_t		*image;
+	mlx_image_t		*animation;
+	mlx_texture_t	*animation_txt;
+	t_map			*map;
+	t_player		*player;
+	t_ray			*ray;
 }	t_game;
 
 typedef struct s_draw_info
@@ -157,7 +158,7 @@ void	print_grid(char **grid, int map_height);
 void	handle_key_actions(void *param);
 
 // error.c
-int		error_print(char *error_message);
+int		error_print(const char *error_message);
 void	error_print_exit(char *error_message, t_game *game);
 
 // free.c
@@ -190,10 +191,6 @@ int		print_map(char **map);
 int		print_values(t_game *game);
 
 // animation.c
-void	put_img_to_img(mlx_image_t* dst, mlx_image_t* src, int x, int y);
-int		put_pixel_valid(mlx_image_t* img, uint32_t x, uint32_t y);
-int32_t	mlx_get_pixel(mlx_image_t* image, uint32_t x, uint32_t y);
-int 	get_rgba(int r, int g, int b, int a);
 void	play_animation(t_game *game);
 
 #endif

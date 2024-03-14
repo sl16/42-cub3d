@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   init.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+        */
+/*   By: vbartos <vbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/26 16:19:30 by aulicna           #+#    #+#             */
-/*   Updated: 2024/03/06 14:41:18 by aulicna          ###   ########.fr       */
+/*   Updated: 2024/03/14 08:15:44 by vbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,33 @@ void	init_game_struct(t_game *game)
 	game->player->fov_rd = (FOV * M_PI) / 180;
 }
 
+/**
+ * Initializes the resources of the 'credits' floating rectangle animation
+ * 
+ * @param game The game structure.
+ * @return true if the animation is successfully initialized, false otherwise.
+ */
+static bool	init_animation(t_game *game)
+{
+	game->animation_txt = mlx_load_png("./textures/logo2.png");
+	if (!(game->animation_txt))
+	{
+		mlx_close_window(game->mlx);
+		error_print(mlx_strerror(mlx_errno));
+		free_game_full(game);
+		return (false);
+	}
+	game->animation = mlx_texture_to_image(game->mlx, game->animation_txt);
+	if (!(game->animation))
+	{
+		mlx_close_window(game->mlx);
+		error_print(mlx_strerror(mlx_errno));
+		free_game_full(game);
+		return (false);
+	}
+	return (true);
+}
+
 bool	init_mlx42(t_game *game)
 {
 	game->mlx = mlx_init(WIDTH, HEIGHT, "cub3d", 0);
@@ -57,6 +84,7 @@ bool	init_mlx42(t_game *game)
 		free_game_full(game);
 		return (false);
 	}
+	init_animation(game);
 	return (true);
 }
 
