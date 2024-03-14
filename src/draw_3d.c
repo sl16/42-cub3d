@@ -6,7 +6,7 @@
 /*   By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/12 17:01:23 by aulicna           #+#    #+#             */
-/*   Updated: 2024/03/12 20:18:47 by aulicna          ###   ########.fr       */
+/*   Updated: 2024/03/14 15:26:05 by aulicna          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@
  * @param	stop	y-coordinate to stop drawing at
  *
  */
-void	draw_3d_column(t_game *game, int x, double start,
+static void	draw_column(t_game *game, int x, double start,
 	double stop)
 {
 	while (start < stop)
@@ -124,7 +124,7 @@ static t_clr	reverse_bytes(t_clr color)
  * @param	x			x-coordinate of the wall column
  * @param	wall		wall struct with wall start, end and height values
  */
-void	draw_wall(t_game *game, t_ray *ray, int x, t_wall wall)
+static void	draw_wall(t_game *game, t_ray *ray, int x, t_wall wall)
 {
 	mlx_texture_t	*txt;
 	double			txt_x;
@@ -171,7 +171,7 @@ void	draw_wall(t_game *game, t_ray *ray, int x, t_wall wall)
  * @param	game		pointer to the game state
  * @param	ray_counter	index of the current ray being cast
  */
-void	draw_3d_game(t_game *game, int ray_counter)
+void	project_ray_into_3d(t_game *game, int ray_counter)
 {
 	t_wall	wall;
 
@@ -187,7 +187,7 @@ void	draw_3d_game(t_game *game, int ray_counter)
 		wall.wall_start = 0;
 	draw_wall(game, game->ray, ray_counter, wall);
 	game->ray->color = game->map->clr_ceiling.rgba;
-	draw_3d_column(game, ray_counter, 0, wall.wall_start);
+	draw_column(game, ray_counter, 0, wall.wall_start);
 	game->ray->color = game->map->clr_floor.rgba;
-	draw_3d_column(game, ray_counter, wall.wall_end, HEIGHT);
+	draw_column(game, ray_counter, wall.wall_end, HEIGHT);
 }

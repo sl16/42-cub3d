@@ -2,6 +2,7 @@ NAME = cub3d
 
 SRC = main.c\
 		src/rays.c\
+		src/rays_calculate.c\
 		src/draw_2d.c\
 		src/draw_3d.c\
 		src/draw_utils.c\

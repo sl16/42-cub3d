@@ -6,7 +6,7 @@
 /*   By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/06 15:23:00 by aulicna           #+#    #+#             */
-/*   Updated: 2024/03/06 15:23:01 by aulicna          ###   ########.fr       */
+/*   Updated: 2024/03/14 15:38:44 by aulicna          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,9 +92,12 @@ void	free_game_full(t_game *game)
 		free(game->player);
 	if (game->ray)
 		free(game->ray);
-	mlx_delete_image(game->mlx, game->image);
-	mlx_close_window(game->mlx);
-	mlx_terminate(game->mlx);
+	if (game->mlx)
+	{
+		mlx_delete_image(game->mlx, game->image);
+		mlx_close_window(game->mlx);
+		mlx_terminate(game->mlx);
+	}
 	if (game)
 		free(game);
 }

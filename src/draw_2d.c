@@ -5,147 +5,12 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/03/05 12:12:59 by aulicna           #+#    #+#             */
-/*   Updated: 2024/03/14 13:57:58 by aulicna          ###   ########.fr       */
+/*   Created: 2024/03/14 14:55:55 by aulicna           #+#    #+#             */
+/*   Updated: 2024/03/14 15:20:38 by aulicna          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/cub3d.h"
-# define TILE_SIZE_2D 16
-
-
-uint32_t	color_minimap(t_map *map, t_player *player, int m_x, int m_y)
-{
-	(void) player;
-	if (m_y >= map->map_height || m_y < 0 || m_x >= map->map_width || m_x < 0)
-		return (0x000000FF);
-	if (map->grid[m_y] && m_x < (int)strlen(map->grid[m_y]))
-		if (map->grid[m_y][m_x] == '1')
-			return (0xFFFFFFFF);
-//	int p_x = (player->p_x - (TILE_SIZE / 2)) / TILE_SIZE;
-//	int p_y = (player->p_y - (TILE_SIZE / 2)) / TILE_SIZE;
-//	if (m_x == p_x && m_y == p_y)
-//	{
-//		return (0xFF0000FF);
-//	}
-	return (0x0000FFFF);
-
-}
-
-/**
- * @brief	Draws a 2D grid map of the game world.
- *
- * This function iterates over the grid map and draws a square for each grid
- * cell. The color of the square depends on the type of the cell
- * (wall or empty space).
- *
- * The position and size of each square is calculated based on the size of the
- * grid cells and the current indices in the grid iteration.
- *
- * @param	game	pointer to the game struct
- */
-void	draw_2d_map_grid(t_game *game, double tile_size_2d)
-{
-	(void) tile_size_2d;
-	t_player *player = game->player;
-	t_draw_info	draw_info;
-	int			start_x = (game->player->p_x - (TILE_SIZE / 2)) / TILE_SIZE;
-	int			start_y = (game->player->p_y - (TILE_SIZE / 2)) / TILE_SIZE;
-	int			offset_x = 5 - start_x;
-	int			offset_y = 5 - start_y;
-	int			m_x;
-	int			m_y;
-	for (int y = -5; y < 5; y++)
-	{
-		for (int x = -5; x < 5; x++)
-		{
-			m_x = start_x + x;
-			m_y = start_y + y;
-			uint32_t color = color_minimap(game->map, game->player, m_x, m_y);
-
-		//	if (x == 0 && y == 0)
-		//		color = 0x00FF00FF;
-			draw_info.y1 = (start_y + y + offset_y) * TILE_SIZE_2D + TILE_SIZE_2D / 2;
-			draw_info.x1 = (start_x + x + offset_x) * TILE_SIZE_2D + TILE_SIZE_2D / 2;
-			draw_info.color = color;
-			draw_info.size = TILE_SIZE_2D;
-			draw_square(game->image, &draw_info);
-		}
-	}
-	draw_info.color = 0xFFFF00FF;
-	draw_info.y1 = (start_y + offset_y) * TILE_SIZE_2D + TILE_SIZE_2D;
-	draw_info.x1 = (start_x + offset_x) * TILE_SIZE_2D + TILE_SIZE_2D;
-	draw_info.size = PLAYER_SIZE;
-	draw_square(game->image, &draw_info);
-	draw_info.y2 = draw_info.y1 + PLAYER_SIZE * 2 * sin(player->p_a);
-	draw_info.x2 = draw_info.x1 + PLAYER_SIZE * 2 * cos(player->p_a);
-	draw_line(game->image, &draw_info);
-//	int			i;
-//	int			j;
-//	t_draw_info	draw_info;
-//
-//	i = 0;
-//	draw_info.y1 = tile_size_2d / 2;
-//	while (game->map->grid[i])
-//	{
-//		draw_info.x1 = tile_size_2d / 2;
-//		j = 0;
-//		while (game->map->grid[i][j])
-//		{
-//			draw_info.size = tile_size_2d;
-//			if (game->map->grid[i][j] == '1')
-//				draw_info.color = 0xFFFFFFFF;
-//			else if (game->map->grid[i][j] == '0')
-//				draw_info.color = 0xB99470FF;
-//			draw_square(game->image, &draw_info);
-//			draw_info.x1 += tile_size_2d;
-//			j++;
-//		}
-//		draw_info.y1 += tile_size_2d;
-//		i++;
-//	}
-}
-
-/**
- * @brief	Draws a 2D representation of a ray cast from the player.
- *
- * This function draws a line from the player's position to the end point of the
- * ray. The end point of the ray is calculated based on the ray's direction and
- * distance.
- *
- * The position of the player and the end point of the ray are scaled down by
- * the size of the mini map to fit within the 2D map view.
- *
- * @param	image		pointer to the image where the ray is drawn
- * @param	player		pointer to the player struct
- * @param	ray			pointer to the ray being drawn
- */
-void	draw_2d_rays(mlx_image_t *image, t_player *player, t_ray *ray,
-	double mini_map_scale)
-{
-	t_draw_info	draw_info;
-	(void) mini_map_scale;
-
-//	draw_info.y1 = player->p_y / mini_map_scale;
-//	draw_info.x1 = player->p_x / mini_map_scale;
-//	draw_info.y2 = ray->r_y / mini_map_scale;
-//	draw_info.x2 = ray->r_x / mini_map_scale;
-//	draw_info.color = ray->color;
-//	draw_line(image, &draw_info);
-
-	int			start_x = (player->p_x - (TILE_SIZE / 2)) / TILE_SIZE;
-	int			start_y = (player->p_y - (TILE_SIZE / 2)) / TILE_SIZE;
-	draw_info.y1 = (start_y + 5 - start_y) * TILE_SIZE_2D + TILE_SIZE_2D;
-	draw_info.x1 = (start_x + 5 - start_x) * TILE_SIZE_2D + TILE_SIZE_2D;
-	int			ray_x = ray->r_x;
-	int			ray_y = ray->r_y;
-	draw_info.y2 = (ray_y + 5 - ray_y);
-	draw_info.x2 = (ray_x + 5 - ray_x);
-//	draw_info.y2 = draw_info.y1 + PLAYER_SIZE * 2 * sin(ray->r_a);
-//	draw_info.x2 = draw_info.x1 + PLAYER_SIZE * 2 * cos(ray->r_a);
-	draw_info.color = 0xFF0000FF;
-	draw_line(image, &draw_info);
-}
 
 /**
  * @brief	Draws a 2D representation of the player.
@@ -160,19 +25,98 @@ void	draw_2d_rays(mlx_image_t *image, t_player *player, t_ray *ray,
  * @param	image		pointer to the image where the player is drawn
  * @param	player		pointer to the player struct
  */
-void	draw_2d_player(mlx_image_t *image, t_player *player,
-	double mini_map_scale)
+static void	draw_2d_player(t_game *game, t_player *player)
 {
 	t_draw_info	draw_info;
+	int			start_x;
+	int			start_y;
+	int			offset_x;
+	int			offset_y;
 
-	draw_info.color = 0xFFFF00FF;
-	draw_info.y1 = player->p_y / mini_map_scale;
-	draw_info.x1 = player->p_x / mini_map_scale;
-	draw_info.size = PLAYER_SIZE / mini_map_scale;
-	draw_square(image, &draw_info);
-	draw_info.y1 = player->p_y / mini_map_scale;
-	draw_info.x1 = player->p_x / mini_map_scale;
-	draw_info.y2 = (player->p_y + 50 * sin(player->p_a)) / mini_map_scale;
-	draw_info.x2 = (player->p_x + 50 * cos(player->p_a)) / mini_map_scale;
-	draw_line(image, &draw_info);
+	start_x = (game->player->p_x - (TILE_SIZE / 2)) / TILE_SIZE;
+	start_y = (game->player->p_y - (TILE_SIZE / 2)) / TILE_SIZE;
+	offset_x = MINIMAP_ZOOM - start_x;
+	offset_y = MINIMAP_ZOOM - start_y;
+	draw_info.color = COLOR_PLAYER;
+	draw_info.y1 = (start_y + offset_y) * TILE_SIZE_2D + TILE_SIZE_2D;
+	draw_info.x1 = (start_x + offset_x) * TILE_SIZE_2D + TILE_SIZE_2D;
+	draw_info.size = PLAYER_SIZE;
+	draw_square(game->image, &draw_info);
+	draw_info.y2 = draw_info.y1 + PLAYER_SIZE * 2 * sin(player->p_a);
+	draw_info.x2 = draw_info.x1 + PLAYER_SIZE * 2 * cos(player->p_a);
+	draw_line(game->image, &draw_info);
+}
+
+/**
+ * @brief	Determines the color of a tile on the mini-map.
+ *
+ * The color is determined based on whether the position is outside the map,
+ * inside a wall, or in free space.
+ *
+ * The function first checks if the given position is outside the map
+ * boundaries. If it is, the function returns the color for outside the map.
+ * 
+ * If the position is within the map boundaries, the function checks if
+ * there is a wall at the position. If there is, the function returns the color
+ * for a wall. If there is no wall, the function returns the color for free
+ * space.
+ *
+ * @param	map			pointer to the map struct
+ * @param	m_x			the x-coordinate on the mini-map
+ * @param	m_y			the y-coordinate on the mini-map
+ * @return	uint32_t	the color for the given position
+ */
+static uint32_t	pick_color_minimap(t_map *map, int m_x, int m_y)
+{
+	if (m_y >= map->map_height || m_y < 0 || m_x >= map->map_width || m_x < 0)
+		return (COLOR_OUTSIDE_2D);
+	if (map->grid[m_y] && m_x < (int)strlen(map->grid[m_y]))
+		if (map->grid[m_y][m_x] == '1')
+			return (COLOR_WALL_2D);
+	return (COLOR_FREE_SPACE_2D);
+}
+
+/**
+ * @brief	Draws a 2D mini-map of the game.
+ *
+ * This function draws a square for each tile in the vicinity of the player's
+ * position on the mini-map. The color of each square is determined
+ * by the `color_minimap` function.
+ *
+ * The player's position is centered in the middle of the minimap, with
+ * a set number, as defined by MINIMAP_ZOOM, of tiles around.
+ *
+ * After all the squares have been drawn, the function calls `draw_2d_player`
+ * to draw the player on the mini-map.
+ *
+ * @param	game		pointer to the game struct
+ * @param	player		pointer to the player struct
+ */
+void	draw_2d_minimap(t_game *game, t_player *player)
+{
+	int			i;
+	int			j;
+	t_draw_info	draw_info;
+
+	player->mini_p_x = (game->player->p_x - (TILE_SIZE / 2)) / TILE_SIZE;
+	player->mini_p_y = (game->player->p_y - (TILE_SIZE / 2)) / TILE_SIZE;
+	i = -MINIMAP_ZOOM;
+	while (i <= MINIMAP_ZOOM)
+	{
+		j = -MINIMAP_ZOOM;
+		while (j <= MINIMAP_ZOOM)
+		{
+			draw_info.color = pick_color_minimap(game->map,
+					player->mini_p_x + j, player->mini_p_y + i);
+			draw_info.y1 = (player->mini_p_y + i + MINIMAP_ZOOM
+					- player->mini_p_y) * TILE_SIZE_2D + TILE_SIZE_2D / 2;
+			draw_info.x1 = (player->mini_p_x + j + MINIMAP_ZOOM
+					- player->mini_p_x) * TILE_SIZE_2D + TILE_SIZE_2D / 2;
+			draw_info.size = TILE_SIZE_2D;
+			draw_square(game->image, &draw_info);
+			j++;
+		}
+		i++;
+	}
+	draw_2d_player(game, player);
 }

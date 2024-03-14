@@ -19,10 +19,17 @@
 # define WIDTH 1280
 # define HEIGHT 768
 # define TILE_SIZE 32
+# define TILE_SIZE_2D 16
 # define FOV 60
 # define ROTATION_SPEED 0.045
 # define PLAYER_SPEED 5
 # define PLAYER_SIZE 6
+# define MINIMAP_ZOOM 5
+
+# define COLOR_FREE_SPACE_2D 0x0000FFFF
+# define COLOR_WALL_2D 0xFFFFFFFF
+# define COLOR_OUTSIDE_2D 0x000000FF
+# define COLOR_PLAYER 0xFFFF00FF
 
 # include "../libftprintf/ft_printf.h"
 # include "../MLX42/include/MLX42/MLX42.h"
@@ -53,8 +60,6 @@ typedef struct s_map
 	char			**grid;
 	int				map_width;
 	int				map_height;
-	double			tile_size_2d;
-	double			mini_map_scale;
 	int				start_count;
 	int				start_x;
 	int				start_y;
@@ -75,6 +80,8 @@ typedef struct s_player
 {
 	int		p_x;
 	int		p_y;
+	int		mini_p_x;
+	int		mini_p_y;
 	double	p_a; // player angle
 	double	fov_rd; // field of view in radians
 	double	move_y;
@@ -152,18 +159,17 @@ int		init_empty_struct(t_game *game);
 
 // rays.c
 void	cast_rays_3d(t_game *game, t_player *player, t_ray *ray);
-void	cast_rays_2d(t_game *game, t_player *player, t_ray *ray);
 double	normalize_angle(double angle);
 
+// rays_calculate.c
+void	calculate_vertical_hit(t_map *map, t_player *player, t_ray *ray);
+void	calculate_horizontal_hit(t_map *map, t_player *player, t_ray *ray);
+
 // draw_2d.c
-void	draw_2d_map_grid(t_game *game, double tile_size_2d);
-void	draw_2d_rays(mlx_image_t *image, t_player *player, t_ray *ray,
-			double mini_map_scale);
-void	draw_2d_player(mlx_image_t *image, t_player *player,
-			double mini_map_scale);
+void	draw_2d_minimap(t_game *game, t_player *player);
 
 // draw_3d.c
-void	draw_3d_game(t_game *game, int ray_counter);
+void	project_ray_into_3d(t_game *game, int ray_counter);
 
 // draw_utils.c
 void	draw_square(mlx_image_t *image, t_draw_info *draw_info);
