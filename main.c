@@ -6,7 +6,7 @@
 /*   By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/28 11:37:55 by aulicna           #+#    #+#             */
-/*   Updated: 2024/03/14 16:00:40 by aulicna          ###   ########.fr       */
+/*   Updated: 2024/03/14 16:22:02 by aulicna          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,7 @@ void	game_loop(void *param)
 	}
 	cast_rays_3d(game, game->player, game->ray);
 	draw_2d_minimap(game, game->player);
+	play_animation(game);
 	if (mlx_image_to_window(game->mlx, game->image, 0, 0) == -1)
 	{
 		mlx_close_window(game->mlx);
@@ -50,6 +51,7 @@ int	main(int argc, char **argv)
 	parser(game);
 	checker_map(game->map, game);
 	init_game_struct(game);
+	print_values(game);
 	print_grid(game->map->grid, game->map->map_height);
 	if (!init_mlx42(game))
 	{
@@ -57,7 +59,6 @@ int	main(int argc, char **argv)
 		ft_putstr_fd("MLX42 error.\n", 2);
 		return (EXIT_FAILURE);
 	}
-	load_textures(game->map);
 	mlx_loop_hook(game->mlx, &game_loop, game);
 	mlx_loop_hook(game->mlx, &handle_key_actions, game);
 	mlx_loop(game->mlx);

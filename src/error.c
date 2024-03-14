@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   error.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: vbartos <vbartos@student.42prague.com>     +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/03/14 14:16:31 by vbartos           #+#    #+#             */
+/*   Updated: 2024/03/14 14:16:32 by vbartos          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../inc/cub3d.h"
 
 /**
@@ -6,7 +18,7 @@
  * @param error_message The error message to be printed.
  * @return 0 indicating the error has been printed.
  */
-int	error_print(char *error_message)
+int	error_print(const char *error_message)
 {
 	ft_printf("Error\n%s\n", error_message);
 	return (0);

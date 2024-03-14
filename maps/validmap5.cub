@@ -1,7 +1,7 @@
-NO ./textures/nwall1.png
-SO ./textures/swall1.png
-WE ./textures/wwall1.png
-EA ./textures/ewall1.png
+NO ./textures/42-Silicon-Valley.png
+SO ./textures/32x32_test.png
+WE ./textures/stone_bricks.png
+EA ./textures/scream.png
 
 F 127,127,127
 C 255,255,255

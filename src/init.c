@@ -6,7 +6,7 @@
 /*   By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/26 16:19:30 by aulicna           #+#    #+#             */
-/*   Updated: 2024/03/14 16:04:55 by aulicna          ###   ########.fr       */
+/*   Updated: 2024/03/14 16:19:03 by aulicna          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,6 +62,33 @@ void	init_game_struct(t_game *game)
 }
 
 /**
+ * Initializes the resources of the 'credits' floating rectangle animation
+ * 
+ * @param game The game structure.
+ * @return true if the animation is successfully initialized, false otherwise.
+ */
+static bool	init_animation(t_game *game)
+{
+	game->animation_txt = mlx_load_png("./textures/logo2.png");
+	if (!(game->animation_txt))
+	{
+		mlx_close_window(game->mlx);
+		error_print(mlx_strerror(mlx_errno));
+		free_game_full(game);
+		return (false);
+	}
+	game->animation = mlx_texture_to_image(game->mlx, game->animation_txt);
+	if (!(game->animation))
+	{
+		mlx_close_window(game->mlx);
+		error_print(mlx_strerror(mlx_errno));
+		free_game_full(game);
+		return (false);
+	}
+	return (true);
+}
+
+/**
  * @brief	Initializes the MLX library and creates a new window and image.
  *
  * This function initializes the MLX library with the specified width and height 
@@ -91,6 +118,7 @@ bool	init_mlx42(t_game *game)
 		mlx_close_window(game->mlx);
 		return (false);
 	}
+	init_animation(game);
 	return (true);
 }
 
@@ -124,5 +152,6 @@ int	init_empty_struct(t_game *game)
 	game->map->start_dir = '\0';
 	game->player = NULL;
 	game->ray = NULL;
+	init_empty_textures(game);
 	return (0);
 }

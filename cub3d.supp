@@ -1,0 +1,90 @@
+{
+   <dlopen>
+   Memcheck:Leak
+   ...
+   fun:dlopen@@GLIBC_2.34
+}
+{
+   <mlx_init>
+   Memcheck:Leak
+   ...
+   fun:mlx_init
+}
+{
+   <_dl_catch_exception>
+   Memcheck:Leak
+   ...
+   fun:_dl_catch_exception
+}
+{
+   <dlopen_doit>
+   Memcheck:Leak
+   ...
+   fun:dlopen_doit
+}
+{
+   <_dl_open>
+   Memcheck:Leak
+   ...
+   fun:_dl_open
+}
+{
+   <_dl_catch_error>
+   Memcheck:Leak
+   ...
+   fun:_dl_catch_error
+}
+{
+   <_dlerror_run>
+   Memcheck:Leak
+   ...
+   fun:_dlerror_run
+}
+{
+   <glfwInit>
+   Memcheck:Leak
+   ...
+   fun:glfwInit
+}
+{
+   <mlx_terminate>
+   Memcheck:Leak
+   ...
+   fun:mlx_terminate
+}
+{
+   <XrmGetStringDatabase>
+   Memcheck:Leak
+   ...
+   fun:XrmGetStringDatabase
+}
+{
+   <obj:/usr/lib/x86_64-linux-gnu/libX11.so.6.4.0>
+   Memcheck:Leak
+   ...
+   obj:/usr/lib/x86_64-linux-gnu/libX11.so.6.4.0
+}
+{
+   <_dlerror_run>
+   Memcheck:Leak
+   ...
+   fun:_dlerror_run
+}
+{
+   <_dl_init>
+   Memcheck:Leak
+   ...
+   fun:_dl_init
+}
+{
+   <dl_open_worker>
+   Memcheck:Leak
+   ...
+   fun:dl_open_worker
+}
+{
+   <llvm>
+   Memcheck:Leak
+   ...
+   fun:__pthread_once_slow
+}

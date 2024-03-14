@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   cub3d.h                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/03/14 14:17:09 by vbartos           #+#    #+#             */
+/*   Updated: 2024/03/14 16:45:04 by aulicna          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #ifndef CUB3D_H
 # define CUB3D_H
 
@@ -6,7 +18,12 @@
 # define ERR_ARGC			"Provide a path to your desired map only."
 # define ERR_ARGV			"Provide a .cub file."
 # define ERR_OPEN			"File cannot be opened."
+# define ERR_TXT_OPEN		"A texture file cannot be opened."
 # define ERR_MISSING_VALUE	"The provided map is missing a required value."
+# define ERR_COLOR			"Provided RGB colors must be set in 0-255 range " \
+							"with no spaces in between or trailing."
+# define ERR_COLOR_INTMAX	"Provided RGB colors must be set in 0-255 range " \
+							"(INTMAX overflow)."
 # define ERR_MAP_NOT_FOUND	"No valid map found in provided file."
 # define ERR_MAP_NOT_CLOSED	"The map's perimeter is not enclosed in walls."
 # define ERR_MAP_EMPTY_LINE	"The map must not contain empty lines."
@@ -112,11 +129,13 @@ typedef struct s_ray
 
 typedef struct s_game
 {
-	mlx_t		*mlx;
-	mlx_image_t	*image;
-	t_map		*map;
-	t_player	*player;
-	t_ray		*ray;
+	mlx_t			*mlx;
+	mlx_image_t		*image;
+	mlx_image_t		*animation;
+	mlx_texture_t	*animation_txt;
+	t_map			*map;
+	t_player		*player;
+	t_ray			*ray;
 }	t_game;
 
 typedef struct s_wall
@@ -156,6 +175,7 @@ void	load_textures(t_map *map);
 bool	init_mlx42(t_game *game);
 void	init_game_struct(t_game *game);
 int		init_empty_struct(t_game *game);
+void	init_empty_textures(t_game *game);
 
 // rays.c
 void	cast_rays_3d(t_game *game, t_player *player, t_ray *ray);
@@ -180,7 +200,7 @@ void	print_grid(char **grid, int map_height);
 void	handle_key_actions(void *param);
 
 // error.c
-int		error_print(char *error_message);
+int		error_print(const char *error_message);
 void	error_print_exit(char *error_message, t_game *game);
 
 // free.c
@@ -192,8 +212,12 @@ int		free_str_arr(char **arr);
 // checker_arg.c
 int		checker_arg(int argc, char **argv, t_game *game);
 
-// parser.c, parser_utils.c, parser_utils2.c
+// parser_file.c, parser_values.c, parser_utils.c, parser_utils2.c
 int		parser(t_game *game);
+char	*value_parser(char *value, char **parsed_file);
+void	clr_parser(char *value, char **parsed_file, t_game *game);
+int		clr_atoi(const char *nptr, int *intmax_check);
+void	load_and_verify_textures(t_game *game);
 int		is_space(char input);
 int		is_wall(char input);
 int		line_has_spaces_only(char *line);
@@ -211,5 +235,8 @@ void	checker_map(t_map *map, t_game *game);
 // debug.c
 int		print_map(char **map);
 int		print_values(t_game *game);
+
+// animation.c
+void	play_animation(t_game *game);
 
 #endif

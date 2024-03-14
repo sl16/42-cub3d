@@ -6,7 +6,7 @@
 /*   By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/06 15:23:00 by aulicna           #+#    #+#             */
-/*   Updated: 2024/03/14 15:38:44 by aulicna          ###   ########.fr       */
+/*   Updated: 2024/03/14 16:20:52 by aulicna          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,6 +53,14 @@ int	free_map(t_map *map)
 		free(map->txt_we);
 	if (map->txt_ea)
 		free(map->txt_ea);
+	if (map->mlx_txt_no)
+		mlx_delete_texture(map->mlx_txt_no);
+	if (map->mlx_txt_so)
+		mlx_delete_texture(map->mlx_txt_so);
+	if (map->mlx_txt_we)
+		mlx_delete_texture(map->mlx_txt_we);
+	if (map->mlx_txt_ea)
+		mlx_delete_texture(map->mlx_txt_ea);
 	free(map);
 	return (0);
 }
@@ -95,6 +103,8 @@ void	free_game_full(t_game *game)
 	if (game->mlx)
 	{
 		mlx_delete_image(game->mlx, game->image);
+		mlx_delete_image(game->mlx, game->animation);
+		mlx_delete_texture(game->animation_txt);
 		mlx_close_window(game->mlx);
 		mlx_terminate(game->mlx);
 	}

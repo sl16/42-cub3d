@@ -11,7 +11,7 @@
             "type": "cppdbg",
             "request": "launch",
             "program": "${workspaceFolder}/cub3d", //path to your programs exe and exe name
-            "args": [ "maps/map_square.cub"
+            "args": [ "maps/map_default.cub"
 				
 			],
             "stopAtEntry": false,
