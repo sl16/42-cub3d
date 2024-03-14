@@ -6,7 +6,7 @@
 /*   By: vbartos <vbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/06 15:23:00 by aulicna           #+#    #+#             */
-/*   Updated: 2024/03/14 12:34:29 by vbartos          ###   ########.fr       */
+/*   Updated: 2024/03/14 08:11:28 by vbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,6 +101,8 @@ void	free_game_full(t_game *game)
 	if (game->ray)
 		free(game->ray);
 	mlx_delete_image(game->mlx, game->image);
+	mlx_delete_image(game->mlx, game->animation);
+	mlx_delete_texture(game->animation_txt);
 	mlx_close_window(game->mlx);
 	mlx_terminate(game->mlx);
 	if (game)

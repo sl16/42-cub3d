@@ -6,7 +6,7 @@
 /*   By: vbartos <vbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/28 11:37:55 by aulicna           #+#    #+#             */
-/*   Updated: 2024/03/14 08:27:46 by vbartos          ###   ########.fr       */
+/*   Updated: 2024/03/14 08:02:52 by vbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,7 @@ void	game_loop(void *param)
 	}
 	cast_rays_3d(game, game->player, game->ray);
 	cast_rays_2d(game, game->player, game->ray);
+	play_animation(game);
 	if (mlx_image_to_window(game->mlx, game->image, 0, 0) == -1)
 	{
 		mlx_close_window(game->mlx);
