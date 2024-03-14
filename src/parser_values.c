@@ -80,6 +80,9 @@ static char	*value_parser_for_clrs(char *value, char **parsed_file)
 
 /**
  * Sets the floor color of the game map based on the RGB values provided.
+ * If the conversion fails because the provided number is bigger than INTMAX
+ * (ptr == -1), the split_rgb array is freed and an error is printed before
+ * exiting the program.
  * 
  * @param split_rgb An array of strings representing the RGB values.
  * @param game      A pointer to the game structure.
@@ -87,23 +90,33 @@ static char	*value_parser_for_clrs(char *value, char **parsed_file)
 static void	set_floor_clr(char **split_rgb, t_game *game)
 {
 	int	i;
+	int	ptr;
 
 	i = 0;
+	ptr = 0;
 	while (split_rgb[i] != NULL)
 	{
 		if (i == 0)
-			game->map->clr_floor.r = ft_atoi(split_rgb[i]);
+			game->map->clr_floor.r = clr_atoi(split_rgb[i], &ptr);
 		else if (i == 1)
-			game->map->clr_floor.g = ft_atoi(split_rgb[i]);
+			game->map->clr_floor.g = clr_atoi(split_rgb[i], &ptr);
 		else if (i == 2)
-			game->map->clr_floor.b = ft_atoi(split_rgb[i]);
+			game->map->clr_floor.b = clr_atoi(split_rgb[i], &ptr);
 		i++;
 	}
 	game->map->clr_floor.a = 0xFF;
+	if (ptr == -1)
+	{
+		free_str_arr(split_rgb);
+		error_print_exit(ERR_COLOR_INTMAX, game);
+	}
 }
 
 /**
  * Sets the ceiling color of the game map based on the RGB values provided.
+ * If the conversion fails because the provided number is bigger than INTMAX
+ * (ptr == -1), the split_rgb array is freed and an error is printed before
+ * exiting the program.
  * 
  * @param split_rgb An array of strings representing the RGB values.
  * @param game      A pointer to the game structure.
@@ -111,19 +124,26 @@ static void	set_floor_clr(char **split_rgb, t_game *game)
 static void	set_ceiling_clr(char **split_rgb, t_game *game)
 {
 	int	i;
+	int	ptr;
 
 	i = 0;
+	ptr = 0;
 	while (split_rgb[i] != NULL)
 	{
 		if (i == 0)
-			game->map->clr_ceiling.r = ft_atoi(split_rgb[i]);
+			game->map->clr_ceiling.r = clr_atoi(split_rgb[i], &ptr);
 		else if (i == 1)
-			game->map->clr_ceiling.g = ft_atoi(split_rgb[i]);
+			game->map->clr_ceiling.g = clr_atoi(split_rgb[i], &ptr);
 		else if (i == 2)
-			game->map->clr_ceiling.b = ft_atoi(split_rgb[i]);
+			game->map->clr_ceiling.b = clr_atoi(split_rgb[i], &ptr);
 		i++;
 	}
 	game->map->clr_ceiling.a = 0xFF;
+	if (ptr == -1)
+	{
+		free_str_arr(split_rgb);
+		error_print_exit(ERR_COLOR_INTMAX, game);
+	}
 }
 
 /**

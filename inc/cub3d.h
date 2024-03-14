@@ -10,6 +10,8 @@
 # define ERR_MISSING_VALUE	"The provided map is missing a required value."
 # define ERR_COLOR			"Provided RGB colors must be set in 0-255 range " \
 							"with no spaces in between or trailing."
+# define ERR_COLOR_INTMAX	"Provided RGB colors must be set in 0-255 range " \
+							"(INTMAX overflow)."
 # define ERR_MAP_NOT_FOUND	"No valid map found in provided file."
 # define ERR_MAP_NOT_CLOSED	"The map's perimeter is not enclosed in walls."
 # define ERR_MAP_EMPTY_LINE	"The map must not contain empty lines."
@@ -175,6 +177,7 @@ int		checker_arg(int argc, char **argv, t_game *game);
 int		parser(t_game *game);
 char	*value_parser(char *value, char **parsed_file);
 void	clr_parser(char *value, char **parsed_file, t_game *game);
+int		clr_atoi(const char *nptr, int *intmax_check);
 void	files_exist(t_game *game);
 int		is_space(char input);
 int		is_wall(char input);
