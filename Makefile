@@ -9,9 +9,11 @@ SRC = main.c\
 		src/checker_map.c\
 		src/checker_arg.c\
 		src/init.c\
-		src/parser.c\
+		src/parser_file.c\
+		src/parser_values.c\
 		src/parser_utils.c\
 		src/parser_utils2.c\
+		src/parser_utils3.c\
 		src/free.c\
 		src/error.c\
 		src/debug.c

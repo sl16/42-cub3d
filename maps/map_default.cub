@@ -1,11 +1,11 @@
-               NO      ./path_to_the_north_texture
-SO   ./path_to_the_south_texture
-WE                      ./path_to_the_west_texture      sad
-EA ./path_to_the_east_texture
+               NO      ./textures/32x32_test.png
+SO   ./textures/32x32_test.png
+WE                      ./textures/32x32_test.png      sad
+EA ./textures/32x32_test.png
 E ./lulec
-EAEAEAA ./kamardde
-F 220,100,0
-C 225,30,0
+EAEAEAA ./kamardde  
+F 10,10,0
+C      255,255,255
 naprosta                        hovadina
 
             
