@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   free.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vbartos <vbartos@student.42prague.com>     +#+  +:+       +#+        */
+/*   By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/06 15:23:00 by aulicna           #+#    #+#             */
-/*   Updated: 2024/03/14 08:11:28 by vbartos          ###   ########.fr       */
+/*   Updated: 2024/03/14 16:20:52 by aulicna          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,11 +100,14 @@ void	free_game_full(t_game *game)
 		free(game->player);
 	if (game->ray)
 		free(game->ray);
-	mlx_delete_image(game->mlx, game->image);
-	mlx_delete_image(game->mlx, game->animation);
-	mlx_delete_texture(game->animation_txt);
-	mlx_close_window(game->mlx);
-	mlx_terminate(game->mlx);
+	if (game->mlx)
+	{
+		mlx_delete_image(game->mlx, game->image);
+		mlx_delete_image(game->mlx, game->animation);
+		mlx_delete_texture(game->animation_txt);
+		mlx_close_window(game->mlx);
+		mlx_terminate(game->mlx);
+	}
 	if (game)
 		free(game);
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cub3d.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vbartos <vbartos@student.42prague.com>     +#+  +:+       +#+        */
+/*   By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/14 14:17:09 by vbartos           #+#    #+#             */
-/*   Updated: 2024/03/14 14:17:11 by vbartos          ###   ########.fr       */
+/*   Updated: 2024/03/14 16:45:04 by aulicna          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,11 +37,16 @@
 # define HEIGHT 768
 # define TILE_SIZE 32
 # define TILE_SIZE_2D 16
-# define MINI_MAP 2
 # define FOV 60
 # define ROTATION_SPEED 0.045
 # define PLAYER_SPEED 5
-# define PLAYER_SIZE 8
+# define PLAYER_SIZE 6
+# define MINIMAP_ZOOM 5
+
+# define COLOR_FREE_SPACE_2D 0x0000FFFF
+# define COLOR_WALL_2D 0xFFFFFFFF
+# define COLOR_OUTSIDE_2D 0x000000FF
+# define COLOR_PLAYER 0xFFFF00FF
 
 # include "../libftprintf/ft_printf.h"
 # include "../MLX42/include/MLX42/MLX42.h"
@@ -58,10 +63,10 @@ typedef union u_clr
 	unsigned int	rgba;
 	struct
 	{
-		unsigned char	r;
-		unsigned char	g;
-		unsigned char	b;
 		unsigned char	a;
+		unsigned char	b;
+		unsigned char	g;
+		unsigned char	r;
 	};
 }				t_clr;
 
@@ -92,6 +97,8 @@ typedef struct s_player
 {
 	int		p_x;
 	int		p_y;
+	int		mini_p_x;
+	int		mini_p_y;
 	double	p_a; // player angle
 	double	fov_rd; // field of view in radians
 	double	move_y;
@@ -100,22 +107,24 @@ typedef struct s_player
 
 typedef struct s_ray
 {
-	double	r_a; // ray angle
-	double	r_x;
-	double	r_y;
-	double	angle_nor; // normalized ray angle
-	double	angle_diff;
-	double	vy;
-	double	vx;
-	double	dist_ver;
-	double	hy;
-	double	hx;
-	double	dist_hor;
-	double	dist_total; // distance to the wall
-	double	y_step;
-	double	x_step;
-	int		pixel;
-	int		color;
+	int			ray_counter;
+	double		r_a; // ray angle
+	double		r_x;
+	double		r_y;
+	double		angle_nor; // normalized ray angle
+	double		angle_diff;
+	int			angle_orientation;
+	double		vy; // vertical ray hit
+	double		vx; // vertical ray hit
+	double		dist_ver; // vertical ray hit
+	double		hy;	// horizontal ray hit
+	double		hx;	// horizontal ray hit
+	double		dist_hor;	// horizontal ray hit
+	double		dist_total; // distance to the wall
+	double		y_step;
+	double		x_step;
+	int			pixel;
+	uint32_t	color;
 }	t_ray;
 
 typedef struct s_game
@@ -128,6 +137,13 @@ typedef struct s_game
 	t_player		*player;
 	t_ray			*ray;
 }	t_game;
+
+typedef struct s_wall
+{
+	double	wall_start;
+	double	wall_end;
+	double	wall_height;
+}	t_wall;
 
 typedef struct s_draw_info
 {
@@ -152,6 +168,9 @@ typedef enum s_orientation
 	VERTICAL
 }	t_orientation;
 
+// TEMPORARY
+void	load_textures(t_map *map);
+
 // init.c
 bool	init_mlx42(t_game *game);
 void	init_game_struct(t_game *game);
@@ -160,16 +179,17 @@ void	init_empty_textures(t_game *game);
 
 // rays.c
 void	cast_rays_3d(t_game *game, t_player *player, t_ray *ray);
-void	cast_rays_2d(t_game *game, t_player *player, t_ray *ray);
 double	normalize_angle(double angle);
 
+// rays_calculate.c
+void	calculate_vertical_hit(t_map *map, t_player *player, t_ray *ray);
+void	calculate_horizontal_hit(t_map *map, t_player *player, t_ray *ray);
+
 // draw_2d.c
-void	draw_2d_map_grid(t_game *game);
-void	draw_2d_rays(mlx_image_t *image, t_player *player, t_ray *ray);
-void	draw_2d_player(mlx_image_t *image, t_player *player);
+void	draw_2d_minimap(t_game *game, t_player *player);
 
 // draw_3d.c
-void	draw_3d_game(t_game *game, int ray_counter);
+void	project_ray_into_3d(t_game *game, int ray_counter);
 
 // draw_utils.c
 void	draw_square(mlx_image_t *image, t_draw_info *draw_info);

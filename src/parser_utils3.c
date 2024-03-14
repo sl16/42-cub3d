@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser_utils3.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vbartos <vbartos@student.42prague.com>     +#+  +:+       +#+        */
+/*   By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/14 14:16:52 by vbartos           #+#    #+#             */
-/*   Updated: 2024/03/14 14:16:53 by vbartos          ###   ########.fr       */
+/*   Updated: 2024/03/14 16:21:31 by aulicna          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,13 +59,11 @@ void	load_and_verify_textures(t_game *game)
  */
 int	clr_atoi(const char *nptr, int *intmax_check)
 {
-	int						sign;
 	int						i;
 	unsigned long long int	num;
 
 	i = 0;
 	num = 0;
-	sign = 1;
 	while (nptr[i] == ' ' || nptr[i] == '\t'
 		|| nptr[i] == '\f' || nptr[i] == '\r'
 		|| nptr[i] == '\n' || nptr[i] == '\v')
