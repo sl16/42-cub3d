@@ -1,13 +1,11 @@
-               NO      ./textures/32x32_test.png
-SO   ./textures/32x32_test.png
-WE                      ./textures/32x32_test.png      sad
-EA ./textures/32x32_test.png
-E ./lulec
-EAEAEAA ./kamardde
+
+NO ./textures/orange_bricks.png
+SO ./textures/stone_bricks.png
+WE ./textures/game_bricks.png
+EA ./textures/old_bricks.png
+
 F 220,100,0
 C 225,30,0
-naprosta                        hovadina
-
 
 
 
