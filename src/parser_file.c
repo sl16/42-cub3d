@@ -6,7 +6,7 @@
 /*   By: vbartos <vbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/14 14:16:42 by vbartos           #+#    #+#             */
-/*   Updated: 2024/03/14 14:16:43 by vbartos          ###   ########.fr       */
+/*   Updated: 2024/03/19 07:03:41 by vbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,8 +110,7 @@ int	parser(t_game *game)
 	load_and_verify_textures(game);
 	clr_parser("F", map->parsed_file, game);
 	clr_parser("C", map->parsed_file, game);
-	if (!map->txt_no || !map->txt_so || !map->txt_we || !map->txt_ea
-		|| map->clr_ceiling.rgba == 0 || map->clr_floor.rgba == 0)
+	if (!map->txt_no || !map->txt_so || !map->txt_we || !map->txt_ea)
 		error_print_exit(ERR_MISSING_VALUE, game);
 	find_map_in_file(map, game);
 	get_map_dimensions(map);
