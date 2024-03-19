@@ -1,7 +1,7 @@
-NO ./textures/42-Silicon-Valley.png
-SO ./textures/32x32_test.png
-WE ./textures/stone_bricks.png
-EA ./textures/scream.png
+NO ./textures/orange_bricks.png
+SO ./textures/stone_bricks.png
+WE ./textures/game_bricks.png
+EA ./textures/old_bricks.png
 
 F 84,145,255
 C 125,255,80

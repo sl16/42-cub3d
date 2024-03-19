@@ -6,7 +6,7 @@
 /*   By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/12 17:01:23 by aulicna           #+#    #+#             */
-/*   Updated: 2024/03/14 16:19:34 by aulicna          ###   ########.fr       */
+/*   Updated: 2024/03/16 15:09:36 by aulicna          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,16 +61,16 @@ static	mlx_texture_t	*get_texture(t_map *map, t_ray *ray)
 	if (ray->angle_orientation == HORIZONTAL)
 	{
 		if (ray->angle_nor > M_PI / 2 && ray->angle_nor < 3 * (M_PI / 2))
-			return (map->mlx_txt_so);
+			return (map->mlx_txt_we);
 		else
-			return (map->mlx_txt_no);
+			return (map->mlx_txt_ea);
 	}
 	else if (ray->angle_orientation == VERTICAL)
 	{
 		if (ray->angle_nor > 0 && ray->angle_nor < M_PI)
-			return (map->mlx_txt_ea);
+			return (map->mlx_txt_so);
 		else
-			return (map->mlx_txt_we);
+			return (map->mlx_txt_no);
 	}
 	return (0);
 }

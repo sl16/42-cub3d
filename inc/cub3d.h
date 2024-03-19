@@ -6,7 +6,7 @@
 /*   By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/14 14:17:09 by vbartos           #+#    #+#             */
-/*   Updated: 2024/03/14 16:45:04 by aulicna          ###   ########.fr       */
+/*   Updated: 2024/03/16 14:11:58 by aulicna          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,10 +43,10 @@
 # define PLAYER_SIZE 6
 # define MINIMAP_ZOOM 5
 
-# define COLOR_FREE_SPACE_2D 0x0000FFFF
-# define COLOR_WALL_2D 0xFFFFFFFF
-# define COLOR_OUTSIDE_2D 0x000000FF
-# define COLOR_PLAYER 0xFFFF00FF
+# define COLOR_FREE_SPACE_2D 0x703023FF
+# define COLOR_WALL_2D 0xFFEEDCFF
+# define COLOR_OUTSIDE_2D 0x5B5B5BFF
+# define COLOR_PLAYER 0xFFDB58FF
 
 # include "../libftprintf/ft_printf.h"
 # include "../MLX42/include/MLX42/MLX42.h"
