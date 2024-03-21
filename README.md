@@ -3,6 +3,8 @@ The goal of this project is to create a “realistic” 3D graphical
 representation of the inside of a maze from a
 first-person perspective using the Ray-Casting principles.
 
+Made by [aulicna](https://github.com/andreaulicna) & vbartos at 42 Prague.
+
 ### Useful stuff
 
 Minilibx/MLX:

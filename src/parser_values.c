@@ -6,7 +6,7 @@
 /*   By: vbartos <vbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/14 14:16:55 by vbartos           #+#    #+#             */
-/*   Updated: 2024/03/14 14:16:56 by vbartos          ###   ########.fr       */
+/*   Updated: 2024/03/19 07:02:51 by vbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -181,6 +181,8 @@ void	clr_parser(char *value, char **parsed_file, t_game *game)
 	int		j;
 
 	rgb = value_parser_for_clrs(value, parsed_file);
+	if (rgb == NULL)
+		error_print_exit(ERR_MISSING_VALUE, game);
 	split_rgb = ft_split(rgb, ',');
 	free(rgb);
 	i = -1;
