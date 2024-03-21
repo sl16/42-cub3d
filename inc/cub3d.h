@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cub3d.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+        */
+/*   By: vbartos <vbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/14 14:17:09 by vbartos           #+#    #+#             */
-/*   Updated: 2024/03/16 14:11:58 by aulicna          ###   ########.fr       */
+/*   Updated: 2024/03/21 16:25:40 by vbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,10 +20,8 @@
 # define ERR_OPEN			"File cannot be opened."
 # define ERR_TXT_OPEN		"A texture file cannot be opened."
 # define ERR_MISSING_VALUE	"The provided map is missing a required value."
-# define ERR_COLOR			"Provided RGB colors must be set in 0-255 range " \
-							"with no spaces in between or trailing."
-# define ERR_COLOR_INTMAX	"Provided RGB colors must be set in 0-255 range " \
-							"(INTMAX overflow)."
+# define ERR_COLOR			"Provided RGB colors must be set in 0-255 range."
+# define ERR_COLOR_INTMAX	"Provided RGB colors cause INTMAX overflow."
 # define ERR_MAP_NOT_FOUND	"No valid map found in provided file."
 # define ERR_MAP_NOT_CLOSED	"The map's perimeter is not enclosed in walls."
 # define ERR_MAP_EMPTY_LINE	"The map must not contain empty lines."
