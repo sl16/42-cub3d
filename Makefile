@@ -1,4 +1,4 @@
-NAME = cub3d
+NAME = cub3D
 
 SRC = main.c\
 		src/rays.c\
@@ -36,7 +36,7 @@ MLX_LIB = $(MLX_DIR)/build/libmlx42.a -ldl -lglfw -pthread -lm -Ofast
 COMPILER_SPEC = -DCMAKE_C_COMPILER=/usr/bin/gcc -DCMAKE_CXX_COMPILER=/usr/bin/g++
 
 all: libs $(NAME)
-	@echo "✅ cub3d executable ready"
+	@echo "✅ cub3D executable ready"
 
 %.o: %.c
 	@$(CC) $(CFLAGS) -c $< $(HEADER) -o $@

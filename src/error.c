@@ -6,7 +6,7 @@
 /*   By: vbartos <vbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/14 14:16:31 by vbartos           #+#    #+#             */
-/*   Updated: 2024/03/14 14:16:32 by vbartos          ###   ########.fr       */
+/*   Updated: 2024/03/25 16:40:57 by vbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,9 @@
  */
 int	error_print(const char *error_message)
 {
-	ft_printf("Error\n%s\n", error_message);
+	write(2, "Error\n", 6);
+	write(2, error_message, ft_strlen(error_message));
+	write(2, "\n", 1);
 	return (0);
 }
 
@@ -32,7 +34,9 @@ int	error_print(const char *error_message)
  */
 void	error_print_exit(char *error_message, t_game *game)
 {
-	ft_printf("Error\n%s\n", error_message);
+	write(2, "Error\n", 6);
+	write(2, error_message, ft_strlen(error_message));
+	write(2, "\n", 1);
 	if (game)
 		free_game_parser(game);
 	exit(1);
