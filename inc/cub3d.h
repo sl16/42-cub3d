@@ -6,7 +6,7 @@
 /*   By: vbartos <vbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/14 14:17:09 by vbartos           #+#    #+#             */
-/*   Updated: 2024/03/25 17:16:19 by vbartos          ###   ########.fr       */
+/*   Updated: 2024/03/25 17:42:15 by vbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,7 @@
 # define ERR_DUP_VALUE		"The file contains duplicate value identifiers."
 # define ERR_MISSING_VALUE	"The provided map is missing a required value."
 # define ERR_COLOR			"Provided RGB colors must be set in 0-255 range."
+# define ERR_COLOR_FORMAT	"Provided RGB colors must be set in R,G,B format."
 # define ERR_COLOR_INTMAX	"Provided RGB colors cause INTMAX overflow."
 # define ERR_MAP_NOT_FOUND	"No valid map found in provided file."
 # define ERR_MAP_NOT_CLOSED	"The map's perimeter is not enclosed in walls."

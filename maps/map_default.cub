@@ -1,12 +1,11 @@
                N     ./textures/orange_b
-			   NO     ./textures/orange_b
 			   NO      ./textures/orange_bricks.png
 SO   ./textures/stone_bricks.png
 WE                      ./textures/game_bricks.png
 EA ./textures/old_bricks.png
 E ./lulec
 EAEAEAA ./kamardde  
-F 60,40,30
+F 1,1,1
 C      180,200,200
 naprosta                        hovadina
 

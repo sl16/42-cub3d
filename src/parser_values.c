@@ -6,7 +6,7 @@
 /*   By: vbartos <vbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/14 14:16:55 by vbartos           #+#    #+#             */
-/*   Updated: 2024/03/25 17:29:23 by vbartos          ###   ########.fr       */
+/*   Updated: 2024/03/25 17:52:17 by vbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -119,10 +119,13 @@ static void	set_floor_clr(char **split_rgb, t_game *game)
 		i++;
 	}
 	game->map->clr_floor.a = 0xFF;
-	if (ptr == -1)
+	if (ptr != 0)
 	{
 		free_str_arr(split_rgb);
-		error_print_exit(ERR_COLOR_INTMAX, game);
+		if (ptr == -1)
+			error_print_exit(ERR_COLOR_INTMAX, game);
+		if (ptr == -2)
+			error_print_exit(ERR_COLOR, game);
 	}
 }
 
@@ -153,10 +156,13 @@ static void	set_ceiling_clr(char **split_rgb, t_game *game)
 		i++;
 	}
 	game->map->clr_ceiling.a = 0xFF;
-	if (ptr == -1)
+	if (ptr != 0)
 	{
 		free_str_arr(split_rgb);
-		error_print_exit(ERR_COLOR_INTMAX, game);
+		if (ptr == -1)
+			error_print_exit(ERR_COLOR_INTMAX, game);
+		if (ptr == -2)
+			error_print_exit(ERR_COLOR, game);
 	}
 }
 
@@ -186,6 +192,8 @@ void	clr_parser(char *value, char **parsed_file, t_game *game)
 	if (rgb == NULL)
 		error_print_exit(ERR_MISSING_VALUE, game);
 	split_rgb = ft_split(rgb, ',');
+	if (!split_rgb[2] || (split_rgb[3]))
+		error_print_exit(ERR_COLOR_FORMAT, game);
 	free(rgb);
 	i = -1;
 	while (split_rgb[++i] != NULL)

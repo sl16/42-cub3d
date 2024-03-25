@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser_utils3.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+        */
+/*   By: vbartos <vbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/14 14:16:52 by vbartos           #+#    #+#             */
-/*   Updated: 2024/03/14 16:21:31 by aulicna          ###   ########.fr       */
+/*   Updated: 2024/03/25 17:50:34 by vbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,5 +75,7 @@ int	clr_atoi(const char *nptr, int *intmax_check)
 	}
 	if (num > INT32_MAX)
 		*intmax_check = -1;
+	if (num < 0 || num > 255)
+		*intmax_check = -2;
 	return ((int)num);
 }
