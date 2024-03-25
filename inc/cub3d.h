@@ -6,7 +6,7 @@
 /*   By: vbartos <vbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/14 14:17:09 by vbartos           #+#    #+#             */
-/*   Updated: 2024/03/21 16:25:40 by vbartos          ###   ########.fr       */
+/*   Updated: 2024/03/25 17:16:19 by vbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@
 # define ERR_ARGV			"Provide a .cub file."
 # define ERR_OPEN			"File cannot be opened."
 # define ERR_TXT_OPEN		"A texture file cannot be opened."
+# define ERR_DUP_VALUE		"The file contains duplicate value identifiers."
 # define ERR_MISSING_VALUE	"The provided map is missing a required value."
 # define ERR_COLOR			"Provided RGB colors must be set in 0-255 range."
 # define ERR_COLOR_INTMAX	"Provided RGB colors cause INTMAX overflow."
@@ -210,6 +211,12 @@ int		free_str_arr(char **arr);
 // checker_arg.c
 int		checker_arg(int argc, char **argv, t_game *game);
 
+// checker_map.c
+void	checker_map(t_map *map, t_game *game);
+
+// checker_duplicates.c
+void	checker_duplicates(t_game *game);
+
 // parser_file.c, parser_values.c, parser_utils.c, parser_utils2.c
 int		parser(t_game *game);
 char	*value_parser(char *value, char **parsed_file);
@@ -226,9 +233,6 @@ void	copy_map(t_map *map, t_game *game);
 void	convert_spaces_to_walls(t_map *map);
 void	check_top_spaces(int x, int y, t_map *map, t_game *game);
 void	check_bot_spaces(int x, int y, t_map *map, t_game *game);
-
-// checker_map.c
-void	checker_map(t_map *map, t_game *game);
 
 // debug.c
 int		print_map(char **map);

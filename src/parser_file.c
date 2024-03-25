@@ -6,7 +6,7 @@
 /*   By: vbartos <vbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/14 14:16:42 by vbartos           #+#    #+#             */
-/*   Updated: 2024/03/19 07:03:41 by vbartos          ###   ########.fr       */
+/*   Updated: 2024/03/25 17:15:39 by vbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,16 +102,17 @@ int	parser(t_game *game)
 	t_map	*map;
 
 	file_parser(game);
+	checker_duplicates(game);
 	map = game->map;
 	map->txt_no = value_parser("NO", map->parsed_file);
 	map->txt_so = value_parser("SO", map->parsed_file);
 	map->txt_we = value_parser("WE", map->parsed_file);
 	map->txt_ea = value_parser("EA", map->parsed_file);
+	if (!map->txt_no || !map->txt_so || !map->txt_we || !map->txt_ea)
+		error_print_exit(ERR_MISSING_VALUE, game);
 	load_and_verify_textures(game);
 	clr_parser("F", map->parsed_file, game);
 	clr_parser("C", map->parsed_file, game);
-	if (!map->txt_no || !map->txt_so || !map->txt_we || !map->txt_ea)
-		error_print_exit(ERR_MISSING_VALUE, game);
 	find_map_in_file(map, game);
 	get_map_dimensions(map);
 	copy_map(map, game);

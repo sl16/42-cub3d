@@ -6,7 +6,7 @@
 /*   By: vbartos <vbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/14 14:16:55 by vbartos           #+#    #+#             */
-/*   Updated: 2024/03/19 07:02:51 by vbartos          ###   ########.fr       */
+/*   Updated: 2024/03/25 17:29:23 by vbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,8 @@ char	*value_parser(char *value, char **parsed_file)
 		j = increment_if_space(parsed_file[i], j);
 		str_start = j;
 		str_end = ft_strlen(parsed_file[i]);
-		if (ft_strncmp(parsed_file[i] + j, value, ft_strlen(value)) == 0)
+		if (ft_strncmp(parsed_file[i] + j, value, ft_strlen(value)) == 0
+			&& is_space(parsed_file[i][j + ft_strlen(value)]))
 		{
 			j += ft_strlen(value);
 			j = increment_if_space(parsed_file[i], j);
@@ -75,7 +76,8 @@ static char	*value_parser_for_clrs(char *value, char **parsed_file)
 		j = increment_if_space(parsed_file[i], j);
 		str_start = j;
 		str_end = ft_strlen(parsed_file[i]);
-		if (ft_strncmp(parsed_file[i] + j, value, ft_strlen(value)) == 0)
+		if (ft_strncmp(parsed_file[i] + j, value, ft_strlen(value)) == 0
+			&& is_space(parsed_file[i][j + ft_strlen(value)]))
 		{
 			j += ft_strlen(value);
 			j = increment_if_space(parsed_file[i], j);

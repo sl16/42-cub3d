@@ -9,6 +9,7 @@ SRC = main.c\
 		src/keys.c\
 		src/checker_map.c\
 		src/checker_arg.c\
+		src/checker_duplicates.c\
 		src/init.c\
 		src/parser_file.c\
 		src/parser_values.c\
